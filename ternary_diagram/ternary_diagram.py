@@ -14,7 +14,7 @@ mode: 'scatter' or 'contour'
 bar_label: colorbarの横に書くlabel名
 '''
 
-def ternary_diagram(reactant, vector, z, **options):
+def ternary_diagram(reactant, vector, **options):
     def grid(reactant, fig, ax):
         ax1 = ax
         # 本当はここにreactant_labelを作成するプログラム作りたい
@@ -83,28 +83,27 @@ def ternary_diagram(reactant, vector, z, **options):
 
     x, y = (2 * vector[:, 2] + vector[:, 0]) / 2, np.sqrt(3) / 2 * vector[:, 0] # 3次元ベクトルをx, y座標に落とし込む．
 
-    # 念のためzをnp.ndarrayにしてflatten
-    z = np.array(z).flatten()
+    z = np.array(options['z']).flatten() if 'z' in options else None    # 念のためzをnp.ndarrayにしてflatten
 
-    maximum = options['maximum'] if 'maximum' in options else np.max(z) + (np.max(z) - np.min(z)) * 0.05
-    minimum = options['minimum'] if 'minimum' in options else np.min(z) - (np.max(z) - np.min(z)) * 0.05
+    if z is None:
+        plt.scatter(x, y, c = 'blue')
+    else:
+        maximum = options['maximum'] if 'maximum' in options else np.max(z) + (np.max(z) - np.min(z)) * 0.05
+        minimum = options['minimum'] if 'minimum' in options else np.min(z) - (np.max(z) - np.min(z)) * 0.05
+        bl = options['bar_label'] if 'bar_label' in options else ''
+        mode = options['mode'] if 'mode' in options else 'scatter'
 
-    bl = options['bar_label'] if 'bar_label' in options else ''
-    mode = options['mode'] if 'mode' in options else 'scatter'
+        if mode == 'contour':
+            T = tri.Triangulation(x, y)
+            triplot = plt.tricontourf(x, y, T.triangles, z, np.linspace(minimum, maximum, 101), cmap = 'rainbow')
+        elif mode == 'scatter':
+            triplot = plt.scatter(x, y, c = z, cmap = 'rainbow', vmin = minimum, vmax = maximum)
 
-    if mode == 'contour':
-        T = tri.Triangulation(x, y)
-        triplot = plt.tricontourf(x, y, T.triangles, z, np.linspace(minimum, maximum, 101), cmap = 'rainbow')
-    elif mode == 'scatter':
-        triplot = plt.scatter(x, y, c = z, cmap = 'rainbow', vmin = minimum, vmax = maximum)
-    plt.colorbar(triplot, shrink = 0.8, format='%.1f', label = bl, orientation = 'vertical', ticklocation = 'top')
+        plt.colorbar(triplot, shrink = 0.8, format='%.1f', label = bl, orientation = 'vertical', ticklocation = 'top')
 
     return fig
 
 if __name__ == '__main__':
-    # df_scatter = pd.read_csv('example/scatter/example_scatter.csv')
-    # fig = ternary_diagram(df_scatter.columns[0:-1], df_scatter.iloc[:, 0:-1], df_scatter.iloc[:, -1], norm = True, maximum = 1, minimum = 0, mode = 'scatter', bar_label = 'example_scatter')
-
-    df_contour = pd.read_csv('example/contour/example_contour.csv')
-    fig = ternary_diagram(df_contour.columns[0:-1], df_contour.iloc[:, 0:-1], df_contour.iloc[:, -1], norm = True, maximum = 1, minimum = 0, mode = 'contour', bar_label = 'example_contour')
+    df = pd.read_csv('example/scatter/example_scatter.csv')
+    fig = ternary_diagram(df.columns[0:-1], df.iloc[:, 0:-1])
     plt.show()
