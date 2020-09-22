@@ -12,6 +12,7 @@ minimum: colorbarの上限値を固定するかどうか．default;None
 norm: 標準化する必要があるかどうか．default;True
 mode: 'scatter' or 'contour'
 bar_label: colorbarの横に書くlabel名
+color: 一種類のscatterのときの色
 '''
 
 def ternary_diagram(reactant, vector, **options):
@@ -86,7 +87,8 @@ def ternary_diagram(reactant, vector, **options):
     z = np.array(options['z']).flatten() if 'z' in options else None    # 念のためzをnp.ndarrayにしてflatten
 
     if z is None:
-        plt.scatter(x, y, c = 'blue')
+        color = options['color'] if 'color' in options else 'blue'
+        plt.scatter(x, y, c = color)
     else:
         maximum = options['maximum'] if 'maximum' in options else np.max(z) + (np.max(z) - np.min(z)) * 0.05
         minimum = options['minimum'] if 'minimum' in options else np.min(z) - (np.max(z) - np.min(z)) * 0.05
