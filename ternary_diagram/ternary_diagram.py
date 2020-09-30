@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm      #ternary内にカラーマップを創設する
+import matplotlib.cm as cm      # ternary内にカラーマップを創設する
 import matplotlib.tri as tri    # 三角図を簡単に出すやつ
 
 '''
