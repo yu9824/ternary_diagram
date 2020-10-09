@@ -10,7 +10,9 @@ import sys
 sys.setrecursionlimit(10 ** 9)
 
 lib_path = '/Users/ryojikanno/.pyenv/versions/anaconda3-2019.03/envs/TD/lib'
+# lib_path = '/Users/ryojikanno/.pyenv/versions/anaconda3-2019.03/envs/TDG/lib'
 dylib_files = [os.path.join(lib_path, f) for f in os.listdir(lib_path) if '.dylib' in f]
+# dylib_files = [os.path.join(lib_path, f) for f in os.listdir(lib_path) if os.path.isfile(os.path.join(lib_path, f))]
 # print(dylib_files)
 
 # 自動生成
@@ -22,7 +24,7 @@ DATA_FILES = [
     ('img', ['gui/img/w_o_z.png', 'gui/img/w_z.png'])
 ]
 
-PKGS = ['pandas', 'numpy', 'matplotlib', 'element_recognition', 'ternary_diagram']
+PKGS = ['pandas', 'numpy', 'matplotlib', 'element_recognition', 'ternary_diagram>=0.0.3']
 
 OPTIONS = {
     'argv_emulation':True,
@@ -30,19 +32,19 @@ OPTIONS = {
     'iconfile': 'gui/icon/ternary_diagram.icns',
     'plist':{
         'PyRuntimeLocations':[
-            # '@executable_path/../Frameworks/libpython3.7m.dylib',
+            # '@executable_path/../Frameworks/libpython3.8.dylib',
+            # '/Users/ryojikanno/.pyenv/versions/anaconda3-2019.03/envs/TDG/lib/libpython3.8.dylib',
             '@executable_path/../Frameworks/libpython3.7.dylib',
             '/Users/ryojikanno/.pyenv/versions/anaconda3-2019.03/envs/TD/lib/libpython3.7m.dylib',
-            # '@executable_path/../Frameworks/libffi.6.dylib',
         ],
     },
-    'frameworks': dylib_files
+    'frameworks': dylib_files,
 }
 
 setup(
     name='ternary_diagram_gui',
     author='yu-9824',
-    version='0.0.1',
+    version='0.0.2',
     app=APP,
     data_files=DATA_FILES,
     options={'py2app': OPTIONS},
