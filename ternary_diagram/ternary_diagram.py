@@ -129,7 +129,7 @@ class ternary_diagram:
                     outer.color = outer.mono_cmap(outer.color_counta)    # 各点ごとに色を指定するのが普通っぽいので， 点の数分で二次元化
                     outer.color_counta += 1
 
-                outer.ax.scatter(self.x, self.y, c = [outer.color * len(vector)], zorder = zorder)
+                outer.ax.scatter(self.x, self.y, c = [outer.color for _ in range(len(vector))], zorder = zorder)
             else:
                 self.triplot = outer.ax.scatter(self.x, self.y, c = self.z, cmap = 'rainbow', vmin = self.minimum, vmax = self.maximum, zorder = zorder)
                 self.colorbar()
