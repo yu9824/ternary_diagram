@@ -10,7 +10,6 @@ import matplotlib.tri as tri    # 三角図を簡単に出すやつ
 maximum: colorbarの上限値を固定するかどうか．default;None
 minimum: colorbarの上限値を固定するかどうか．default;None
 norm: 標準化する必要があるかどうか．default;True
-mode: 'scatter' or 'contour'
 bar_label: colorbarの横に書くlabel名
 '''
 
@@ -87,11 +86,14 @@ class ternary_diagram:
 
     class _common:
         def __init__(self, outer, vector, **options):
+            # クラスオブジェクト
+            self.options = options
+
             # numpy.ndarray化
             self.vector = np.array(vector)
 
             # 正規化するかどうか．
-            norm = outer._get_from_options(options, 'norm', True)
+            norm = self.options.pop('norm') if 'norm' in self.options else True
             if norm:
                 # self.vectorの正規化
                 self.vector = self.vector / np.sum(self.vector, axis = 1, keepdims = True) # 今回keepdims = Trueは.reshape(-1, 1)と同義
@@ -101,12 +103,12 @@ class ternary_diagram:
             self.x, self.y = outer._three2two(self.vector)
 
             # 念のためself.zをnp.ndarrayにしてflatten
-            self.z = np.array(options['z']).flatten() if 'z' in options else None
+            self.z = np.array(self.options.pop('z')).flatten() if 'z' in self.options else None
 
             if self.z is not None:
-                self.maximum = options['maximum'] if 'maximum' in options else None
-                self.minimum = options['minimum'] if 'minimum' in options else None
-                self.bl = options['bar_label'] if 'bar_label' in options else ''
+                self.maximum = self.options.pop('maximum') if 'maximum' in self.options else None
+                self.minimum = self.options.pop('minimum') if 'minimum' in self.options else None
+                self.bl = self.options.pop('bar_label') if 'bar_label' in self.options else ''
 
         def colorbar(self):
             plt.colorbar(self.triplot, shrink = 0.8, format='%.1f', label = self.bl, orientation = 'vertical', ticklocation = 'top')
@@ -116,30 +118,40 @@ class ternary_diagram:
         def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
             super().__init__(outer, vector, **options)   # ternary_diagramクラスのselfを引数として与えている．
 
-            marker = options['marker'] if 'marker' in options else 'o'
             # zに値が指定されていないとき
             zorder = 2
             if self.z is None:
                 # 色について (単色なのは zがNoneのときだけなので)
-                if 'c' in options:
-                    outer.color = options['c']
-                elif 'color' in options:
-                    outer.color = options['color']
-                else:
-                    outer.color = outer.mono_cmap(outer.color_counta)    # 各点ごとに色を指定するのが普通っぽいので， 点の数分で二次元化
-                    outer.color_counta += 1
+                if 'c' in self.options and 'color' in self.options:
+                    raise ValueError("Supply a 'c' argument or a 'color' kwarg but not both")
+                elif 'c' in self.options:
+                    outer.color = self.options['c']
+                elif 'color' in self.options:
+                    outer.color = self.options['color']
+                elif 'edgecolors' in self.options:
+                    outer.color = self.options['edgecolors']
 
-                outer.ax.scatter(self.x, self.y, c = [outer.color for _ in range(len(vector))], zorder = zorder)
+                if not('c' in self.options or 'color' in self.options or 'facecolor' in self.options or 'facecolors' in self.options):
+                    self.options['color'] = outer.mono_cmap(outer.color_counta)    # 各点ごとに色を指定するのが普通っぽいので， 点の数分で二次元化
+                    outer.color = self.options['color']
+                    outer.color_counta += 1
+                
+                outer.ax.scatter(self.x, self.y, zorder = zorder, **self.options)
             else:
-                self.triplot = outer.ax.scatter(self.x, self.y, c = self.z, cmap = 'rainbow', vmin = self.minimum, vmax = self.maximum, zorder = zorder)
+                if 'cmap' not in self.options:
+                    self.options['cmap'] = 'rainbow'
+                self.triplot = outer.ax.scatter(self.x, self.y, c = self.z, vmin = self.minimum, vmax = self.maximum, zorder = zorder, **self.options)
                 self.colorbar()
 
     class _contour_(_common):
         def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
             super().__init__(outer, vector, **options)   # ternary_diagramクラスのselfを引数として与えている．
 
+            if 'cmap' not in self.options:
+                self.options['cmap'] = 'rainbow'
+
             T = tri.Triangulation(self.x, self.y)
-            self.triplot = plt.tricontourf(self.x, self.y, T.triangles, self.z, np.linspace(self.minimum if self.minimum is not None else np.min(self.z), self.maximum if self.maximum is not None else np.max(self.z), 101), cmap = 'rainbow')
+            self.triplot = outer.ax.tricontourf(self.x, self.y, T.triangles, self.z, np.linspace(self.minimum if self.minimum is not None else np.min(self.z), self.maximum if self.maximum is not None else np.max(self.z), 101), **self.options)
             self.colorbar()
 
     class _plot_(_common):
@@ -149,17 +161,17 @@ class ternary_diagram:
             # 3次元を2次元に．
             x, y = outer._three2two(self.vector)
 
-            plot_options = {'color':outer.color, 'zorder':1}
+            if 'zorder' not in self.options:
+                options['zorder'] = 1
+            if not('color' in self.options or 'c' in self.options):
+                self.options['color'] = outer.color
+
             #option系
-            if 'linewidth' in options:
-                plot_options['linewidth'] = options['linewidth']
-            elif 'lw' in options:
-                plot_options['lw'] = options['lw']
-            else:
-                plot_options['lw'] = 1
+            if not('linewidth' in self.options or 'lw' in self.options):
+                self.options['lw'] = 1
 
             # plot
-            outer.ax.plot(x, y, **plot_options)
+            outer.ax.plot(x, y, **options)
 
     def scatter(self, vector, **options):
         self._scatter_(self, vector, **options) # selfオブジェクトを渡してる．
