@@ -20,7 +20,7 @@ class ternary_diagram:
         self.mono_cmap = plt.get_cmap('Set1')
 
         # figure, axisオブジェクトの生成
-        self.fig = plt.figure()
+        self.fig = plt.figure(facecolor='white')    # jupyter note / lab だと背景が透過色になっていて，保存すると変な感じになるため．もし背景透過で保存したい場合はfig.savefig('filename', transparent = True)とする．
         self.ax = self.fig.add_subplot(111)
 
         # reactant_labelを生成する関数を定義し， 生成
@@ -171,7 +171,7 @@ class ternary_diagram:
                 self.options['lw'] = 1
 
             # plot
-            outer.ax.plot(x, y, **options)
+            outer.ax.plot(x, y, **self.options)
 
     def scatter(self, vector, **options):
         self._scatter_(self, vector, **options) # selfオブジェクトを渡してる．
