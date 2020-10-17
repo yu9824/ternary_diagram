@@ -32,7 +32,7 @@ td.scatter(vector, **options)
 ```
 * `vector`:
     * percentage of each compound mixed in 2D `list` / `pandas.DataFrame` / `numpy.ndarray`, where shape = [n, 3] (n is the number of samples to be plotted as integer)
-    * それぞれの化合物が混ざった割合．2次元`list` / `pandas.DataFrame` / `numpy.ndarray`で，shape = [$n$, 3] ($n$は整数でプロットしたいサンプル数)
+    * それぞれの化合物が混ざった割合．2次元`list` / `pandas.DataFrame` / `numpy.ndarray`で，shape = [n, 3] (nは整数でプロットしたいサンプル数)
     
 * `options`:
     * most of the options available in `matplotlib.pyplot.scatter` (`color`, `marker`, etc.)
