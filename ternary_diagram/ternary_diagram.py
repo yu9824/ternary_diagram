@@ -118,6 +118,11 @@ class ternary_diagram:
         def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
             super().__init__(outer, vector, **options)   # ternary_diagramクラスのselfを引数として与えている．
 
+            # easy annotation 右上に簡易annotation
+            self.annotations = self.options.pop('annotations') if 'annotations' in self.options else []
+            for x, y, ann in zip(self.x, self.y, self.annotations):
+                outer.ax.annotate(ann, xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8)
+
             # zに値が指定されていないとき
             zorder = 2
             if self.z is None:
