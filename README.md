@@ -1,3 +1,8 @@
+# Ternary Diagram
+相図描画を簡単に行うためのパッケージ．
+
+![example](https://github.com/yu-9824/ternary_diagram/blob/790283b9122c2981557c414ba21510bc002886ae/example/contour/example_contour.png "example")
+
 ## how to install (インストール方法)
 * pip
 ~~~
@@ -11,12 +16,12 @@ pip install git+https://github.com/yu-9824/ternary_diagram.git
 
 ## Usage (文法)
 ### import package
-~~~
+~~~python
 from ternary_diagram import ternary_diagram
 ~~~
 
 ### Make an instance
-~~~
+~~~python
 materials = ['Li2O', 'LaO3', 'TiO2']
 td = ternary_diagram(materials)
 ~~~
@@ -26,7 +31,7 @@ td = ternary_diagram(materials)
 
 ### Scatter points
 化合物の点をプロット．
-```
+```python
 vector = [[1, 1, 1]]
 td.scatter(vector, **options)
 ```
@@ -42,7 +47,7 @@ td.scatter(vector, **options)
 
 ### Contour
 等高線を使ったカラーマップを出力
-```
+```python
 td.contour(vector, z = [...], maximum = None, minimum = None)
 ```
 * `vector`:
@@ -60,7 +65,7 @@ td.contour(vector, z = [...], maximum = None, minimum = None)
 
 ### Tie line (連結線)
 It is possible to draw a tie line. (連結線を引くことができる．)
-```
+```python
 td.plot(r1, r2, **options)
 ```
 * `r1` and `r2`:
@@ -71,7 +76,7 @@ td.plot(r1, r2, **options)
 
 ### example
 See also the example folder. (exampleフォルダも参照．)
-```
+```python
 td = ternary_diagram(['Li2O', 'LaO3', 'TiO2'])
 td.scatter([[1, 1, 1], [1, 2, 3]], z = [0, 1], marker = 'o')
 td.plot([1, 1, 1], [1, 2, 3], color = 'black')
