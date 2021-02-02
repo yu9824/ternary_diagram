@@ -1,1 +1,1 @@
-from .ternary_diagram import ternary_diagram
+from .ternary_diagram import *
