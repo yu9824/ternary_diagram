@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 
+from copy import deepcopy
+
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm      # ternary内にカラーマップを創設する
 import matplotlib.tri as tri    # 三角図を簡単に出すやつ
@@ -12,6 +14,10 @@ minimum: colorbarの上限値を固定するかどうか．default;None
 norm: 標準化する必要があるかどうか．default;True
 bar_label: colorbarの横に書くlabel名
 '''
+
+__all__ = [
+    'ternary_diagram',
+]
 
 class ternary_diagram:
     def __init__(self, reactant):
@@ -77,6 +83,14 @@ class ternary_diagram:
             self.ax.text((10-i)/20.0-0.06, h*(10-i)/10.0+0.02, '%d0' % i, fontsize = 10, rotation = 300)
             self.ax.text(i/10.0-0.03, -0.07, '%d0' % i, fontsize = 10, rotation = 60)
 
+        # 二次元に変換したデータを保存しておく
+        self.x = {
+            'scatter': [],
+            'contour': [],
+            'plot': [],
+        } 
+        self.y = deepcopy(self.x)
+
     # *** サブ関数 ***
     def _get_from_options(self, options, key, default):
         return options[key] if key in options else default
@@ -118,6 +132,10 @@ class ternary_diagram:
         def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
             super().__init__(outer, vector, **options)   # ternary_diagramクラスのselfを引数として与えている．
 
+            self.name = 'scatter'
+            outer.x[self.name].append(self.x)
+            outer.y[self.name].append(self.y)
+
             # easy annotation 右上に簡易annotation
             self.annotations = self.options.pop('annotations') if 'annotations' in self.options else []
             for x, y, ann in zip(self.x, self.y, self.annotations):
@@ -152,6 +170,10 @@ class ternary_diagram:
         def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
             super().__init__(outer, vector, **options)   # ternary_diagramクラスのselfを引数として与えている．
 
+            self.name = 'contour'
+            outer.x[self.name].append(self.x)
+            outer.y[self.name].append(self.y)
+
             if 'cmap' not in self.options:
                 self.options['cmap'] = 'rainbow'
 
@@ -163,8 +185,9 @@ class ternary_diagram:
         def __init__(self, outer, vector, **options):
             super().__init__(outer, vector, **options)
 
-            # 3次元を2次元に．
-            x, y = outer._three2two(self.vector)
+            self.name = 'plot'
+            outer.x[self.name].append(self.x)
+            outer.y[self.name].append(self.y)
 
             if 'zorder' not in self.options:
                 options['zorder'] = 1
@@ -176,13 +199,13 @@ class ternary_diagram:
                 self.options['lw'] = 1
 
             # plot
-            outer.ax.plot(x, y, **self.options)
+            outer.ax.plot(self.x, self.y, **self.options)
 
     def scatter(self, vector, **options):
         self._scatter_(self, vector, **options) # selfオブジェクトを渡してる．
 
     def contour(self, vector, **options):
-        self._contour_(self, vector, **options)# selfオブジェクトを渡してる．
+        self._contour_(self, vector, **options) # selfオブジェクトを渡してる．
 
     def plot(self, r1, r2, **options):   # 連結線を引く (scatterオブジェクトの使用が必須な状況)
         vector = np.array([r1, r2])
@@ -203,4 +226,5 @@ if __name__ == '__main__':
     td.scatter([[1, 2, 7]])
     td.plot([1, 0, 3], [0, 1, 2])
     td.scatter([[1, 1, 1]])
+    print(td.x, td.y)
     plt.show()
