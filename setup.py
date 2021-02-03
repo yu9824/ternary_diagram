@@ -16,7 +16,7 @@ from shutil import copyfile
 # 自動生成
 from setuptools import setup
 
-VERSIONS = '0.0.2'
+VERSIONS = '0.1.0'
 
 APP = ['gui/main.py']
 APP_NAME = 'ternary_diagram'
@@ -45,7 +45,7 @@ OPTIONS = {
         'CFBundleIdentifier': "com.yu-9824.osx.ternary_diagram",
         'CFBundleVersion': VERSIONS,
         'CFBundleShortVersionString': VERSIONS,
-        'NSHumanReadableCopyright': u"Copyright © 2020, yu-9824, All Rights Reserved"
+        'NSHumanReadableCopyright': u"Copyright © 2020-, yu-9824, All Rights Reserved"
     },
     # 'frameworks': dylib_files,
 }
@@ -59,5 +59,5 @@ setup(
     options={'py2app': OPTIONS},
     setup_requires=['py2app'],
 )
-
-{copyfile(f, os.path.join(frameworks_path, os.path.basename(f))) for f in dylib_files}
+if '-A' not in sys.argv:
+    {copyfile(f, os.path.join(frameworks_path, os.path.basename(f))) for f in dylib_files}
