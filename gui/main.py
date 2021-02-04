@@ -46,17 +46,18 @@ default_path = os.path.join(os.getenv('HOME'), 'Desktop')
 
 # windowを扱いやすいようにクラスを定義
 class WindowBunch:
-    def __init__(self, title = '', layout = ((sg.Text('You have to set something.')))):
+    def __init__(self, title = '', layout = ((sg.Text('You have to set something.'))), timeout = None):
         self.title = title
-        self.layout = deepcopy(layout)  # itemを再生成したときに怒られるため．
+        # self.layout = deepcopy(layout)  # itemを再生成したときに怒られるため．
+        self.layout = layout
+        self.timeout = timeout
 
-        self.window = sg.Window(self.title, self.layout, **options_font, resizable = True, element_justification = 'center')
-        self.window.Finalize()
-    
+        self.window = sg.Window(self.title, self.layout, **options_font, resizable = True, element_justification = 'center', finalize = True)
+
     def read(self):
-        self.event, self.values = self.window.read()
+        self.event, self.values = self.window.read(timeout = self.timeout)
 
-    def __del__(self):
+    def close(self):
         self.window.close()
 
 
@@ -111,7 +112,7 @@ def gui():
     while True:
         top.read()
 
-        if top.event is None:
+        if top.event is sg.WINDOW_CLOSED:
             break
         elif top.event in ('w/o_z', 'w/_z'):
             materials = [top.values['reactant' + str(i)] for i in range(1, 4)]
@@ -171,7 +172,7 @@ def gui():
 
             while True:
                 main.read()
-                if main.event is None:
+                if main.event is sg.WINDOW_CLOSED:
                     break
                 elif 'Add' in main.event:
                     # 割合手入力の場合
@@ -250,18 +251,22 @@ def gui():
                             x, y = event.mouseevent.xdata, event.mouseevent.ydata
                             distance_euc = np.linalg.norm(np.hstack([np.hstack(td.x['scatter']).reshape(-1, 1), np.hstack(td.y['scatter']).reshape(-1, 1)]) - np.array([x, y]), axis = 1)
                             i_min = np.argmin(distance_euc)
-                            sg.PopupOK(df_data.loc[i_min, 'composition'], **options_popup)
+                            sg.popup_auto_close(df_data.loc[i_min, 'composition'], **options_popup)
 
                         # define the window layout
                         figpage = WindowBunch(title = 'check figure', layout = [
                                 [sg.Text('Plot test')],
                                 [sg.Canvas(key='-CANVAS-')],
-                                [sg.Cancel(), sg.Button('Save')],
+                                # [sg.Cancel(), sg.Submit('Save')],
+                                [sg.CloseButton('Cancel'), sg.InputText('', visible = False, key = '-OUTPUT_FILE_PATH-', enable_events = True, do_not_clear = False), sg.FileSaveAs('Save', key = 'Save', file_types = (('png', '*.png'), ('PDF','*.pdf')), default_extension = '.png')],
                                 [sg.Checkbox('transparent', key = '-TRANSPARENT-')]
                             ])
 
                         # add the plot to the window
                         fig_canvas_agg = draw_figure(figpage.window['-CANVAS-'].TKCanvas, td.fig)
+
+                        # コマンド
+                        cid = td.fig.canvas.mpl_connect('pick_event', event_picked)
 
                         if 'z' in df_data.columns:
                             td_options = {'z':df_data.loc[:, 'z']}
@@ -286,29 +291,45 @@ def gui():
                         
                         plt.tight_layout()
 
-                        # コマンド
-                        td.fig.canvas.mpl_connect('pick_event', event_picked)
-
                         while True:
                             figpage.read()
-                            if figpage.event in ('Cancel', None):
+                            print(figpage.event)
+                            if figpage.event == sg.WINDOW_CLOSED:
                                 break
-                            elif figpage.event == 'Save':
-                                fname = sg.popup_get_file('', save_as = True, default_path = default_path, file_types = (('PDF Format','*.pdf'), ('PNG','*.png'),), **options_font, modal = False)
-                                if fname is not None:
+                            elif figpage.event == '-OUTPUT_FILE_PATH-':
+                                t1 = time()
+                                fname = figpage.values['-OUTPUT_FILE_PATH-']
+                                t2 = time()
+                                print(fname, t2 - t1)
+                                if fname is None:
+                                    pass
+                                elif fname == '':
+                                    sg.PopupError('You have to enter/select file name.', **options_popup)
+                                else:
                                     transparent = figpage.values['-TRANSPARENT-']
-                                    td.fig.savefig(fname, dpi = 300, transparent = transparent)
-                                    sg.PopupOK('Saved successfully.', **options_popup)
+                                    try:
+                                        td.fig.savefig(fname, dpi = 300, transparent = transparent)
+                                    except Exception:
+                                        sg.PopupError('Faile to save figure.', **options_popup)
+                                    else:
+                                        sg.PopupAutoClose('Saved successfully.', **options_popup)
+                            else:
+                                sg.PopupError('There is something wrong.', **options_popup)
+                                continue
                         plt.close()
-                        del td
-                        del figpage
+                        figpage.close()
+                    continue    # tableをupdateするところがバグってるっぽいので．
                 elif main.event == 'Clear':
                     df_data = pd.DataFrame()    # Add されたdataを格納しておくDataFrameを初期化
                 else:
                     sg.PopupError('Something Wrong', **options_popup)
+                    continue
                 main.window['-TABLE-'].update(values = df_data.to_numpy().tolist())
-            del main
-    del top
+            main.close()
+    top.close()
 
 if __name__ == '__main__':
+    from pdb import set_trace
+    from time import time
+    sg.Print(do_not_reroute_stdout = False)
     gui()
