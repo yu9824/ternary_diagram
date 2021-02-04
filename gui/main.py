@@ -2,7 +2,6 @@ import PySimpleGUI as sg
 import pandas as pd
 import numpy as np
 import xlrd
-from copy import deepcopy
 import matplotlib.pyplot as plt
 from copy import copy
 
@@ -46,16 +45,14 @@ default_path = os.path.join(os.getenv('HOME'), 'Desktop')
 
 # windowを扱いやすいようにクラスを定義
 class WindowBunch:
-    def __init__(self, title = '', layout = ((sg.Text('You have to set something.'))), timeout = None):
+    def __init__(self, title = '', layout = ((sg.Text('You have to set something.')))):
         self.title = title
-        # self.layout = deepcopy(layout)  # itemを再生成したときに怒られるため．
         self.layout = layout
-        self.timeout = timeout
 
         self.window = sg.Window(self.title, self.layout, **options_font, resizable = True, element_justification = 'center', finalize = True)
 
-    def read(self):
-        self.event, self.values = self.window.read(timeout = self.timeout)
+    def read(self, timeout = None):
+        self.event, self.values = self.window.read(timeout = timeout)
 
     def close(self):
         self.window.close()
@@ -112,7 +109,7 @@ def gui():
     while True:
         top.read()
 
-        if top.event is sg.WINDOW_CLOSED:
+        if top.event is sg.WIN_CLOSED:
             break
         elif top.event in ('w/o_z', 'w/_z'):
             materials = [top.values['reactant' + str(i)] for i in range(1, 4)]
@@ -172,7 +169,7 @@ def gui():
 
             while True:
                 main.read()
-                if main.event is sg.WINDOW_CLOSED:
+                if main.event is sg.WIN_CLOSED:
                     break
                 elif 'Add' in main.event:
                     # 割合手入力の場合
@@ -184,7 +181,7 @@ def gui():
                                 v = main.values[k]
                                 dict_ratio[k] = convert2float(v)
                         except ValueError:
-                            sg.popup_error('You have not entered any. Or the value you entered is not good.\nCorrect: 1/3, 1, 1.0, 3.141 etc.', **options_popup)
+                            sg.PopupError('You have not entered any. Or the value you entered is not good.\nCorrect: 1/3, 1, 1.0, 3.141 etc.', **options_popup)
                             continue
                         
                         dict_temp = {'composition': make_compositions(materials = materials, ratio = list(dict_ratio.values())).index[0]}
@@ -251,14 +248,14 @@ def gui():
                             x, y = event.mouseevent.xdata, event.mouseevent.ydata
                             distance_euc = np.linalg.norm(np.hstack([np.hstack(td.x['scatter']).reshape(-1, 1), np.hstack(td.y['scatter']).reshape(-1, 1)]) - np.array([x, y]), axis = 1)
                             i_min = np.argmin(distance_euc)
-                            sg.popup_auto_close(df_data.loc[i_min, 'composition'], **options_popup)
+                            sg.PopupAutoClose(df_data.loc[i_min, 'composition'], **options_popup, button_type = sg.POPUP_BUTTONS_NO_BUTTONS)
 
                         # define the window layout
                         figpage = WindowBunch(title = 'check figure', layout = [
                                 [sg.Text('Plot test')],
                                 [sg.Canvas(key='-CANVAS-')],
                                 # [sg.Cancel(), sg.Submit('Save')],
-                                [sg.CloseButton('Cancel'), sg.InputText('', visible = False, key = '-OUTPUT_FILE_PATH-', enable_events = True, do_not_clear = False), sg.FileSaveAs('Save', key = 'Save', file_types = (('png', '*.png'), ('PDF','*.pdf')), default_extension = '.png')],
+                                [sg.Cancel(), sg.InputText('', visible = False, key = '-OUTPUT_FILE_PATH-', enable_events = True, do_not_clear = False), sg.FileSaveAs('Save', key = 'Save', file_types = (('png', '*.png'), ('PDF','*.pdf')), default_extension = '.png')],
                                 [sg.Checkbox('transparent', key = '-TRANSPARENT-')]
                             ])
 
@@ -274,7 +271,7 @@ def gui():
                                 td_options['maximum'] = None if main.values['maximum'] == 'None' else convert2float(main.values['maximum'])
                                 td_options['minimum'] = None if main.values['minimum'] == 'None' else convert2float(main.values['minimum'])
                             except ValueError:
-                                sg.popup_error('You have to enter integer or float or None in "maximum" and "minimum".', **options_popup)
+                                sg.PopupError('You have to enter integer or float or None in "maximum" and "minimum".', **options_popup)
                                 continue
                             if main.values['scatter']:
                                 td.scatter(df_data.loc[:, materials], **td_options, picker = True)
@@ -293,14 +290,10 @@ def gui():
 
                         while True:
                             figpage.read()
-                            print(figpage.event)
-                            if figpage.event == sg.WINDOW_CLOSED:
+                            if figpage.event in (sg.WIN_CLOSED, 'Cancel'):
                                 break
                             elif figpage.event == '-OUTPUT_FILE_PATH-':
-                                t1 = time()
                                 fname = figpage.values['-OUTPUT_FILE_PATH-']
-                                t2 = time()
-                                print(fname, t2 - t1)
                                 if fname is None:
                                     pass
                                 elif fname == '':
@@ -312,7 +305,7 @@ def gui():
                                     except Exception:
                                         sg.PopupError('Faile to save figure.', **options_popup)
                                     else:
-                                        sg.PopupAutoClose('Saved successfully.', **options_popup)
+                                        sg.PopupAutoClose('Saved successfully.', **options_popup, button_type = sg.POPUP_BUTTONS_NO_BUTTONS)
                             else:
                                 sg.PopupError('There is something wrong.', **options_popup)
                                 continue
@@ -329,7 +322,9 @@ def gui():
     top.close()
 
 if __name__ == '__main__':
-    from pdb import set_trace
-    from time import time
-    sg.Print(do_not_reroute_stdout = False)
+    # デバッグ用
+    # from pdb import set_trace
+    # from time import time
+    # sg.Print(do_not_reroute_stdout = False)
+
     gui()
