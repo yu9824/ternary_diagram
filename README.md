@@ -1,9 +1,20 @@
 # Ternary Diagram
-相図描画を簡単に行うためのパッケージ．
+This package makes it easier for you to draw beautiful ternary diagram <b>without</b> [pymatgen](https://pymatgen.org).
+
+Meaningly, only need `numpy`, `pandas` and `matplotlib`.
 
 ![example](https://github.com/yu-9824/ternary_diagram/blob/790283b9122c2981557c414ba21510bc002886ae/example/contour/example_contour.png "example")
 
-## how to install (インストール方法)
+
+## First of all
+This package works well with the [element_recognition](https://github.com/yu-9824/element_recognition) package (my own package). This package works well with the element_recognition package (my own package) because it has a function (`get_ratio`) that converts composition to ratio.
+
+Also, if you are using Mac OS, you can use these functions in a GUI application. See [ternary_diagram_gui](https://github.com/yu-9824/ternary_diagram_gui) for details.
+
+
+## How to install
+I recommend you to create and use a brand new virtual environment, especially anaconda.
+
 * pip
 ~~~
 pip install git+https://github.com/yu-9824/ternary_diagram.git
@@ -75,7 +86,9 @@ td.plot(r1, r2, **options)
     * `matplotlib.pyplot.plot`の`options`と同じ．(e.g. lw, color etc.)
 
 ### example
-See also the example folder. (exampleフォルダも参照．)
+* See also the [example](https://github.com/yu-9824/element_recognition/tree/master/example) folder. 
+
+* [example](https://github.com/yu-9824/element_recognition/tree/master/example)フォルダも参照．
 ```python
 td = ternary_diagram(['Li2O', 'LaO3', 'TiO2'])
 td.scatter([[1, 1, 1], [1, 2, 3]], z = [0, 1], marker = 'o')
