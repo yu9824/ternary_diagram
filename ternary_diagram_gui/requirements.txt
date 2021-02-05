@@ -1,0 +1,7 @@
+pysimplegui
+pandas
+numpy
+xlrd
+matplotlib
+element_recognition>=0.1.1
+ternary_diagram>=0.0.6
