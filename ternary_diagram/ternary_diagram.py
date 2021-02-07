@@ -238,6 +238,8 @@ class ternary_diagram:
         ----------
         vector : list, numpy.ndarray, pandas.DataFrame etc.
             percentage of each compound mixed in 2D list / pandas.DataFrame / numpy.ndarray, where shape = [n, 3] (n is the number of samples to be plotted as integer)
+        
+        annotations : list
         '''
         self._scatter_(self, vector, **options) # selfオブジェクトを渡してる．
 
