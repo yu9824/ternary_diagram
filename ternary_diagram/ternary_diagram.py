@@ -20,7 +20,17 @@ __all__ = [
 ]
 
 class ternary_diagram:
-    def __init__(self, reactant):
+    def __init__(self, materials, fontfamily = 'Helvetica'):
+        '''
+        Make instance.
+
+        Parameters
+        ----------
+        materials : list
+            A one-dimensional list of compounds that constitute an endpoint when generating a ternary_diagram.
+        '''
+        plt.rcParams['font.family'] = fontfamily
+
         # 単色scatterのときにcolormapのうち何番目までを使ったかを保存しておく変数とcolormapの指定
         self.color_counta = 0
         self.mono_cmap = plt.get_cmap('Set1')
@@ -29,20 +39,8 @@ class ternary_diagram:
         self.fig = plt.figure(facecolor='white')    # jupyter note / lab だと背景が透過色になっていて，保存すると変な感じになるため．もし背景透過で保存したい場合はfig.savefig('filename', transparent = True)とする．
         self.ax = self.fig.add_subplot(111)
 
-        # reactant_labelを生成する関数を定義し， 生成
-        def get_label(name):
-            lst_name = list(name)
-            for i, s in enumerate(name):
-                if s.isdigit():
-                    lst_name[i - 1] += '$_{'
-                    for j in range(i, len(name)):
-                        if name[j].isupper():
-                            lst_name[j - 1] += '}$'
-                            break
-                    else:
-                        lst_name[-1] += '}$'
-            return ''.join(lst_name)
-        reactant_label = list(map(get_label, reactant))
+        # material_labelを生成
+        material_label = list(map(self._get_label, materials))
 
         # 正方形にする
         self.ax.set_aspect('equal', 'datalim')
@@ -73,9 +71,9 @@ class ternary_diagram:
         self.ax.plot([1.0, 0.5],[0.0, h], 'k-', lw = 2)
 
         # 頂点のラベル
-        self.ax.text(0.5, h+0.02, reactant_label[0], fontsize=16, ha = 'center', va = 'bottom')
-        self.ax.text(0, -0.05, reactant_label[1], fontsize=16, ha = 'right', va = 'top')#, rotation=300)
-        self.ax.text(1, -0.05, reactant_label[2], fontsize=16, ha = 'left', va = 'top')#, rotation=60)
+        self.ax.text(0.5, h+0.02, material_label[0], fontsize=16, ha = 'center', va = 'bottom')
+        self.ax.text(0, -0.05, material_label[1], fontsize=16, ha = 'right', va = 'top')#, rotation=300)
+        self.ax.text(1, -0.05, material_label[2], fontsize=16, ha = 'left', va = 'top')#, rotation=60)
 
         #軸ラベル
         for i in range(1,10):
@@ -97,6 +95,38 @@ class ternary_diagram:
 
     def _three2two(self, vector):
         return (2 * vector[:, 2] + vector[:, 0]) / 2, np.sqrt(3) / 2 * vector[:, 0]
+    
+    def _get_label(self, name):
+        if not isinstance(name, str):
+            raise ValueError('The "name" must be string.')
+        f = '$_{'
+        b = '}$'
+        N = len(name)
+        lst_name = list(name) + ['']   # outputするために変えていく．
+
+        # １文字ずつ取り出して
+        i = 0
+        while i < N:
+            l = name[i] # l: letter
+            if l.isdigit():
+                j = i + 1
+                while j < N + 1:
+                    try:
+                        float(name[i:j])
+                    except ValueError:
+                        break
+                    else:
+                        j += 1
+                j -= 1
+                lst_name[i] = f + lst_name[i]
+                try:
+                    lst_name[j] = b + lst_name[j]
+                except:
+                    print('aaa', j, N)
+                # print(lst_name[i] = name[i:j])
+                i = j
+            i += 1
+        return ''.join(lst_name)
 
     class _common:
         def __init__(self, outer, vector, **options):
@@ -113,7 +143,6 @@ class ternary_diagram:
                 self.vector = self.vector / np.sum(self.vector, axis = 1, keepdims = True) # 今回keepdims = Trueは.reshape(-1, 1)と同義
 
             # 3次元ベクトルをx, y座標に落とし込む．
-            # self.x, self.y = (2 * self.vector[:, 2] + self.vector[:, 0]) / 2, np.sqrt(3) / 2 * self.vector[:, 0]
             self.x, self.y = outer._three2two(self.vector)
 
             # 念のためself.zをnp.ndarrayにしてflatten
@@ -139,7 +168,7 @@ class ternary_diagram:
             # easy annotation 右上に簡易annotation
             self.annotations = self.options.pop('annotations') if 'annotations' in self.options else []
             for x, y, ann in zip(self.x, self.y, self.annotations):
-                outer.ax.annotate(ann, xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8)
+                outer.ax.annotate(ann, xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8, color = '#262626')
 
             # zに値が指定されていないとき
             zorder = 2
@@ -202,12 +231,36 @@ class ternary_diagram:
             outer.ax.plot(self.x, self.y, **self.options)
 
     def scatter(self, vector, **options):
+        '''
+        To plot scatter points.
+
+        Parameters
+        ----------
+        vector : list, numpy.ndarray, pandas.DataFrame etc.
+            percentage of each compound mixed in 2D list / pandas.DataFrame / numpy.ndarray, where shape = [n, 3] (n is the number of samples to be plotted as integer)
+        '''
         self._scatter_(self, vector, **options) # selfオブジェクトを渡してる．
 
     def contour(self, vector, **options):
+        '''
+        To create a contour map.
+
+        Parameters
+        ----------
+        vector : list, numpy.ndarray, pandas.DataFrame etc.
+            percentage of each compound mixed in 2D list / pandas.DataFrame / numpy.ndarray, where shape = [n, 3] (n is the number of samples to be plotted as integer)
+        '''
         self._contour_(self, vector, **options) # selfオブジェクトを渡してる．
 
     def plot(self, r1, r2, **options):   # 連結線を引く (scatterオブジェクトの使用が必須な状況)
+        '''
+        To draw a tie line.
+
+        Parameters
+        ----------
+        r1, r2 : list
+            A mixing ratio of the compounds that are endpoints of the connecting line. A one-dimensional list of length 3.
+        '''
         vector = np.array([r1, r2])
         self._plot_(self, vector, **options)
 
