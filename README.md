@@ -33,7 +33,7 @@ from ternary_diagram import ternary_diagram
 
 ### Make an instance
 ~~~python
-materials = ['Li2O', 'LaO3', 'TiO2']
+materials = ['Li2O', 'La2O3', 'TiO2']
 td = ternary_diagram(materials)
 ~~~
 * `materials`:
@@ -90,7 +90,7 @@ td.plot(r1, r2, **options)
 
 * [example](https://github.com/yu-9824/element_recognition/tree/master/example)フォルダも参照．
 ```python
-td = ternary_diagram(['Li2O', 'LaO3', 'TiO2'])
+td = ternary_diagram(['Li2O', 'La2O3', 'TiO2'])
 td.scatter([[1, 1, 1], [1, 2, 3]], z = [0, 1], marker = 'o')
 td.plot([1, 1, 1], [1, 2, 3], color = 'black')
 td.fig.savefig('figure.png', transparent = True, dpi = 300)
