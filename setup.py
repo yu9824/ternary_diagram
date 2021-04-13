@@ -5,7 +5,7 @@ with open('requirements.txt') as requirements_file:
 
 setup(
     name='ternary_diagram',
-    version='0.1.1',
+    version='0.1.2',
     description='You can make ternary diagram easily.',
     author='yu-9824',
     author_email='yu.9824@gmail.com',
