@@ -170,8 +170,10 @@ class ternary_diagram:
             for x, y, ann in zip(self.x, self.y, self.annotations):
                 outer.ax.annotate(ann, xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8, color = '#262626')
 
+            # scatterにおいてzorderを指定してしまうと複数入力になってしまうため，それへの対処．
+            zorder = options.pop('zorder') if 'zorder' in options else 2
+
             # zに値が指定されていないとき
-            zorder = 2
             if self.z is None:
                 # 色について (単色なのは zがNoneのときだけなので)
                 if 'c' in self.options and 'color' in self.options:
@@ -278,7 +280,7 @@ if __name__ == '__main__':
     # N = 1000
     # td.contour(np.random.rand(3 * N).reshape(N, 3), z = np.random.rand(N))
     # td.scatter([[6, 1, 3]], z = [1])
-    td.scatter([[1, 2, 7]])
+    td.scatter([[1, 2, 7]], zorder = 2)
     td.plot([1, 0, 3], [0, 1, 2])
     td.scatter([[1, 1, 1]])
     print(td.x, td.y)
