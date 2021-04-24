@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 example/* linguist-vendored
+=======
+example/** linguist-vendored
+>>>>>>> main
