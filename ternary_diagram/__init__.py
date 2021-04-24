@@ -1,14 +1,16 @@
+# 正規表現でtextファイルと同じやり方で読み込むのですべて手打ちする．
+
 from .ternary_diagram import *
 
 __version__      = '1.0.0'
 __license__      = 'MIT'
 __author__       = 'yu-9824'
-__copyright__    = 'Copyright (c) 2021 {0}'.format(__author__)
-__author_email__ = '{0}@{1}'.format('yu.9824.job', 'gmail.com')
+__copyright__ = 'Copyright (c) 2021 yu-9824'
+__author_email__ = 'yu.9824.job@gmail.com'
 __user_id__ = 'yu-9824'
 __app_name__ = 'ternary_diagram'
-__url__ = 'http://github.com/{0}/{1}'.format(__user_id__, ___app_name__)
+__url__ = 'http://github.com/yu-9824/ternary_diagram/'
 
 __all__ = [
-    'main',
-    ]
+    'TernaryDiagram',
+]
