@@ -16,10 +16,10 @@ bar_label: colorbarの横に書くlabel名
 '''
 
 __all__ = [
-    'ternary_diagram',
+    'TernaryDiagram',
 ]
 
-class ternary_diagram:
+class TernaryDiagram:
     def __init__(self, materials, fontfamily = 'Helvetica'):
         '''
         Make instance.
@@ -159,7 +159,7 @@ class ternary_diagram:
 
     class _scatter_(_common):
         def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
-            super().__init__(outer, vector, **options)   # ternary_diagramクラスのselfを引数として与えている．
+            super().__init__(outer, vector, **options)   # TernaryDiagramクラスのselfを引数として与えている．
 
             self.name = 'scatter'
             outer.x[self.name].append(self.x)
@@ -199,7 +199,7 @@ class ternary_diagram:
 
     class _contour_(_common):
         def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
-            super().__init__(outer, vector, **options)   # ternary_diagramクラスのselfを引数として与えている．
+            super().__init__(outer, vector, **options)   # TernaryDiagramクラスのselfを引数として与えている．
 
             self.name = 'contour'
             outer.x[self.name].append(self.x)
@@ -272,10 +272,10 @@ class ternary_diagram:
 
 if __name__ == '__main__':
     df = pd.read_csv('example/scatter/example_scatter.csv')
-    # fig = ternary_diagram(df.columns[0:-1], df.iloc[:, 0:-1])
+    # fig = TernaryDiagram(df.columns[0:-1], df.iloc[:, 0:-1])
     # plt.show()
 
-    td = ternary_diagram(['Li2O', 'La2O3', 'TiO2'])
+    td = TernaryDiagram(['Li2O', 'La2O3', 'TiO2'])
 
     # N = 1000
     # td.contour(np.random.rand(3 * N).reshape(N, 3), z = np.random.rand(N))
