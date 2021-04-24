@@ -3,8 +3,7 @@ This package makes it easier for you to draw beautiful ternary diagram <b>withou
 
 Meaningly, only need `numpy`, `pandas` and `matplotlib`.
 
-![example](example/contour/example_contour.png "example")
-
+![example](https://github.com/yu-9824/ternary_diagram/blob/main/example/contour/example_contour.png "example")
 
 ## First of all
 This package works well with the [element_recognition](https://github.com/yu-9824/element_recognition) package (my own package). This package works well with the element_recognition package (my own package) because it has a function (`get_ratio`) that converts composition to ratio.
@@ -86,12 +85,12 @@ td.plot(r1, r2, **options)
     * `matplotlib.pyplot.plot`の`options`と同じ．(e.g. lw, color etc.)
 
 ### example
-* See also the [example](example) folder. 
-* In particular, if you want to know how to use element_recognition[element_recognition](https://github.com/yu-9824/element_recognition) as well, please refer to [example/scatter/example _scatter_with_annotations.ipynb](example/scatter/example_scatter_with_annotations.ipynb).
+* See also the [example](https://github.com/yu-9824/ternary_diagram/tree/main/example) folder. 
+* In particular, if you want to know how to use element_recognition[element_recognition](https://github.com/yu-9824/element_recognition) as well, please refer to [example/scatter/example _scatter_with_annotations.ipynb](https://github.com/yu-9824/ternary_diagram/tree/main/example/scatter/example_scatter_with_annotations.ipynb).
 
 
 * [example](example)フォルダも参照．
-* 特にelement_recognition[element_recognition](https://github.com/yu-9824/element_recognition)の使い方も含めて知りたい場合は[example/scatter/example_scatter_with_annotations.ipynb](example/scatter/example_scatter_with_annotations.ipynb)を参照．
+* 特にelement_recognition[element_recognition](https://github.com/yu-9824/element_recognition)の使い方も含めて知りたい場合は[example/scatter/example_scatter_with_annotations.ipynb](https://github.com/yu-9824/ternary_diagram/tree/main/example/scatter/example_scatter_with_annotations.ipynb)を参照．
 ```python
 td = TernaryDiagram(['Li2O', 'La2O3', 'TiO2'])
 td.scatter([[1, 1, 1], [1, 2, 3]], z = [0, 1], marker = 'o')
@@ -100,4 +99,4 @@ td.fig.savefig('figure.png', transparent = True, dpi = 300)
 ```
 
 ### LICENSE
-See [LICENSE](LICENSE)
+See [LICENSE](https://github.com/yu-9824/ternary_diagram/tree/main/LICENSE).
