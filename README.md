@@ -3,7 +3,7 @@ This package makes it easier for you to draw beautiful ternary diagram <b>withou
 
 Meaningly, only need `numpy`, `pandas` and `matplotlib`.
 
-![example](https://github.com/yu-9824/ternary_diagram/blob/main/example/contour/example_contour.png "example")
+![example](https://github.com/yu-9824/ternary_diagram/blob/main/example/contour/example_contour.png?raw=true "example")
 
 ## First of all
 This package works well with the [element_recognition](https://github.com/yu-9824/element_recognition) package (my own package). This package works well with the element_recognition package (my own package) because it has a function (`get_ratio`) that converts composition to ratio.
@@ -14,14 +14,8 @@ Also, if you are using Mac OS, you can use these functions in a GUI application.
 ## How to install
 I recommend you to create and use a brand new virtual environment, especially anaconda.
 
-* pip
 ~~~
-pip install git+https://github.com/yu-9824/ternary_diagram.git
-~~~
-* anaconda
-~~~
-conda install pip
-pip install git+https://github.com/yu-9824/ternary_diagram.git
+pip install ternary-diagram
 ~~~
 
 ## Usage (文法)
