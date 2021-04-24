@@ -5,12 +5,11 @@ with open('requirements.txt') as requirements_file:
 
 setup(
     name='ternary_diagram',
-    version='0.1.2',
+    version='0.2.0',
     description='You can make ternary diagram easily.',
     author='yu-9824',
-    author_email='yu.9824@gmail.com',
+    author_email='{0}@{1}'.format('yu.9824.job', 'gmail.com'),
     install_requires=install_requirements,
     url='https://github.com/yu-9824/ternary_diagram',
-    license=license,
     packages=find_packages(exclude=['example'])
 )
