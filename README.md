@@ -3,7 +3,7 @@ This package makes it easier for you to draw beautiful ternary diagram <b>withou
 
 Meaningly, only need `numpy`, `pandas` and `matplotlib`.
 
-![example](https://github.com/yu-9824/ternary_diagram/blob/790283b9122c2981557c414ba21510bc002886ae/example/contour/example_contour.png "example")
+![example](example/contour/example_contour.png "example")
 
 
 ## First of all
@@ -86,12 +86,18 @@ td.plot(r1, r2, **options)
     * `matplotlib.pyplot.plot`の`options`と同じ．(e.g. lw, color etc.)
 
 ### example
-* See also the [example](https://github.com/yu-9824/element_recognition/tree/master/example) folder. 
+* See also the [example](example) folder. 
+* In particular, if you want to know how to use element_recognition[element_recognition](https://github.com/yu-9824/element_recognition) as well, please refer to [example/scatter/example _scatter_with_annotations.ipynb](example/scatter/example_scatter_with_annotations.ipynb).
 
-* [example](https://github.com/yu-9824/element_recognition/tree/master/example)フォルダも参照．
+
+* [example](example)フォルダも参照．
+* 特にelement_recognition[element_recognition](https://github.com/yu-9824/element_recognition)の使い方も含めて知りたい場合は[example/scatter/example_scatter_with_annotations.ipynb](example/scatter/example_scatter_with_annotations.ipynb)を参照．
 ```python
 td = ternary_diagram(['Li2O', 'La2O3', 'TiO2'])
 td.scatter([[1, 1, 1], [1, 2, 3]], z = [0, 1], marker = 'o')
 td.plot([1, 1, 1], [1, 2, 3], color = 'black')
 td.fig.savefig('figure.png', transparent = True, dpi = 300)
 ```
+
+### LICENSE
+See [LICENSE](LICENSE)

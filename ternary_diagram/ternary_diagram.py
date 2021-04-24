@@ -171,7 +171,7 @@ class ternary_diagram:
                 outer.ax.annotate(ann, xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8, color = '#262626')
 
             # scatterにおいてzorderを指定してしまうと複数入力になってしまうため，それへの対処．
-            zorder = options.pop('zorder') if 'zorder' in options else 2
+            zorder = self.options.pop('zorder') if 'zorder' in self.options else 2
 
             # zに値が指定されていないとき
             if self.z is None:
