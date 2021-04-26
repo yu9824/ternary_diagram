@@ -15,7 +15,7 @@ sys.setrecursionlimit(10 ** 9)
 
 # ------------------------ ここを変更 --------------------------------
 PACKAGE_NAME = 'ternary_diagram'    # フォルダの名前も統一
-DESCRIPTION = ''
+DESCRIPTION = 'This package makes it easier for you to draw beautiful ternary diagram without pymatgen.'
 
 # py2app用の変数
 SRC = ['main.py']
@@ -136,7 +136,7 @@ else:
         install_requires = install_requirements,
         url = url,
         keywords = 'ternarydiagram phasediagram chemistry', # PyPIでの検索用キーワードをスペース区切りで指定．
-        license = license,
+        license = LICENSE,
         packages = find_packages(exclude=['example']),
         classifiers = [
             'License :: OSI Approved :: MIT License',
