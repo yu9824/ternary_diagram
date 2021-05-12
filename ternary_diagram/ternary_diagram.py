@@ -59,27 +59,38 @@ class TernaryDiagram:
         h = np.sqrt(3.0)*0.5
 
         # 内側目盛
-        line_options = {'color':'gray', 'lw':0.5, 'zorder':1}
+        inner_border_options = {
+            'color':'gray',
+            'lw':0.5,
+            'zorder':1,
+        }
         for i in range(1,10):
-            self.ax.plot([i/20.0, 1.0-i/20.0],[h*i/10.0, h*i/10.0], **line_options)
-            self.ax.plot([i/20.0, i/10.0],[h*i/10.0, 0.0], **line_options)
-            self.ax.plot([0.5+i/20.0, i/10.0],[h*(1.0-i/10.0), 0.0], **line_options)
+            self.ax.plot([i/20.0, 1.0-i/20.0],[h*i/10.0, h*i/10.0], **inner_border_options)
+            self.ax.plot([i/20.0, i/10.0],[h*i/10.0, 0.0], **inner_border_options)
+            self.ax.plot([0.5+i/20.0, i/10.0],[h*(1.0-i/10.0), 0.0], **inner_border_options)
 
         # 外周の枠線
-        self.ax.plot([0.0, 1.0],[0.0, 0.0], 'k-', lw = 2)
-        self.ax.plot([0.0, 0.5],[0.0, h], 'k-', lw = 2)
-        self.ax.plot([1.0, 0.5],[0.0, h], 'k-', lw = 2)
+        outer_border_options = {
+            'color':'black',
+            'lw':2,
+            'linestyle':'-',
+            }
+        self.ax.plot([0.0, 1.0],[0.0, 0.0], **outer_border_options)
+        self.ax.plot([0.0, 0.5],[0.0, h], **outer_border_options)
+        self.ax.plot([1.0, 0.5],[0.0, h], **outer_border_options)
 
         # 頂点のラベル
-        self.ax.text(0.5, h+0.02, material_label[0], fontsize=16, ha = 'center', va = 'bottom')
-        self.ax.text(0, -0.05, material_label[1], fontsize=16, ha = 'right', va = 'top')#, rotation=300)
-        self.ax.text(1, -0.05, material_label[2], fontsize=16, ha = 'left', va = 'top')#, rotation=60)
+        font_size_material_label = 16
+        self.ax.text(0.5, h+0.02, material_label[0], fontsize=font_size_material_label, ha = 'center', va = 'bottom')
+        self.ax.text(0, -0.05, material_label[1], fontsize=font_size_material_label, ha = 'right', va = 'top')#, rotation=300)
+        self.ax.text(1, -0.05, material_label[2], fontsize=font_size_material_label, ha = 'left', va = 'top')#, rotation=60)
 
         #軸ラベル
+        font_size_axis_label = 10
         for i in range(1,10):
-            self.ax.text(0.5+(10-i)/20.0, h*(1.0-(10-i)/10.0), '%d0' % i, fontsize = 10)
-            self.ax.text((10-i)/20.0-0.06, h*(10-i)/10.0+0.02, '%d0' % i, fontsize = 10, rotation = 300)
-            self.ax.text(i/10.0-0.03, -0.07, '%d0' % i, fontsize = 10, rotation = 60)
+            self.ax.text(0.5+(10-i)/20.0, h*(1.0-(10-i)/10.0), '%d0' % i, fontsize = font_size_axis_label, va = 'bottom', ha = 'left')
+            self.ax.text((10-i)/20.0, h*(10-i)/10.0+0.04, '%d0' % i, fontsize = font_size_axis_label, rotation = 300, va = 'top', ha = 'right')
+            self.ax.text(i/10.0+0.02, 0, '%d0' % i, fontsize = font_size_axis_label, rotation = 60, va = 'top', ha = 'right')
 
         # 二次元に変換したデータを保存しておく
         self.x = {
