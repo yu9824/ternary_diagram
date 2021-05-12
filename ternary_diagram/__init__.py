@@ -2,7 +2,7 @@
 
 from .ternary_diagram import *
 
-__version__      = '1.5.2'
+__version__      = '1.5.3'
 __license__      = 'MIT'
 __author__       = 'yu-9824'
 __copyright__ = 'Copyright (c) 2021 yu-9824'
