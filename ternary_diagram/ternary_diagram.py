@@ -20,7 +20,7 @@ __all__ = [
 ]
 
 class TernaryDiagram:
-    def __init__(self, materials, fontfamily = 'Helvetica'):
+    def __init__(self, materials, fontfamily = 'Helvetica', fig = None, ax = None):
         '''
         Make instance.
 
@@ -36,8 +36,8 @@ class TernaryDiagram:
         self.mono_cmap = plt.get_cmap('Set1')
 
         # figure, axisオブジェクトの生成
-        self.fig = plt.figure(facecolor='white')    # jupyter note / lab だと背景が透過色になっていて，保存すると変な感じになるため．もし背景透過で保存したい場合はfig.savefig('filename', transparent = True)とする．
-        self.ax = self.fig.add_subplot(111)
+        self.fig = plt.figure(facecolor='white') if fig is None else fig    # jupyter note / lab だと背景が透過色になっていて，保存すると変な感じになるため．もし背景透過で保存したい場合はfig.savefig('filename', transparent = True)とする．
+        self.ax = self.fig.add_subplot(111) if ax is None else ax
 
         # material_labelを生成
         material_label = list(map(self._get_label, materials))
