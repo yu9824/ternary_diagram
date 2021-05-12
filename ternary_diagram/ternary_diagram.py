@@ -36,8 +36,17 @@ class TernaryDiagram:
         self.mono_cmap = plt.get_cmap('Set1')
 
         # figure, axisオブジェクトの生成
-        self.fig = plt.figure(facecolor='white') if fig is None else fig    # jupyter note / lab だと背景が透過色になっていて，保存すると変な感じになるため．もし背景透過で保存したい場合はfig.savefig('filename', transparent = True)とする．
-        self.ax = self.fig.add_subplot(111) if ax is None else ax
+        # jupyter note / lab だと背景が透過色になっていて，保存すると変な感じになるため．もし背景透過で保存したい場合はfig.savefig('filename', transparent = True)とする．
+        # seabronのコードを参考．
+        # Get references to the axes we want
+        if fig is None and ax is None:
+            fig, ax = plt.subplots(dpi=100, facecolor='white')
+        elif fig is not None and ax is None:    # figureが入力されたものの，axisが入力されなかったときは一番最初のaxisを描画の対象とする．
+            ax = fig.axes[0]
+        elif fig is None:
+            raise ValueError('axis is entered, but figure is not entered. Please enter.')
+        self.fig = fig
+        self.ax = ax
 
         # material_labelを生成
         material_label = list(map(self._get_label, materials))
@@ -50,10 +59,7 @@ class TernaryDiagram:
         self.ax.tick_params(bottom = False, left = False, right = False, top = False)
 
         # 枠線を表示しない．
-        plt.gca().spines['bottom'].set_visible(False)
-        plt.gca().spines['left'].set_visible(False)
-        plt.gca().spines['right'].set_visible(False)
-        plt.gca().spines['top'].set_visible(False)
+        {self.ax.spines[position].set_visible(False) for position in ['bottom', 'left', 'right', 'top']}
 
         # h = √3/2
         h = np.sqrt(3.0)*0.5
@@ -89,7 +95,7 @@ class TernaryDiagram:
         font_size_axis_label = 10
         for i in range(1,10):
             self.ax.text(0.5+(10-i)/20.0, h*(1.0-(10-i)/10.0), '%d0' % i, fontsize = font_size_axis_label, va = 'bottom', ha = 'left')
-            self.ax.text((10-i)/20.0, h*(10-i)/10.0+0.04, '%d0' % i, fontsize = font_size_axis_label, rotation = 300, va = 'top', ha = 'right')
+            self.ax.text((10-i)/20.0-0.01, h*(10-i)/10.0+0.04, '%d0' % i, fontsize = font_size_axis_label, rotation = 300, va = 'top', ha = 'right')
             self.ax.text(i/10.0+0.02, 0, '%d0' % i, fontsize = font_size_axis_label, rotation = 60, va = 'top', ha = 'right')
 
         # 二次元に変換したデータを保存しておく
@@ -164,8 +170,11 @@ class TernaryDiagram:
                 self.minimum = self.options.pop('minimum') if 'minimum' in self.options else None
                 self.bl = self.options.pop('bar_label') if 'bar_label' in self.options else ''
 
+            # TernaryDiagramオブジェクトをインスタンス変数として持っておく（colorbar関数のため．）
+            self.outer = outer
+
         def colorbar(self):
-            plt.colorbar(self.triplot, shrink = 0.8, format='%.1f', label = self.bl, orientation = 'vertical', ticklocation = 'top')
+            plt.colorbar(self.triplot, shrink = 0.8, format='%.1f', label = self.bl, orientation = 'vertical', ticklocation = 'top', ax=self.outer.ax)
 
 
     class _scatter_(_common):
