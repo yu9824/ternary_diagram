@@ -1,3 +1,7 @@
+'''
+Copyright © 2021 yu9824
+'''
+
 import numpy as np
 import pandas as pd
 
