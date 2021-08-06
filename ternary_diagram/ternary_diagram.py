@@ -226,7 +226,8 @@ class TernaryDiagram:
             self.tight_layout()
 
     class _contour_(_common):
-        def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
+        def __init__(self, outer, vector, z, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
+            options['z'] = z
             super().__init__(outer, vector, **options)   # TernaryDiagramクラスのselfを引数として与えている．
 
             self.name = 'contour'
