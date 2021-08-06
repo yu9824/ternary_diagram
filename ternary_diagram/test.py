@@ -12,5 +12,5 @@ td = TernaryDiagram(materials, fig = fig, ax = ax2)
 td.scatter([
     [1, 1, 1],
     ])
-plt.tight_layout()
+td.fig.tight_layout()
 plt.show()

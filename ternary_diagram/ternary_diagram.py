@@ -51,6 +51,8 @@ class TernaryDiagram:
             raise ValueError('axis is entered, but figure is not entered. Please enter.')
         self.fig = fig
         self.ax = ax
+        del fig
+        del ax
 
         # material_labelを生成
         material_label = list(map(self._get_label, materials))
@@ -178,10 +180,10 @@ class TernaryDiagram:
             self.outer = outer
 
         def colorbar(self):
-            plt.colorbar(self.triplot, shrink = 0.8, format='%.1f', label = self.bl, orientation = 'vertical', ticklocation = 'top', ax=self.outer.ax)
+            return self.outer.fig.colorbar(self.triplot, shrink = 0.8, format='%.1f', label = self.bl, orientation = 'vertical', ticklocation = 'top', ax=self.outer.ax)
         
         def tight_layout(self):
-            self.outer.fig.tight_layout()
+            return self.outer.fig.tight_layout()
 
 
     class _scatter_(_common):
@@ -226,7 +228,8 @@ class TernaryDiagram:
             self.tight_layout()
 
     class _contour_(_common):
-        def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
+        def __init__(self, outer, vector, z, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
+            options['z'] = z
             super().__init__(outer, vector, **options)   # TernaryDiagramクラスのselfを引数として与えている．
 
             self.name = 'contour'
@@ -237,7 +240,16 @@ class TernaryDiagram:
                 self.options['cmap'] = 'rainbow'
 
             T = tri.Triangulation(self.x, self.y)
-            self.triplot = outer.ax.tricontourf(self.x, self.y, T.triangles, self.z, np.linspace(self.minimum if self.minimum is not None else np.min(self.z), self.maximum if self.maximum is not None else np.max(self.z), 101), **self.options)
+            # 等高線の線を引く場所，すなわち，色の勾配を表す配列．
+            n_levels = 101  # 勾配をどれだけ細かくするかの変数．
+            levels = np.linspace(self.minimum if self.minimum is not None else np.min(self.z), self.maximum if self.maximum is not None else np.max(self.z), n_levels)
+            # solve issue#7
+            unique = np.unique(levels)
+            if unique.size == 1:
+                offset = 0.001
+                levels = np.linspace(unique[0] - offset * (n_levels // 2), unique[0] + offset * (n_levels // 2), n_levels)
+            self.triplot = outer.ax.tricontourf(self.x, self.y, T.triangles, self.z, levels = levels, **self.options)
+
             self.colorbar()
             self.tight_layout()
 
@@ -274,6 +286,7 @@ class TernaryDiagram:
         annotations : list
         '''
         self._scatter_(self, vector, **options) # selfオブジェクトを渡してる．
+        return self.fig
 
     def contour(self, vector, **options):
         '''
@@ -285,6 +298,7 @@ class TernaryDiagram:
             percentage of each compound mixed in 2D list / pandas.DataFrame / numpy.ndarray, where shape = [n, 3] (n is the number of samples to be plotted as integer)
         '''
         self._contour_(self, vector, **options) # selfオブジェクトを渡してる．
+        return self.fig
 
     def plot(self, r1, r2, **options):   # 連結線を引く (scatterオブジェクトの使用が必須な状況)
         '''
@@ -297,6 +311,7 @@ class TernaryDiagram:
         '''
         vector = np.array([r1, r2])
         self._plot_(self, vector, **options)
+        return self.fig
 
 
 
