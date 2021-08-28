@@ -115,9 +115,6 @@ class TernaryDiagram:
     # *** サブ関数 ***
     def _get_from_options(self, options, key, default):
         return options[key] if key in options else default
-
-    def _three2two(self, vector):
-        return (2 * vector[:, 2] + vector[:, 0]) / 2, np.sqrt(3) / 2 * vector[:, 0]
     
     def _get_label(self, name):
         if not isinstance(name, str):
@@ -142,138 +139,11 @@ class TernaryDiagram:
                         j += 1
                 j -= 1
                 lst_name[i] = f + lst_name[i]
-                try:
-                    lst_name[j] = b + lst_name[j]
-                except:
-                    print('aaa', j, N)
-                # print(lst_name[i] = name[i:j])
+                lst_name[j] = b + lst_name[j]
                 i = j
             i += 1
         return ''.join(lst_name)
-
-    class _Base:
-        def __init__(self, outer, vector, **options):
-            # クラスオブジェクト
-            self.options = options
-
-            # numpy.ndarray化
-            self.vector = np.array(vector)
-
-            # 正規化するかどうか．
-            norm = self.options.pop('norm') if 'norm' in self.options else True
-            if norm:
-                # self.vectorの正規化
-                self.vector = self.vector / np.sum(self.vector, axis = 1, keepdims = True) # 今回keepdims = Trueは.reshape(-1, 1)と同義
-
-            # 3次元ベクトルをx, y座標に落とし込む．
-            self.x, self.y = outer._three2two(self.vector)
-
-            # 念のためself.zをnp.ndarrayにしてflatten
-            self.z = np.array(self.options.pop('z')).flatten() if 'z' in self.options else None
-
-            if self.z is not None:
-                self.maximum = self.options.pop('maximum') if 'maximum' in self.options else None
-                self.minimum = self.options.pop('minimum') if 'minimum' in self.options else None
-                self.bl = self.options.pop('bar_label') if 'bar_label' in self.options else ''
-
-            # TernaryDiagramオブジェクトをインスタンス変数として持っておく（colorbar関数のため．）
-            self.outer = outer
-
-        def colorbar(self):
-            return self.outer.fig.colorbar(self.triplot, shrink = 0.8, format='%.1f', label = self.bl, orientation = 'vertical', ticklocation = 'top', ax=self.outer.ax)
-        
-        def tight_layout(self):
-            return self.outer.fig.tight_layout()
-
-
-    class _Scatter(_Base):
-        def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
-            super().__init__(outer, vector, **options)   # TernaryDiagramクラスのselfを引数として与えている．
-
-            self.name = 'scatter'
-            outer.x[self.name].append(self.x)
-            outer.y[self.name].append(self.y)
-
-            # easy annotation 右上に簡易annotation
-            self.annotations = self.options.pop('annotations') if 'annotations' in self.options else []
-            for x, y, ann in zip(self.x, self.y, self.annotations):
-                outer.ax.annotate(ann, xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8, color = '#262626')
-
-            # scatterにおいてzorderを指定してしまうと複数入力になってしまうため，それへの対処．
-            zorder = self.options.pop('zorder') if 'zorder' in self.options else 2
-
-            # zに値が指定されていないとき
-            if self.z is None:
-                # 色について (単色なのは zがNoneのときだけなので)
-                if 'c' in self.options and 'color' in self.options:
-                    raise ValueError("Supply a 'c' argument or a 'color' kwarg but not both")
-                elif 'c' in self.options:
-                    outer.color = self.options['c']
-                elif 'color' in self.options:
-                    outer.color = self.options['color']
-                elif 'edgecolors' in self.options:
-                    outer.color = self.options['edgecolors']
-
-                if not('c' in self.options or 'color' in self.options or 'facecolor' in self.options or 'facecolors' in self.options):
-                    self.options['color'] = outer.mono_cmap(outer.color_counta)    # 各点ごとに色を指定するのが普通っぽいので， 点の数分で二次元化
-                    outer.color = self.options['color']
-                    outer.color_counta += 1
-                
-                outer.ax.scatter(self.x, self.y, zorder = zorder, **self.options)
-            else:
-                if 'cmap' not in self.options:
-                    self.options['cmap'] = 'rainbow'
-                self.triplot = outer.ax.scatter(self.x, self.y, c = self.z, vmin = self.minimum, vmax = self.maximum, zorder = zorder, **self.options)
-                self.colorbar()
-            self.tight_layout()
-
-    class _Contour(_Base):
-        def __init__(self, outer, vector, z, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
-            options['z'] = z
-            super().__init__(outer, vector, **options)   # TernaryDiagramクラスのselfを引数として与えている．
-
-            self.name = 'contour'
-            outer.x[self.name].append(self.x)
-            outer.y[self.name].append(self.y)
-
-            if 'cmap' not in self.options:
-                self.options['cmap'] = 'rainbow'
-
-            T = tri.Triangulation(self.x, self.y)
-            # 等高線の線を引く場所，すなわち，色の勾配を表す配列．
-            n_levels = 101  # 勾配をどれだけ細かくするかの変数．
-            levels = np.linspace(self.minimum if self.minimum is not None else np.min(self.z), self.maximum if self.maximum is not None else np.max(self.z), n_levels)
-            # solve issue#7
-            unique = np.unique(levels)
-            if unique.size == 1:
-                offset = 0.001
-                levels = np.linspace(unique[0] - offset * (n_levels // 2), unique[0] + offset * (n_levels // 2), n_levels)
-            self.triplot = outer.ax.tricontourf(self.x, self.y, T.triangles, self.z, levels = levels, **self.options)
-
-            self.colorbar()
-            self.tight_layout()
-
-    class _Plot(_Base):
-        def __init__(self, outer, vector, **options):
-            super().__init__(outer, vector, **options)
-
-            self.name = 'plot'
-            outer.x[self.name].append(self.x)
-            outer.y[self.name].append(self.y)
-
-            if 'zorder' not in self.options:
-                options['zorder'] = 1
-            if not('color' in self.options or 'c' in self.options):
-                self.options['color'] = outer.color
-
-            #option系
-            if not('linewidth' in self.options or 'lw' in self.options):
-                self.options['lw'] = 1
-
-            # plot
-            outer.ax.plot(self.x, self.y, **self.options)
-            self.tight_layout()
-
+    
     def scatter(self, vector, **options):
         '''
         To plot scatter points.
@@ -312,6 +182,132 @@ class TernaryDiagram:
         vector = np.array([r1, r2])
         self._Plot(self, vector, **options)
         return self.fig
+
+class _Base:
+    def __init__(self, outer, vector, **options):
+        # クラスオブジェクト
+        self.options = options
+
+        # numpy.ndarray化
+        self.vector = np.array(vector)
+
+        # 正規化するかどうか．
+        norm = self.options.pop('norm') if 'norm' in self.options else True
+        if norm:
+            # self.vectorの正規化
+            self.vector = self.vector / np.sum(self.vector, axis = 1, keepdims = True) # 今回keepdims = Trueは.reshape(-1, 1)と同義
+
+        # 3次元ベクトルをx, y座標に落とし込む．
+        self.x, self.y = self._three2two(self.vector)
+
+        # 念のためself.zをnp.ndarrayにしてflatten
+        self.z = np.array(self.options.pop('z')).flatten() if 'z' in self.options else None
+
+        if self.z is not None:
+            self.maximum = self.options.pop('maximum') if 'maximum' in self.options else None
+            self.minimum = self.options.pop('minimum') if 'minimum' in self.options else None
+            self.bl = self.options.pop('bar_label') if 'bar_label' in self.options else ''
+
+        # TernaryDiagramオブジェクトをインスタンス変数として持っておく（colorbar関数のため．）
+        self.outer = outer
+
+    def colorbar(self):
+        return self.outer.fig.colorbar(self.triplot, shrink = 0.8, format='%.1f', label = self.bl, orientation = 'vertical', ticklocation = 'top', ax=self.outer.ax)
+    
+    def tight_layout(self):
+        return self.outer.fig.tight_layout()
+    
+    def _three2two(self, vector):
+        return (2 * vector[:, 2] + vector[:, 0]) / 2, np.sqrt(3) / 2 * vector[:, 0]
+
+
+class _Scatter(_Base):
+    def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
+        super().__init__(outer, vector, **options)   # TernaryDiagramクラスのselfを引数として与えている．
+
+        self.name = 'scatter'
+        outer.x[self.name].append(self.x)
+        outer.y[self.name].append(self.y)
+
+        # easy annotation 右上に簡易annotation
+        self.annotations = self.options.pop('annotations') if 'annotations' in self.options else []
+        for x, y, ann in zip(self.x, self.y, self.annotations):
+            outer.ax.annotate(ann, xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8, color = '#262626')
+
+        # scatterにおいてzorderを指定してしまうと複数入力になってしまうため，それへの対処．
+        zorder = self.options.pop('zorder') if 'zorder' in self.options else 2
+
+        # zに値が指定されていないとき
+        if self.z is None:
+            # 色について (単色なのは zがNoneのときだけなので)
+            if 'c' in self.options and 'color' in self.options:
+                raise ValueError("Supply a 'c' argument or a 'color' kwarg but not both")
+            elif 'c' in self.options:
+                outer.color = self.options['c']
+            elif 'color' in self.options:
+                outer.color = self.options['color']
+            elif 'edgecolors' in self.options:
+                outer.color = self.options['edgecolors']
+
+            if not('c' in self.options or 'color' in self.options or 'facecolor' in self.options or 'facecolors' in self.options):
+                self.options['color'] = outer.mono_cmap(outer.color_counta)    # 各点ごとに色を指定するのが普通っぽいので， 点の数分で二次元化
+                outer.color = self.options['color']
+                outer.color_counta += 1
+            
+            outer.ax.scatter(self.x, self.y, zorder = zorder, **self.options)
+        else:
+            if 'cmap' not in self.options:
+                self.options['cmap'] = 'rainbow'
+            self.triplot = outer.ax.scatter(self.x, self.y, c = self.z, vmin = self.minimum, vmax = self.maximum, zorder = zorder, **self.options)
+            self.colorbar()
+        self.tight_layout()
+
+class _Contour(_Base):
+    def __init__(self, outer, vector, z, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
+        options['z'] = z
+        super().__init__(outer, vector, **options)   # TernaryDiagramクラスのselfを引数として与えている．
+
+        self.name = 'contour'
+        outer.x[self.name].append(self.x)
+        outer.y[self.name].append(self.y)
+
+        if 'cmap' not in self.options:
+            self.options['cmap'] = 'rainbow'
+
+        T = tri.Triangulation(self.x, self.y)
+        # 等高線の線を引く場所，すなわち，色の勾配を表す配列．
+        n_levels = 101  # 勾配をどれだけ細かくするかの変数．
+        levels = np.linspace(self.minimum if self.minimum is not None else np.min(self.z), self.maximum if self.maximum is not None else np.max(self.z), n_levels)
+        # solve issue#7
+        unique = np.unique(levels)
+        if unique.size == 1:
+            offset = 0.001
+            levels = np.linspace(unique[0] - offset * (n_levels // 2), unique[0] + offset * (n_levels // 2), n_levels)
+        self.triplot = outer.ax.tricontourf(self.x, self.y, T.triangles, self.z, levels = levels, **self.options)
+
+        self.colorbar()
+        self.tight_layout()
+
+class _Plot(_Base):
+    def __init__(self, outer, vector, **options):
+        super().__init__(outer, vector, **options)
+
+        self.name = 'plot'
+        outer.x[self.name].append(self.x)
+        outer.y[self.name].append(self.y)
+
+        if 'zorder' not in self.options:
+            options['zorder'] = 1
+        if not('color' in self.options or 'c' in self.options):
+            self.options['color'] = outer.color
+
+        #option系
+        if not('linewidth' in self.options or 'lw' in self.options):
+            self.options['lw'] = 1
+
+        # plot
+        outer.ax.plot(self.x, self.y, **self.options)
+        self.tight_layout()
 
 
 
