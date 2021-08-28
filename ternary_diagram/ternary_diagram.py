@@ -151,7 +151,7 @@ class TernaryDiagram:
             i += 1
         return ''.join(lst_name)
 
-    class _common:
+    class _Base:
         def __init__(self, outer, vector, **options):
             # クラスオブジェクト
             self.options = options
@@ -186,7 +186,7 @@ class TernaryDiagram:
             return self.outer.fig.tight_layout()
 
 
-    class _scatter_(_common):
+    class _Scatter(_Base):
         def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
             super().__init__(outer, vector, **options)   # TernaryDiagramクラスのselfを引数として与えている．
 
@@ -227,7 +227,7 @@ class TernaryDiagram:
                 self.colorbar()
             self.tight_layout()
 
-    class _contour_(_common):
+    class _Contour(_Base):
         def __init__(self, outer, vector, z, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
             options['z'] = z
             super().__init__(outer, vector, **options)   # TernaryDiagramクラスのselfを引数として与えている．
@@ -253,7 +253,7 @@ class TernaryDiagram:
             self.colorbar()
             self.tight_layout()
 
-    class _plot_(_common):
+    class _Plot(_Base):
         def __init__(self, outer, vector, **options):
             super().__init__(outer, vector, **options)
 
@@ -285,7 +285,7 @@ class TernaryDiagram:
         
         annotations : list
         '''
-        self._scatter_(self, vector, **options) # selfオブジェクトを渡してる．
+        self._Scatter(self, vector, **options) # selfオブジェクトを渡してる．
         return self.fig
 
     def contour(self, vector, **options):
@@ -297,7 +297,7 @@ class TernaryDiagram:
         vector : list, numpy.ndarray, pandas.DataFrame etc.
             percentage of each compound mixed in 2D list / pandas.DataFrame / numpy.ndarray, where shape = [n, 3] (n is the number of samples to be plotted as integer)
         '''
-        self._contour_(self, vector, **options) # selfオブジェクトを渡してる．
+        self._Contour(self, vector, **options) # selfオブジェクトを渡してる．
         return self.fig
 
     def plot(self, r1, r2, **options):   # 連結線を引く (scatterオブジェクトの使用が必須な状況)
@@ -310,7 +310,7 @@ class TernaryDiagram:
             A mixing ratio of the compounds that are endpoints of the connecting line. A one-dimensional list of length 3.
         '''
         vector = np.array([r1, r2])
-        self._plot_(self, vector, **options)
+        self._Plot(self, vector, **options)
         return self.fig
 
 
