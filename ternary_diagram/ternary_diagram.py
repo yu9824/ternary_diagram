@@ -10,7 +10,12 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 # import matplotlib.cm as cm      # ternary内にカラーマップを創設する
 import matplotlib.tri as tri    # 三角図を簡単に出すやつ
-from utils import check_ax, check_vector, three2two, get_label
+try:
+    # package
+    from .utils import check_ax, check_vector, three2two, get_label
+except:
+    # for _test.py
+    from utils import check_ax, check_vector, three2two, get_label
 
 '''
     kwargs
@@ -149,7 +154,7 @@ class TernaryDiagram:
         -------
         Axes object
         """
-        
+
         plotter = _ContourPlotter(vector=vector, ax=self.ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
         self._append_x_y(plotter)
         return self.ax
@@ -250,8 +255,9 @@ class _ScatterPlotter(_BasePlotter):
         # when z is None
         if self.z is None:
             # To change color by each point
-            for i_data in range(len(self.x)):
-                self.ax.scatter(self.x[i_data], self.y[i_data], **self.kwargs)
+            self.ax.scatter(self.x, self.y, **self.kwargs)
+            # for i_data in range(len(self.x)):
+            #     self.ax.scatter(self.x[i_data], self.y[i_data], **self.kwargs)
         else:
             if 'cmap' not in self.kwargs:
                 self.kwargs['cmap'] = DEFAULT_CMAP

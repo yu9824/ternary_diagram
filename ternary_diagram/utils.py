@@ -23,8 +23,7 @@ def check_vector(vector, scale=True):
 
     Returns
     -------
-    [type]
-        [description]
+    numpy.ndarray | shape = (n, 3)
 
     Raises
     ------
