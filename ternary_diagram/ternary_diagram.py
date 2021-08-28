@@ -40,6 +40,7 @@ class TernaryDiagram:
         materials : array (shape = (3,))
             A one-dimensional list of compounds that constitute an endpoint when generating a ternary_diagram.
         """
+
         # check `ax`
         self.ax = check_ax(ax)
         self.fig = self.ax.figure
@@ -122,16 +123,7 @@ class TernaryDiagram:
         -------
         Axes object
         """
-        '''
-        
 
-        Parameters
-        ----------
-        vector : list, numpy.ndarray, pandas.DataFrame etc.
-            percentage of each compound mixed in 2D list / pandas.DataFrame / numpy.ndarray, where shape = [n, 3] (n is the number of samples to be plotted as integer)
-        
-        annotations : list
-        '''
         plotter = _ScatterPlotter(vector=vector, ax=self.ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
         self._append_x_y(plotter)
         return self.ax
@@ -157,6 +149,7 @@ class TernaryDiagram:
         -------
         Axes object
         """
+        
         plotter = _ContourPlotter(vector=vector, ax=self.ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
         self._append_x_y(plotter)
         return self.ax
@@ -174,6 +167,7 @@ class TernaryDiagram:
         -------
         Axes object
         """
+
         vector = np.array([r1, r2])
         plotter = _LinePlotter(vector=vector, ax=self.ax, **kwargs)
         self._append_x_y(plotter)
