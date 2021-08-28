@@ -9,6 +9,7 @@ Welcome to ternary_diagram's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   :numbered:
 
    modules.rst
 

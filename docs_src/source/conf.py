@@ -22,7 +22,8 @@ copyright = '2021, yu9824'
 author = 'yu9824'
 
 # The full version, including alpha/beta/rc tags
-release = 'v2.0.0dev'
+from ternary_diagram import __version__
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
