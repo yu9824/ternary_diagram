@@ -8,56 +8,46 @@ import pandas as pd
 from copy import deepcopy
 
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm      # ternary内にカラーマップを創設する
+# import matplotlib.cm as cm      # ternary内にカラーマップを創設する
 import matplotlib.tri as tri    # 三角図を簡単に出すやつ
+from utils import check_ax, check_vector, three2two, get_label
 
 '''
-    options
-maximum: colorbarの上限値を固定するかどうか．default;None
-minimum: colorbarの上限値を固定するかどうか．default;None
+    kwargs
+z_max: colorbarの上限値を固定するかどうか．default;None
+z_min: colorbarの上限値を固定するかどうか．default;None
 norm: 標準化する必要があるかどうか．default;True
 bar_label: colorbarの横に書くlabel名
 '''
 
-__all__ = [
-    'TernaryDiagram',
-]
+# default parameters
+DEFAULT_CMAP = 'rainbow'
+DEFAULT_ZORDER_CONTOUR = 0
+DEFAULT_ZORDER_GRIDS = 1
+DEFAULT_ZORDER_PLOTS = 2
+DEFAULT_ZORDER_SCATTER = 3
 
 class TernaryDiagram:
-    def __init__(self, materials, fontfamily = 'Helvetica', fig = None, ax = None):
-        '''
+    def __init__(self, materials, ax=None):
+        """
         Make instance.
+
+        Create borders, etc. for triangulation diagrams.
+
 
         Parameters
         ----------
-        materials : list
+        materials : array (shape = (3,))
             A one-dimensional list of compounds that constitute an endpoint when generating a ternary_diagram.
-        '''
-        plt.rcParams['font.family'] = fontfamily
+        """
+        # check `ax`
+        self.ax = check_ax(ax)
+        self.fig = self.ax.figure
 
-        # 単色scatterのときにcolormapのうち何番目までを使ったかを保存しておく変数とcolormapの指定
-        self.color_counta = 0
-        self.mono_cmap = plt.get_cmap('Set1')
+        # Generate material_label (LaTeX notation)
+        material_label = list(map(get_label, materials))
 
-        # figure, axisオブジェクトの生成
-        # jupyter note / lab だと背景が透過色になっていて，保存すると変な感じになるため．もし背景透過で保存したい場合はfig.savefig('filename', transparent = True)とする．
-        # seabronのコードを参考．
-        # Get references to the axes we want
-        if fig is None and ax is None:
-            fig, ax = plt.subplots(dpi=100, facecolor='white')
-        elif fig is not None and ax is None:    # figureが入力されたものの，axisが入力されなかったときは一番最初のaxisを描画の対象とする．
-            ax = fig.axes[0]
-        elif fig is None:
-            raise ValueError('axis is entered, but figure is not entered. Please enter.')
-        self.fig = fig
-        self.ax = ax
-        del fig
-        del ax
-
-        # material_labelを生成
-        material_label = list(map(self._get_label, materials))
-
-        # 正方形にする
+        # Allign the aspect
         self.ax.set_aspect('equal', 'datalim')
 
         # 目盛りや目盛りにつくラベルを表示しない
@@ -72,9 +62,9 @@ class TernaryDiagram:
 
         # 内側目盛
         inner_border_options = {
-            'color':'gray',
-            'lw':0.5,
-            'zorder':1,
+            'color': 'gray',
+            'lw': 0.5,
+            'zorder': DEFAULT_ZORDER_GRIDS,
         }
         for i in range(1,10):
             self.ax.plot([i/20.0, 1.0-i/20.0],[h*i/10.0, h*i/10.0], **inner_border_options)
@@ -83,9 +73,10 @@ class TernaryDiagram:
 
         # 外周の枠線
         outer_border_options = {
-            'color':'black',
-            'lw':2,
-            'linestyle':'-',
+            'color': 'black',
+            'lw': 2,
+            'linestyle': '-',
+            'zorder': DEFAULT_ZORDER_GRIDS,
             }
         self.ax.plot([0.0, 1.0],[0.0, 0.0], **outer_border_options)
         self.ax.plot([0.0, 0.5],[0.0, h], **outer_border_options)
@@ -105,48 +96,34 @@ class TernaryDiagram:
             self.ax.text(i/10.0+0.02, 0, '%d0' % i, fontsize = font_size_axis_label, rotation = 60, va = 'top', ha = 'right')
 
         # 二次元に変換したデータを保存しておく
-        self.x = {
-            'scatter': [],
-            'contour': [],
-            'plot': [],
-        } 
-        self.y = deepcopy(self.x)
-
-    # *** サブ関数 ***
-    def _get_from_options(self, options, key, default):
-        return options[key] if key in options else default
+        self.x = dict()
+        self.y = dict()
     
-    def _get_label(self, name):
-        if not isinstance(name, str):
-            raise ValueError('The "name" must be string.')
-        f = '$_{'
-        b = '}$'
-        N = len(name)
-        lst_name = list(name) + ['']   # outputするために変えていく．
-
-        # １文字ずつ取り出して
-        i = 0
-        while i < N:
-            l = name[i] # l: letter
-            if l.isdigit():
-                j = i + 1
-                while j < N + 1:
-                    try:
-                        float(name[i:j])
-                    except ValueError:
-                        break
-                    else:
-                        j += 1
-                j -= 1
-                lst_name[i] = f + lst_name[i]
-                lst_name[j] = b + lst_name[j]
-                i = j
-            i += 1
-        return ''.join(lst_name)
     
-    def scatter(self, vector, **options):
+    
+    def scatter(self, vector, z=None, z_min=None, z_max=None, bar_label='', **kwargs):
+        """
+        Plot scatter points.
+
+        Parameters
+        ----------
+        vector : array | shape = (n, 3)
+            percentage of each compound mixed in 2D list / pandas.DataFrame / numpy.ndarray, where shape = [n, 3] (n is the number of samples to be plotted as integer)
+        z : list, numpy.ndarray, pandas.Series etc, shape = (n,), optional
+            , by default None
+        z_min : [type], optional
+            , by default None
+        z_max : [type], optional
+            , by default None
+        bar_label : str, optional
+            color bar label when `z` is not None., by default ''
+
+        Returns
+        -------
+        Axes object
+        """
         '''
-        To plot scatter points.
+        
 
         Parameters
         ----------
@@ -155,174 +132,183 @@ class TernaryDiagram:
         
         annotations : list
         '''
-        self._Scatter(self, vector, **options) # selfオブジェクトを渡してる．
-        return self.fig
+        plotter = _ScatterPlotter(vector=vector, ax=self.ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
+        self._append_x_y(plotter)
+        return self.ax
 
-    def contour(self, vector, **options):
-        '''
+    def contour(self, vector, z, z_min=None, z_max=None, bar_label='', **kwargs):
+        """
         To create a contour map.
 
         Parameters
         ----------
-        vector : list, numpy.ndarray, pandas.DataFrame etc.
+        vector : array | shape = (n, 3)
             percentage of each compound mixed in 2D list / pandas.DataFrame / numpy.ndarray, where shape = [n, 3] (n is the number of samples to be plotted as integer)
-        '''
-        self._Contour(self, vector, **options) # selfオブジェクトを渡してる．
-        return self.fig
+        z : list, numpy.ndarray, pandas.Series etc, shape = (n,)
+            , by default None
+        z_min : [type], optional
+            , by default None
+        z_max : [type], optional
+            , by default None
+        bar_label : str, optional
+            color bar label when `z` is not None., by default ''
 
-    def plot(self, r1, r2, **options):   # 連結線を引く (scatterオブジェクトの使用が必須な状況)
-        '''
+        Returns
+        -------
+        Axes object
+        """
+        plotter = _ContourPlotter(vector=vector, ax=self.ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
+        self._append_x_y(plotter)
+        return self.ax
+
+    def plot(self, r1, r2, **kwargs):   # 連結線を引く (scatterオブジェクトの使用が必須な状況)
+        """
         To draw a tie line.
 
         Parameters
         ----------
-        r1, r2 : list
+        r1, r2 : array | shape = (3,)
             A mixing ratio of the compounds that are endpoints of the connecting line. A one-dimensional list of length 3.
-        '''
+
+        Returns
+        -------
+        Axes object
+        """
         vector = np.array([r1, r2])
-        self._Plot(self, vector, **options)
-        return self.fig
+        plotter = _LinePlotter(vector=vector, ax=self.ax, **kwargs)
+        self._append_x_y(plotter)
+        return self.ax
+    
+    def _append_x_y(self, plotter):
+        if not isinstance(plotter, _BasePlotter):
+            raise TypeError()
+        
+        x, y = plotter.get_x_y()
+        name = plotter.name
+        if name in self.x:
+            self.x[name].append(x)
+            self.y[name].append(y)
+        else:
+            self.x[name] = [x]
+            self.y[name] = [y]
 
-class _Base:
-    def __init__(self, outer, vector, **options):
+
+class _BasePlotter:
+    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, bar_label='', **kwargs):
         # クラスオブジェクト
-        self.options = options
+        self.vector = check_vector(vector)  # numpy.ndarray化
+        self.ax = check_ax(ax)
+        self.kwargs = kwargs
+        self.z = np.array(z).ravel() if z is not None else None # convert to 1-d np.ndarray
+        if self.z is not None:
+            self.z_min = z_min
+            self.z_max = z_max
+            self.bar_label = bar_label
 
-        # numpy.ndarray化
-        self.vector = np.array(vector)
+        self.name = 'base'  # change by each plotter
 
-        # 正規化するかどうか．
-        norm = self.options.pop('norm') if 'norm' in self.options else True
-        if norm:
-            # self.vectorの正規化
-            self.vector = self.vector / np.sum(self.vector, axis = 1, keepdims = True) # 今回keepdims = Trueは.reshape(-1, 1)と同義
+        # get_figure
+        self.fig = self.ax.figure
 
         # 3次元ベクトルをx, y座標に落とし込む．
-        self.x, self.y = self._three2two(self.vector)
-
-        # 念のためself.zをnp.ndarrayにしてflatten
-        self.z = np.array(self.options.pop('z')).flatten() if 'z' in self.options else None
-
-        if self.z is not None:
-            self.maximum = self.options.pop('maximum') if 'maximum' in self.options else None
-            self.minimum = self.options.pop('minimum') if 'minimum' in self.options else None
-            self.bl = self.options.pop('bar_label') if 'bar_label' in self.options else ''
-
-        # TernaryDiagramオブジェクトをインスタンス変数として持っておく（colorbar関数のため．）
-        self.outer = outer
+        self.x, self.y = three2two(self.vector)
+        
 
     def colorbar(self):
-        return self.outer.fig.colorbar(self.triplot, shrink = 0.8, format='%.1f', label = self.bl, orientation = 'vertical', ticklocation = 'top', ax=self.outer.ax)
+        return self.fig.colorbar(self.triplot, shrink = 0.8, format='%.1f', label = self.bar_label, orientation = 'vertical', ticklocation = 'top', ax=self.ax)
     
     def tight_layout(self):
-        return self.outer.fig.tight_layout()
+        return self.fig.tight_layout()
     
-    def _three2two(self, vector):
-        return (2 * vector[:, 2] + vector[:, 0]) / 2, np.sqrt(3) / 2 * vector[:, 0]
+    def get_x_y(self):
+        return self.x, self.y
+    
+    def _set_default_params(self, **kwargs):
+        """
+        set_default_params
+
+        Examples
+        --------------
+        self._set_default_params(zorder=2)
+        """
+        for k, v in kwargs.items():
+            if k not in self.kwargs:
+                self.kwargs[k] = v
 
 
-class _Scatter(_Base):
-    def __init__(self, outer, vector, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
-        super().__init__(outer, vector, **options)   # TernaryDiagramクラスのselfを引数として与えている．
+class _ScatterPlotter(_BasePlotter):
+    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, bar_label='', **kwargs):
+        super().__init__(vector=vector, ax=ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
 
+        # name
         self.name = 'scatter'
-        outer.x[self.name].append(self.x)
-        outer.y[self.name].append(self.y)
+
+        # default options
+        self._set_default_params(
+            zorder= DEFAULT_ZORDER_SCATTER,
+        )
 
         # easy annotation 右上に簡易annotation
-        self.annotations = self.options.pop('annotations') if 'annotations' in self.options else []
+        self.annotations = self.kwargs.pop('annotations') if 'annotations' in self.kwargs else []
         for x, y, ann in zip(self.x, self.y, self.annotations):
-            outer.ax.annotate(ann, xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8, color = '#262626')
+            self.ax.annotate(ann, xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8, color = '#262626')
 
-        # scatterにおいてzorderを指定してしまうと複数入力になってしまうため，それへの対処．
-        zorder = self.options.pop('zorder') if 'zorder' in self.options else 2
-
-        # zに値が指定されていないとき
+        # when z is None
         if self.z is None:
-            # 色について (単色なのは zがNoneのときだけなので)
-            if 'c' in self.options and 'color' in self.options:
-                raise ValueError("Supply a 'c' argument or a 'color' kwarg but not both")
-            elif 'c' in self.options:
-                outer.color = self.options['c']
-            elif 'color' in self.options:
-                outer.color = self.options['color']
-            elif 'edgecolors' in self.options:
-                outer.color = self.options['edgecolors']
-
-            if not('c' in self.options or 'color' in self.options or 'facecolor' in self.options or 'facecolors' in self.options):
-                self.options['color'] = outer.mono_cmap(outer.color_counta)    # 各点ごとに色を指定するのが普通っぽいので， 点の数分で二次元化
-                outer.color = self.options['color']
-                outer.color_counta += 1
-            
-            outer.ax.scatter(self.x, self.y, zorder = zorder, **self.options)
+            # To change color by each point
+            for i_data in range(len(self.x)):
+                self.ax.scatter(self.x[i_data], self.y[i_data], **self.kwargs)
         else:
-            if 'cmap' not in self.options:
-                self.options['cmap'] = 'rainbow'
-            self.triplot = outer.ax.scatter(self.x, self.y, c = self.z, vmin = self.minimum, vmax = self.maximum, zorder = zorder, **self.options)
+            if 'cmap' not in self.kwargs:
+                self.kwargs['cmap'] = DEFAULT_CMAP
+            self.triplot = self.ax.scatter(self.x, self.y, c = self.z, vmin = self.z_min, vmax = self.z_max, **self.kwargs)
             self.colorbar()
         self.tight_layout()
 
-class _Contour(_Base):
-    def __init__(self, outer, vector, z, **options):   # なぜか**kwargsで継承クラスの初期化メソッドともども使うとダメだった．
-        options['z'] = z
-        super().__init__(outer, vector, **options)   # TernaryDiagramクラスのselfを引数として与えている．
+class _ContourPlotter(_BasePlotter):
+    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, bar_label='', **kwargs):
+        super().__init__(vector, ax=ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
 
+        # name
         self.name = 'contour'
-        outer.x[self.name].append(self.x)
-        outer.y[self.name].append(self.y)
 
-        if 'cmap' not in self.options:
-            self.options['cmap'] = 'rainbow'
+        # default options
+        self._set_default_params(
+            cmap = DEFAULT_CMAP,
+            zorder = DEFAULT_ZORDER_CONTOUR,
+        )
 
         T = tri.Triangulation(self.x, self.y)
         # 等高線の線を引く場所，すなわち，色の勾配を表す配列．
         n_levels = 101  # 勾配をどれだけ細かくするかの変数．
-        levels = np.linspace(self.minimum if self.minimum is not None else np.min(self.z), self.maximum if self.maximum is not None else np.max(self.z), n_levels)
+        levels = np.linspace(self.z_min if self.z_min is not None else np.min(self.z), self.z_max if self.z_max is not None else np.max(self.z), n_levels)
         # solve issue#7
         unique = np.unique(levels)
         if unique.size == 1:
             offset = 0.001
             levels = np.linspace(unique[0] - offset * (n_levels // 2), unique[0] + offset * (n_levels // 2), n_levels)
-        self.triplot = outer.ax.tricontourf(self.x, self.y, T.triangles, self.z, levels = levels, **self.options)
+        self.triplot = self.ax.tricontourf(self.x, self.y, T.triangles, self.z, levels = levels, **self.kwargs)
 
         self.colorbar()
         self.tight_layout()
 
-class _Plot(_Base):
-    def __init__(self, outer, vector, **options):
-        super().__init__(outer, vector, **options)
+class _LinePlotter(_BasePlotter):
+    def __init__(self, vector, ax, **kwargs):
+        super().__init__(vector, ax, **kwargs)
 
+        # name
         self.name = 'plot'
-        outer.x[self.name].append(self.x)
-        outer.y[self.name].append(self.y)
 
-        if 'zorder' not in self.options:
-            options['zorder'] = 1
-        if not('color' in self.options or 'c' in self.options):
-            self.options['color'] = outer.color
-
-        #option系
-        if not('linewidth' in self.options or 'lw' in self.options):
-            self.options['lw'] = 1
+        # default options
+        self._set_default_params(
+            zorder = DEFAULT_ZORDER_PLOTS,
+        )
 
         # plot
-        outer.ax.plot(self.x, self.y, **self.options)
+        self.ax.plot(self.x, self.y, **self.kwargs)
         self.tight_layout()
 
 
 
 if __name__ == '__main__':
-    df = pd.read_csv('example/scatter/example_scatter.csv')
-    # fig = TernaryDiagram(df.columns[0:-1], df.iloc[:, 0:-1])
-    # plt.show()
-
-    td = TernaryDiagram(['Li2O', 'La2O3', 'TiO2'])
-
-    # N = 1000
-    # td.contour(np.random.rand(3 * N).reshape(N, 3), z = np.random.rand(N))
-    # td.scatter([[6, 1, 3]], z = [1])
-    td.scatter([[1, 2, 7]], zorder = 2)
-    td.plot([1, 0, 3], [0, 1, 2])
-    td.scatter([[1, 1, 1]])
-    print(td.x, td.y)
-    plt.show()
+    pass

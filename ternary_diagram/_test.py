@@ -1,16 +1,36 @@
-from ternary_diagram import TernaryDiagram
-import matplotlib.pyplot as plt
+if __name__ == '__main__':
 
-fig = plt.figure(facecolor = 'white', dpi = 100, figsize=(10, 4.8))
-ax1 = fig.add_subplot(121)
-ax2 = fig.add_subplot(122)
+    from ternary_diagram import TernaryDiagram
+    import matplotlib.pyplot as plt
+    import pandas as pd
 
-ax1.plot([0, 1], [0, 1], c = 'black')
+    n_cols = 3
+    n_rows = 1
+    fig, axes = plt.subplots(n_rows, n_cols, facecolor = 'white', dpi = 72, figsize=(6.4*n_cols, 4.8*n_rows))
 
-materials = ['Li2O', 'La2O3', 'TiO2']
-td = TernaryDiagram(materials, fig = fig, ax = ax2)
-td.scatter([
-    [1, 1, 1],
-    ])
-td.fig.tight_layout()
-plt.show()
+    # print(plt.gca() == ax2, plt.gca() == ax1)
+
+    df_mono_scatter = pd.read_csv('https://raw.githubusercontent.com/yu9824/ternary_diagram/main/example/mono_scatter/example_mono_scatter.csv')
+    df_scatter = pd.read_csv('https://raw.githubusercontent.com/yu9824/ternary_diagram/main/example/scatter/example_scatter.csv')
+    df_contour = pd.read_csv('https://raw.githubusercontent.com/yu9824/ternary_diagram/main/example/contour/example_contour.csv')
+
+    tds = []
+    for i in range(2):
+        tds.append(TernaryDiagram(materials = df_mono_scatter.columns, ax=axes[i]))
+    tds.append(TernaryDiagram(materials=df_contour.columns[:3], ax=axes[2]))
+
+    # td.scatter([
+    #     [1, 1, 1],
+    #     ])
+    tds[0].scatter(df_mono_scatter)
+
+    tds[1].scatter(df_mono_scatter, color='black', zorder=1)
+    tds[1].plot(r1=[0, 1, 9], r2=[1, 0, 9], c='gray', lw=2, zorder=0)
+
+    tds[2].contour(df_contour.iloc[:, 0:3], df_contour['z'])
+    tds[2].scatter(df_scatter.iloc[:, 0:3], df_scatter['z'])
+    fig.tight_layout()
+    plt.show()
+    plt.close()
+
+    # print(tds[2].x, tds[2].y)
