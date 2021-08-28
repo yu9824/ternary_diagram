@@ -117,9 +117,9 @@ class TernaryDiagram:
             percentage of each compound mixed in 2D list / pandas.DataFrame / numpy.ndarray, where shape = [n, 3] (n is the number of samples to be plotted as integer)
         z : list, numpy.ndarray, pandas.Series etc, shape = (n,), optional
             , by default None
-        z_min : [type], optional
+        z_min : int, float , optional
             , by default None
-        z_max : [type], optional
+        z_max : int, float, optional
             , by default None
         bar_label : str, optional
             color bar label when `z` is not None., by default ''
@@ -143,9 +143,9 @@ class TernaryDiagram:
             percentage of each compound mixed in 2D list / pandas.DataFrame / numpy.ndarray, where shape = [n, 3] (n is the number of samples to be plotted as integer)
         z : list, numpy.ndarray, pandas.Series etc, shape = (n,)
             , by default None
-        z_min : [type], optional
+        z_min : int, float, optional
             , by default None
-        z_max : [type], optional
+        z_max : int, float, optional
             , by default None
         bar_label : str, optional
             color bar label when `z` is not None., by default ''
