@@ -64,11 +64,11 @@ td.contour(vector, z = [...], maximum = None, minimum = None)
 * `z`:
     * It should have the same length as len(vector) and is required to color the colormap.
     * len(vector)と同じ長さを持つ．colormapの色をつけるにあたって必要な値．
-* `maximum`:
-    * No need. If there is not, it will get the maximum value by itself.
+* `z_max`:
+    * Optional. If there is not, it will get the maximum value by itself.
     * なくてもいい．なかったら勝手に最大値を取得してやってくれる．
-* `minimum`:
-    * No need. If there is not, it will get the minimum value by itself.
+* `z_min`:
+    * Optional. If there is not, it will get the minimum value by itself.
     * なくてもいい．なかったら勝手に最小値を取得してやってくれる．
 
 ### Tie line (連結線)
@@ -80,21 +80,30 @@ td.plot(r1, r2, **options)
     * 1D, `list` of length 3. Mixing ratio of compounds at the endpoints of the connecting lines.
     * 一次元，長さ3の`list`．連結線の端点の化合物の混合割合．
 * `options`:
-    * `matplotlib.pyplot.plot`の`options`と同じ．(e.g. lw, color etc.)
+    * `matplotlib.pyplot.plot`の`options`と同じ．(e.g. `lw`, `color` etc.)
 
 ### example
-* See also the [example](https://github.com/yu9824/ternary_diagram/tree/main/example) folder. 
-* In particular, if you want to know how to use element_recognition[element_recognition](https://github.com/yu9824/element_recognition) as well, please refer to [example/scatter/example _scatter_with_annotations.ipynb](https://github.com/yu9824/ternary_diagram/tree/main/example/scatter/example_scatter_with_annotations.ipynb).
-
-
-* [example](example)フォルダも参照．
-* 特にelement_recognition[element_recognition](https://github.com/yu9824/element_recognition)の使い方も含めて知りたい場合は[example/scatter/example_scatter_with_annotations.ipynb](https://github.com/yu9824/ternary_diagram/tree/main/example/scatter/example_scatter_with_annotations.ipynb)を参照．
+The easiest example is here.
 ```python
 td = TernaryDiagram(['Li2O', 'La2O3', 'TiO2'])
 td.scatter([[1, 1, 1], [1, 2, 3]], z = [0, 1], marker = 'o')
 td.plot([1, 1, 1], [1, 2, 3], color = 'black')
-td.fig.savefig('figure.png', transparent = True, dpi = 300)
+plt.savefig('figure.png', transparent = True, dpi = 144)
 ```
+
+It can be written like this.
+```python
+fig, ax = plt.subplots(facecolor='w')
+td = TernaryDiagram(['Li2O', 'La2O3', 'TiO2'], ax=ax)
+td.scatter([[1, 1, 1], [1, 2, 3]], z = [0, 1], marker = 'o')
+td.plot([1, 1, 1], [1, 2, 3], color = 'black')
+fig.savefig('figure.png', transparent = True, dpi = 144)
+```
+
+It means that you can draw multiple figures in one figure object.
+
+
+See also the [example](https://github.com/yu9824/ternary_diagram/tree/main/example) folder. In particular, if you want to know how to use element_recognition[element_recognition](https://github.com/yu9824/element_recognition) as well, please refer to [example/scatter/example _scatter_with_annotations.ipynb](https://github.com/yu9824/ternary_diagram/tree/main/example/scatter/example_scatter_with_annotations.ipynb).
 
 ### LICENSE
 See [LICENSE](https://github.com/yu9824/ternary_diagram/tree/main/LICENSE).
