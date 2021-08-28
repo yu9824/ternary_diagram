@@ -44,6 +44,8 @@ class TernaryDiagram:
         ----------
         materials : array (shape = (3,))
             A one-dimensional list of compounds that constitute an endpoint when generating a ternary_diagram.
+        ax : None or Axes object
+            Axes object to draw a diagram. If None, automatically generate.
         """
 
         # check `ax`
@@ -123,6 +125,11 @@ class TernaryDiagram:
             , by default None
         bar_label : str, optional
             color bar label when `z` is not None., by default ''
+        **kwargs : parameter of matplotlib.pyplot.scatter, optional
+            For example, `marker='x'`, `facecolor='blue'` etc.
+            
+            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html.
+        
 
         Returns
         -------
@@ -149,6 +156,8 @@ class TernaryDiagram:
             , by default None
         bar_label : str, optional
             color bar label when `z` is not None., by default ''
+        **kwargs : parameter of matplotlib.pyplot.contour, optional
+            https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html
 
         Returns
         -------
@@ -167,6 +176,9 @@ class TernaryDiagram:
         ----------
         r1, r2 : array | shape = (3,)
             A mixing ratio of the compounds that are endpoints of the connecting line. A one-dimensional list of length 3.
+        **kwargs: parameter of matplotlib.pyplot.plot, optional
+            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html
+
 
         Returns
         -------

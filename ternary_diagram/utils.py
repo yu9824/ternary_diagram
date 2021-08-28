@@ -3,6 +3,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def check_ax(ax):
+    """check ax
+
+    Parameters
+    ----------
+    ax : None or Axes object
+        
+
+    Returns
+    -------
+    Axes object
+
+    Raises
+    ------
+    TypeError
+        
+    """
     if ax is None:
         ax = plt.gca()
     elif isinstance(ax, Axes):
@@ -12,7 +28,7 @@ def check_ax(ax):
     return ax
 
 def check_vector(vector, scale=True):
-    """[summary]
+    """check vector
 
     Parameters
     ----------
