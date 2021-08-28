@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>1.1. ternary_diagram package &mdash; ternary-diagram 2.0.0 documentation</title>
+  <title>1.1. ternary_diagram package &mdash; ternary-diagram 2.0.1 documentation</title>
   
 
   
@@ -192,6 +192,7 @@
 <li><p><strong>z_min</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>optional</em>) – , by default None</p></li>
 <li><p><strong>z_max</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>optional</em>) – , by default None</p></li>
 <li><p><strong>bar_label</strong> (<em>str</em><em>, </em><em>optional</em>) – color bar label when <cite>z</cite> is not None., by default ‘’</p></li>
+<li><p><strong>**kwargs</strong> (<em>parameter of matplotlib.pyplot.contour</em><em>, </em><em>optional</em>) – <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html">https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html</a></p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -212,6 +213,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r1</strong> (<em>array</em><em> | </em><em>shape =</em><em> (</em><em>3</em><em>,</em><em>)</em>) – A mixing ratio of the compounds that are endpoints of the connecting line. A one-dimensional list of length 3.</p></li>
 <li><p><strong>r2</strong> (<em>array</em><em> | </em><em>shape =</em><em> (</em><em>3</em><em>,</em><em>)</em>) – A mixing ratio of the compounds that are endpoints of the connecting line. A one-dimensional list of length 3.</p></li>
+<li><p><strong>**kwargs</strong> (<em>parameter of matplotlib.pyplot.plot</em><em>, </em><em>optional</em>) – See <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html">https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html</a></p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -235,6 +237,9 @@
 <li><p><strong>z_min</strong> (<em>int</em><em>, </em><em>float</em><em> , </em><em>optional</em>) – , by default None</p></li>
 <li><p><strong>z_max</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>optional</em>) – , by default None</p></li>
 <li><p><strong>bar_label</strong> (<em>str</em><em>, </em><em>optional</em>) – color bar label when <cite>z</cite> is not None., by default ‘’</p></li>
+<li><p><strong>**kwargs</strong> (<em>parameter of matplotlib.pyplot.scatter</em><em>, </em><em>optional</em>) – <p>For example, <cite>marker=’x’</cite>, <cite>facecolor=’blue’</cite> etc.</p>
+<p>See <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html">https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html</a>.</p>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -254,12 +259,27 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="ternary_diagram.utils.check_ax">
 <span class="sig-prename descclassname"><span class="pre">ternary_diagram.utils.</span></span><span class="sig-name descname"><span class="pre">check_ax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ternary_diagram.utils.check_ax" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>check ax</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ax</strong> (<em>None</em><em> or </em><em>Axes object</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Axes object</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ternary_diagram.utils.check_vector">
 <span class="sig-prename descclassname"><span class="pre">ternary_diagram.utils.</span></span><span class="sig-name descname"><span class="pre">check_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ternary_diagram.utils.check_vector" title="Permalink to this definition">¶</a></dt>
-<dd><p>[summary]</p>
+<dd><p>check vector</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -335,6 +355,7 @@
 <li><p><strong>z_min</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>optional</em>) – , by default None</p></li>
 <li><p><strong>z_max</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>optional</em>) – , by default None</p></li>
 <li><p><strong>bar_label</strong> (<em>str</em><em>, </em><em>optional</em>) – color bar label when <cite>z</cite> is not None., by default ‘’</p></li>
+<li><p><strong>**kwargs</strong> (<em>parameter of matplotlib.pyplot.contour</em><em>, </em><em>optional</em>) – <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html">https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html</a></p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -355,6 +376,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r1</strong> (<em>array</em><em> | </em><em>shape =</em><em> (</em><em>3</em><em>,</em><em>)</em>) – A mixing ratio of the compounds that are endpoints of the connecting line. A one-dimensional list of length 3.</p></li>
 <li><p><strong>r2</strong> (<em>array</em><em> | </em><em>shape =</em><em> (</em><em>3</em><em>,</em><em>)</em>) – A mixing ratio of the compounds that are endpoints of the connecting line. A one-dimensional list of length 3.</p></li>
+<li><p><strong>**kwargs</strong> (<em>parameter of matplotlib.pyplot.plot</em><em>, </em><em>optional</em>) – See <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html">https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html</a></p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -378,6 +400,9 @@
 <li><p><strong>z_min</strong> (<em>int</em><em>, </em><em>float</em><em> , </em><em>optional</em>) – , by default None</p></li>
 <li><p><strong>z_max</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>optional</em>) – , by default None</p></li>
 <li><p><strong>bar_label</strong> (<em>str</em><em>, </em><em>optional</em>) – color bar label when <cite>z</cite> is not None., by default ‘’</p></li>
+<li><p><strong>**kwargs</strong> (<em>parameter of matplotlib.pyplot.scatter</em><em>, </em><em>optional</em>) – <p>For example, <cite>marker=’x’</cite>, <cite>facecolor=’blue’</cite> etc.</p>
+<p>See <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html">https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html</a>.</p>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
