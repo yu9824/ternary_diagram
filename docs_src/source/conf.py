@@ -34,9 +34,11 @@ release = __version__
 # extensions = [
 # ]
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.githubpages'
+    'sphinx.ext.autodoc',       # docstringからドキュメントを作成してくれる．
+    'sphinx.ext.napoleon',      # google式・numpy式docstringを整形してくれる．
+    'sphinx.ext.githubpages',   # github-pages用のファイルを生成してくれる．
+    'recommonmark',             # markdownで書けるようにする．
+    'sphinx_markdown_tables',   # markdownの表を書けるようにする．
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -46,6 +48,20 @@ templates_path = ['_templates']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['setup']
+
+# markdown
+source_suffix = ['.rst', '.md']
+source_parsers = {
+   '.md': 'recommonmark.parser.CommonMarkParser',
+}
+
+from shutil import copyfile
+fname_readme = 'README.md'
+path_readme = os.path.join(os.path.abspath('../..'), 'README.md')
+if os.path.isfile(path_readme):
+    copyfile(path_readme, fname_readme)
+else:
+    print(path_readme)
 
 
 # -- Options for HTML output -------------------------------------------------
