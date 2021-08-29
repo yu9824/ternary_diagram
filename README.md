@@ -46,8 +46,9 @@ import matplotlib.pyplot as plt
 from ternary_diagram import TernaryDiagram
 
 td = TernaryDiagram(['Li2O', 'La2O3', 'TiO2'])
-td.scatter([[1, 1, 1], [1, 2, 3]], z = [0, 1], marker = 'o')    # You can set some options in matplotlib.pyplot.scatter like `marker`, `c` etc.
-td.plot([1, 1, 1], [1, 2, 3], color = 'black')  # You can set some options in matplotlib.pyplot.plot like `lw`, `c`, and so on.
+td.scatter(vector = [[1, 1, 1], [1, 2, 3]], z = [0, 1])
+td.scatter(vector = [[2, 1, 3], [3, 2, 1]], marker = 's', c = '#022c5e', s = 30)    # You can set some options in matplotlib.pyplot.scatter like `marker`, `c` etc.
+td.plot(r1 = [1, 1, 1], r2 = [1, 2, 3], color = 'black')  # You can set some options in matplotlib.pyplot.plot like `lw`, `c`, and so on.
 plt.savefig('figure.png', dpi = 144)
 ```
 
@@ -59,9 +60,10 @@ import matplotlib.pyplot as plt
 from ternary_diagram import TernaryDiagram
 
 fig, ax = plt.subplots(facecolor='w')   # The background color is sometimes transparent in jupyter notebooks, so set facecolor 'white'.
-td = TernaryDiagram(['Li2O', 'La2O3', 'TiO2'], ax=ax)   # You can set `ax` to select which axes to draw. If not, 
-td.scatter([[1, 1, 1], [1, 2, 3]], z = [0, 1], marker = 'o')
-td.plot([1, 1, 1], [1, 2, 3], color = 'black')
+td = TernaryDiagram(['Li2O', 'La2O3', 'TiO2'], ax=ax)   # You can set `ax` to select which axes to draw. If None, automatically select or generate. 
+td.scatter(vector = [[1, 1, 1], [1, 2, 3]], z = [0, 1])
+td.scatter(vector = [[2, 1, 3], [3, 2, 1]], marker = 's', c = '#022c5e', s = 30)    # You can set some options in matplotlib.pyplot.scatter like `marker`, `c` etc.
+td.plot(r1 = [1, 1, 1], r2 = [1, 2, 3], color = 'black')  # You can set some options in matplotlib.pyplot.plot like `lw`, `c`, and so on.
 fig.savefig('figure.png', dpi = 144)
 ```
 
