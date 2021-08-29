@@ -1,3 +1,4 @@
+# Ternary Diagram
 ![python_badge](https://img.shields.io/pypi/pyversions/ternary-diagram)
 ![license_badge](https://img.shields.io/pypi/l/ternary-diagram)
 ![Total_Downloads_badge](https://pepy.tech/badge/ternary-diagram)
@@ -72,5 +73,5 @@ It means that you can draw multiple figures in one figure object.
 
 See also the [example](https://github.com/yu9824/ternary_diagram/tree/main/example) folder. In particular, if you want to know how to use element_recognition[element_recognition](https://github.com/yu9824/element_recognition) as well, please refer to [example/scatter/example _scatter_with_annotations.ipynb](https://github.com/yu9824/ternary_diagram/tree/main/example/scatter/example_scatter_with_annotations.ipynb).
 
-### LICENSE
+## LICENSE
 See [LICENSE](https://github.com/yu9824/ternary_diagram/tree/main/LICENSE).
