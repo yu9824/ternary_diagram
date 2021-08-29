@@ -14,7 +14,7 @@ Meaningly, only need `numpy`, `pandas` and `matplotlib`.
 - Automatically format chemical composition using subscripts
 - Most of the matplotlib options are available
 
-![example](https://github.com/yu9824/ternary_diagram/blob/main/example/contour/example_contour.png?raw=true "example")
+![example](/example/contour/example_contour.png "example")
 
 ## First of all
 This package works well with the [element_recognition](https://github.com/yu9824/element_recognition) package (my own package) because it has a function (`get_ratio`) that converts composition to ratio.
@@ -51,7 +51,7 @@ td.plot([1, 1, 1], [1, 2, 3], color = 'black')  # You can set some options in ma
 plt.savefig('figure.png', dpi = 144)
 ```
 
-![example_figure](/example/example_on_readme/figure.png)
+![easy example](/example/example_on_readme/figure.png)
 
 It can be written like this.
 ```python
