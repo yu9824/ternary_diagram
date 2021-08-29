@@ -71,7 +71,7 @@ fig.savefig('figure.png', dpi = 144)
 It means that you can draw multiple figures in one figure object.
 
 
-See also the [example](https://github.com/yu9824/ternary_diagram/tree/main/example) folder. In particular, if you want to know how to use element_recognition[element_recognition](https://github.com/yu9824/element_recognition) as well, please refer to [example/scatter/example _scatter_with_annotations.ipynb](https://github.com/yu9824/ternary_diagram/tree/main/example/scatter/example_scatter_with_annotations.ipynb).
+See also the [example](https://github.com/yu9824/ternary_diagram/tree/main/example) folder. In particular, if you want to know how to use [element_recognition](https://github.com/yu9824/element_recognition) as well, please refer to [example/scatter/example _scatter_with_annotations.ipynb](https://github.com/yu9824/ternary_diagram/tree/main/example/scatter/example_scatter_with_annotations.ipynb).
 
 ## LICENSE
 See [LICENSE](https://github.com/yu9824/ternary_diagram/tree/main/LICENSE).
