@@ -2,12 +2,7 @@
 Copyright © 2021 yu9824
 '''
 
-from _typeshed import NoneType
 import numpy as np
-from typing import Union
-
-from copy import deepcopy
-
 import matplotlib.pyplot as plt
 # import matplotlib.cm as cm      # ternary内にカラーマップを創設する
 import matplotlib.tri as tri    # 三角図を簡単に出すやつ
@@ -251,7 +246,7 @@ class _BasePlotter:
 
 class _ScatterPlotter(_BasePlotter):
     def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, bar_label='', annotations = None, **kwargs):
-        super().__init__(vector=vector, ax=ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, annotations=annotations, **kwargs)
+        super().__init__(vector=vector, ax=ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
 
         # name
         self.name = 'scatter'
@@ -308,7 +303,7 @@ class _ContourPlotter(_BasePlotter):
 
 class _LinePlotter(_BasePlotter):
     def __init__(self, vector, ax, **kwargs):
-        super().__init__(vector, ax, **kwargs)
+        super().__init__(vector, ax=ax, z=None, z_min=None, z_max=None, bar_label='', **kwargs)
 
         # name
         self.name = 'plot'
@@ -321,7 +316,6 @@ class _LinePlotter(_BasePlotter):
         # plot
         self.ax.plot(self.x, self.y, **self.kwargs)
         self.tight_layout()
-
 
 
 if __name__ == '__main__':

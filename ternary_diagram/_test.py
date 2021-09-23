@@ -25,7 +25,7 @@ if __name__ == '__main__':
     tds[0].scatter(df_mono_scatter)
 
     tds[1].scatter(df_mono_scatter, color='black', zorder=1)
-    tds[1].plot(r1=[0, 1, 9], r2=[1, 0, 9], c='gray', lw=2, zorder=0)
+    tds[1].plot([[0, 1, 9], [1, 0, 9]], c='gray', lw=2, zorder=0)
 
     tds[2].contour(df_contour.iloc[:, 0:3], df_contour['z'])
     tds[2].scatter(df_scatter.iloc[:, 0:3], df_scatter['z'])
