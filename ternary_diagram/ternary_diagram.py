@@ -177,7 +177,7 @@ class TernaryDiagram:
 
         Parameters
         ----------
-        r1, r2 : array | shape = (3,)
+        vector : array | shape = (n, 3)
             A mixing ratio of the compounds that are endpoints of the connecting line. A one-dimensional list of length 3.
         **kwargs: parameter of matplotlib.pyplot.plot, optional
             See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html
