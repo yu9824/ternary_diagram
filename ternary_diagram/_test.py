@@ -3,6 +3,7 @@ if __name__ == '__main__':
     from ternary_diagram import TernaryDiagram
     import matplotlib.pyplot as plt
     import pandas as pd
+    from element_recognition import make_compositions
 
     n_cols = 3
     n_rows = 1
@@ -23,8 +24,10 @@ if __name__ == '__main__':
     #     [1, 1, 1],
     #     ])
     tds[0].scatter(df_mono_scatter)
+    tds[0].annotate('sample', df_mono_scatter.iloc[0])
 
-    tds[1].scatter(df_mono_scatter, color='black', zorder=1)
+    # tds[1].scatter(df_mono_scatter, color='black', zorder=1, annotations=make_compositions(df_mono_scatter.columns, ratio=df_mono_scatter).index)
+    tds[1].scatter(df_mono_scatter, color='black', zorder=1, annotations=df_mono_scatter.index)
     tds[1].plot([[0, 1, 9], [1, 0, 9]], c='gray', lw=2, zorder=0)
 
     tds[2].contour(df_contour.iloc[:, 0:3], df_contour['z'])

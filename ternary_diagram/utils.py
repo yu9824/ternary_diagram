@@ -1,6 +1,7 @@
 from matplotlib.axes._subplots import Axes
 import matplotlib.pyplot as plt
 import numpy as np
+from typing import Tuple
 
 def check_ax(ax) -> plt.Axes:
     """check ax
@@ -27,8 +28,8 @@ def check_ax(ax) -> plt.Axes:
         raise TypeError('`ax` is None or Axes object.\nThis `ax` is ({}).'.format(ax.__class__))
     return ax
 
-def check_vector(vector, scale=True) -> np.ndarray:
-    """check vector
+def check_2d_vector(vector, scale:bool=True) -> np.ndarray:
+    """check 2d vector
 
     Parameters
     ----------
@@ -53,7 +54,38 @@ def check_vector(vector, scale=True) -> np.ndarray:
         vector = vector / np.sum(vector, axis = 1, keepdims = True) # 今回keepdims = Trueは.reshape(-1, 1)と同義
     return vector
 
-def three2two(vector) -> np.ndarray:
+def check_1d_vector(vector, scale:bool=True) -> np.ndarray:
+    """check 1d vector
+
+    Parameters
+    ----------
+    vector : [type]
+        [description]
+    scale : bool, optional
+        [description], by default True
+
+    Examples
+    --------
+    >>> check_1d_vector([1, 2, 3], scale=False)
+    array([[1, 2, 3]])
+
+    >>> check_1d_vector([2, 2, 4], scale=True)
+    array([[0.25, 0.25, 0.5 ]])
+
+    Returns
+    -------
+    np.ndarray
+        2d array
+
+        shape is (1, 3)
+    """
+    vector = np.array(vector).ravel()
+    if len(vector) == 3:
+        return check_2d_vector(np.array([vector]), scale=scale)
+    else:
+        raise ValueError("`vector`'s length must be 3.")
+
+def three2two(vector) -> Tuple[np.ndarray, np.ndarray]:
     """
     Converted 3D proportions to 2D in order to generate a triangular diagram.
 
@@ -61,6 +93,11 @@ def three2two(vector) -> np.ndarray:
     ----------
     vector : array | shape = (n, 3)
         ratio
+
+    Examples
+    --------
+    >>> three2two(check_2d_vector([[2, 2, 4]]))
+    (array([0.625]), array([0.21650635]))
 
     Returns
     -------
@@ -81,7 +118,14 @@ def get_label(compound_name:str) -> str:
     -------
     str
         Chemical composition converted to LaTeX notation.
-        
+    
+    Examples
+    --------
+    >>> get_label('Li2O')
+    'Li$_{2}$O'
+
+    >>> get_label('(LiLa)0.5TiO3')
+    '(LiLa)$_{0.5}$TiO$_{3}$'
 
     Raises
     ------
@@ -114,3 +158,7 @@ def get_label(compound_name:str) -> str:
             i = j
         i += 1
     return ''.join(lst_compound_name)
+
+if __name__ == '__main__':
+    from doctest import testmod
+    testmod(verbose=True)

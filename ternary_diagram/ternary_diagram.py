@@ -2,16 +2,18 @@
 Copyright © 2021 yu9824
 '''
 
+from typing import Optional
+
 import numpy as np
 import matplotlib.pyplot as plt
 # import matplotlib.cm as cm      # ternary内にカラーマップを創設する
 import matplotlib.tri as tri    # 三角図を簡単に出すやつ
 try:
     # package
-    from .utils import check_ax, check_vector, three2two, get_label
+    from .utils import check_ax, check_1d_vector, check_2d_vector, three2two, get_label
 except:
     # for _test.py
-    from utils import check_ax, check_vector, three2two, get_label
+    from utils import check_ax, check_1d_vector, check_2d_vector, three2two, get_label
 
 '''
     kwargs
@@ -29,7 +31,7 @@ DEFAULT_ZORDER_PLOTS = 2
 DEFAULT_ZORDER_SCATTER = 3
 
 class TernaryDiagram:
-    def __init__(self, materials, ax: plt.Axes=None):
+    def __init__(self, materials, ax: Optional[plt.Axes]=None):
         """
         Make instance.
 
@@ -105,7 +107,7 @@ class TernaryDiagram:
     
     
     
-    def scatter(self, vector, z=None, z_min=None, z_max=None, bar_label='', annotations=None, **kwargs) -> plt.Axes:
+    def scatter(self, vector, z=None, z_min=None, z_max=None, bar_label:str='', annotations=None, **kwargs) -> plt.Axes:
         """
         Plot scatter points.
 
@@ -138,7 +140,7 @@ class TernaryDiagram:
         self._append_x_y(plotter)
         return self.ax
 
-    def contour(self, vector, z, z_min=None, z_max=None, bar_label='', **kwargs) -> plt.Axes:
+    def contour(self, vector, z, z_min=None, z_max=None, bar_label:str='', **kwargs) -> plt.Axes:
         """
         To create a contour map.
 
@@ -187,6 +189,12 @@ class TernaryDiagram:
         self._append_x_y(plotter)
         return self.ax
     
+    def annotate(self, text:str, vector, **kwargs) -> plt.Axes:
+        plotter = _AnnotatePlotter(text, vector, ax=self.ax, **kwargs)
+        self._append_x_y(plotter)
+        return self.ax
+        
+    
     def _append_x_y(self, plotter):
         if not isinstance(plotter, _BasePlotter):
             raise TypeError()
@@ -202,9 +210,9 @@ class TernaryDiagram:
 
 
 class _BasePlotter:
-    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, bar_label='', **kwargs):
+    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, bar_label:str='', **kwargs):
         # クラスオブジェクト
-        self.vector = check_vector(vector)  # numpy.ndarray化
+        self.vector = check_2d_vector(vector)  # numpy.ndarray化
         self.ax = check_ax(ax)
         self.kwargs = kwargs
         self.z = np.array(z).ravel() if z is not None else None # convert to 1-d np.ndarray
@@ -259,7 +267,11 @@ class _ScatterPlotter(_BasePlotter):
         # easy annotation 右上に簡易annotation
         if annotations is not None:
             for x, y, txt in zip(self.x, self.y, annotations):
-                self.ax.annotate(get_label(txt), xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8, color = '#262626')
+                try:
+                    txt = get_label(txt)
+                except ValueError:
+                    pass
+                self.ax.annotate(txt, xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8, color = '#262626')
 
         # when z is None
         if self.z is None:
@@ -302,7 +314,7 @@ class _ContourPlotter(_BasePlotter):
         self.tight_layout()
 
 class _LinePlotter(_BasePlotter):
-    def __init__(self, vector, ax, **kwargs):
+    def __init__(self, vector, ax=None, **kwargs):
         super().__init__(vector, ax=ax, z=None, z_min=None, z_max=None, bar_label='', **kwargs)
 
         # name
@@ -315,6 +327,26 @@ class _LinePlotter(_BasePlotter):
 
         # plot
         self.ax.plot(self.x, self.y, **self.kwargs)
+        self.tight_layout()
+
+class _AnnotatePlotter(_BasePlotter):
+    def __init__(self, text, vector, ax=None, **kwargs):
+        vector = check_1d_vector(vector, scale=False)
+        super().__init__(vector, ax=ax, z=None, z_min=None, z_max=None, bar_label='', **kwargs)
+
+        if 'xytext' not in kwargs:
+            kwargs['xytext'] = (self.x[0] + 0.02, self.y[0] + 0.02)
+        if 'fontsize' not in kwargs:
+            kwargs['fontsize'] = 8
+
+        # check_text
+        try:
+            text = get_label(text)
+        except ValueError:
+            pass
+        # annotate
+        self.text_object_ = self.ax.annotate(text=text, xy=(self.x[0], self.y[0]), **kwargs)
+
         self.tight_layout()
 
 
