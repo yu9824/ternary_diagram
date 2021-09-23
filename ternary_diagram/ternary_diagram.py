@@ -190,6 +190,19 @@ class TernaryDiagram:
         return self.ax
     
     def annotate(self, text:str, vector, **kwargs) -> plt.Axes:
+        """annotate
+
+        Parameters
+        ----------
+        text : str
+            
+        vector : 1d array, whose length is 3.
+            
+
+        Returns
+        -------
+        plt.Axes
+        """
         plotter = _AnnotatePlotter(text, vector, ax=self.ax, **kwargs)
         self._append_x_y(plotter)
         return self.ax
