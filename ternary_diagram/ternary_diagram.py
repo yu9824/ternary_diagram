@@ -2,8 +2,9 @@
 Copyright © 2021 yu9824
 '''
 
+from _typeshed import NoneType
 import numpy as np
-import pandas as pd
+from typing import Union
 
 from copy import deepcopy
 
@@ -33,7 +34,7 @@ DEFAULT_ZORDER_PLOTS = 2
 DEFAULT_ZORDER_SCATTER = 3
 
 class TernaryDiagram:
-    def __init__(self, materials, ax=None):
+    def __init__(self, materials, ax: plt.Axes=None):
         """
         Make instance.
 
@@ -109,7 +110,7 @@ class TernaryDiagram:
     
     
     
-    def scatter(self, vector, z=None, z_min=None, z_max=None, bar_label='', **kwargs):
+    def scatter(self, vector, z=None, z_min=None, z_max=None, bar_label='', annotations=None, **kwargs) -> plt.Axes:
         """
         Plot scatter points.
 
@@ -125,6 +126,8 @@ class TernaryDiagram:
             , by default None
         bar_label : str, optional
             color bar label when `z` is not None., by default ''
+        annotations : array, optional
+            to add annotation easily, by default None
         **kwargs : parameter of matplotlib.pyplot.scatter, optional
             For example, `marker='x'`, `facecolor='blue'` etc.
             
@@ -136,11 +139,11 @@ class TernaryDiagram:
         Axes object
         """
 
-        plotter = _ScatterPlotter(vector=vector, ax=self.ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
+        plotter = _ScatterPlotter(vector=vector, ax=self.ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, annotations=annotations, **kwargs)
         self._append_x_y(plotter)
         return self.ax
 
-    def contour(self, vector, z, z_min=None, z_max=None, bar_label='', **kwargs):
+    def contour(self, vector, z, z_min=None, z_max=None, bar_label='', **kwargs) -> plt.Axes:
         """
         To create a contour map.
 
@@ -168,7 +171,7 @@ class TernaryDiagram:
         self._append_x_y(plotter)
         return self.ax
 
-    def plot(self, r1, r2, **kwargs):   # 連結線を引く (scatterオブジェクトの使用が必須な状況)
+    def plot(self, vector, **kwargs) -> plt.Axes:   # 連結線を引く (scatterオブジェクトの使用が必須な状況)
         """
         To draw a tie line.
 
@@ -185,7 +188,6 @@ class TernaryDiagram:
         Axes object
         """
 
-        vector = np.array([r1, r2])
         plotter = _LinePlotter(vector=vector, ax=self.ax, **kwargs)
         self._append_x_y(plotter)
         return self.ax
@@ -248,8 +250,8 @@ class _BasePlotter:
 
 
 class _ScatterPlotter(_BasePlotter):
-    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, bar_label='', **kwargs):
-        super().__init__(vector=vector, ax=ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
+    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, bar_label='', annotations = None, **kwargs):
+        super().__init__(vector=vector, ax=ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, annotations=annotations, **kwargs)
 
         # name
         self.name = 'scatter'
@@ -260,9 +262,9 @@ class _ScatterPlotter(_BasePlotter):
         )
 
         # easy annotation 右上に簡易annotation
-        self.annotations = self.kwargs.pop('annotations') if 'annotations' in self.kwargs else []
-        for x, y, ann in zip(self.x, self.y, self.annotations):
-            self.ax.annotate(ann, xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8, color = '#262626')
+        if annotations is not None:
+            for x, y, txt in zip(self.x, self.y, annotations):
+                self.ax.annotate(get_label(txt), xy = (x, y), xytext = (x+0.02, y+0.02), fontsize = 8, color = '#262626')
 
         # when z is None
         if self.z is None:

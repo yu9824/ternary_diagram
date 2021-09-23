@@ -2,7 +2,7 @@ from matplotlib.axes._subplots import Axes
 import matplotlib.pyplot as plt
 import numpy as np
 
-def check_ax(ax):
+def check_ax(ax) -> plt.Axes:
     """check ax
 
     Parameters
@@ -27,7 +27,7 @@ def check_ax(ax):
         raise TypeError('`ax` is None or Axes object.\nThis `ax` is ({}).'.format(ax.__class__))
     return ax
 
-def check_vector(vector, scale=True):
+def check_vector(vector, scale=True) -> np.ndarray:
     """check vector
 
     Parameters
@@ -53,7 +53,7 @@ def check_vector(vector, scale=True):
         vector = vector / np.sum(vector, axis = 1, keepdims = True) # 今回keepdims = Trueは.reshape(-1, 1)と同義
     return vector
 
-def three2two(vector):
+def three2two(vector) -> np.ndarray:
     """
     Converted 3D proportions to 2D in order to generate a triangular diagram.
 
@@ -68,7 +68,7 @@ def three2two(vector):
     """
     return (2 * vector[:, 2] + vector[:, 0]) / 2, np.sqrt(3) / 2 * vector[:, 0]
 
-def get_label(compound_name):
+def get_label(compound_name:str) -> str:
     """
     Convert the chemical composition to LaTeX notation.
 
