@@ -6,7 +6,6 @@ from typing import Optional
 
 import numpy as np
 import matplotlib
-from copy import deepcopy
 import matplotlib.pyplot as plt
 # import matplotlib.cm as cm      # ternary内にカラーマップを創設する
 import matplotlib.tri as tri    # 三角図を簡単に出すやつ
@@ -317,7 +316,7 @@ class _ScatterPlotter(_BasePlotter):
                 self.kwargs['cmap'] = DEFAULT_CMAP
             self._return_ = self.ax.scatter(self.x, self.y, c = self.z, vmin = self.z_min, vmax = self.z_max, **self.kwargs)
             if flag_cbar:
-                _draw_colorbar(self._return_, ax=self.ax)
+                self.colorbar = _draw_colorbar(self._return_, ax=self.ax)
         self.fig.tight_layout()
 
 class _ContourPlotter(_BasePlotter):
