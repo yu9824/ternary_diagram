@@ -5,6 +5,8 @@ Copyright © 2021 yu9824
 from typing import Optional
 
 import numpy as np
+import matplotlib
+from copy import deepcopy
 import matplotlib.pyplot as plt
 # import matplotlib.cm as cm      # ternary内にカラーマップを創設する
 import matplotlib.tri as tri    # 三角図を簡単に出すやつ
@@ -20,7 +22,6 @@ except:
 z_max: colorbarの上限値を固定するかどうか．default;None
 z_min: colorbarの上限値を固定するかどうか．default;None
 norm: 標準化する必要があるかどうか．default;True
-bar_label: colorbarの横に書くlabel名
 '''
 
 # default parameters
@@ -31,7 +32,7 @@ DEFAULT_ZORDER_PLOTS = 2
 DEFAULT_ZORDER_SCATTER = 3
 
 class TernaryDiagram:
-    def __init__(self, materials, ax: Optional[plt.Axes]=None):
+    def __init__(self, materials, ax: Optional[matplotlib.axes.Axes]=None):
         """
         Make instance.
 
@@ -42,7 +43,7 @@ class TernaryDiagram:
         ----------
         materials : array (shape = (3,))
             A one-dimensional list of compounds that constitute an endpoint when generating a ternary_diagram.
-        ax : None or Axes object
+        ax : matplotlib.axes.Axes, optional
             Axes object to draw a diagram. If None, automatically generate.
         """
 
@@ -107,7 +108,7 @@ class TernaryDiagram:
     
     
     
-    def scatter(self, vector, z=None, z_min=None, z_max=None, bar_label:str='', annotations=None, **kwargs) -> plt.Axes:
+    def scatter(self, vector, z=None, z_min=None, z_max=None, annotations=None, flag_cbar:bool = True, **kwargs) -> matplotlib.collection.PathCollection:
         """
         Plot scatter points.
 
@@ -121,8 +122,6 @@ class TernaryDiagram:
             , by default None
         z_max : int, float, optional
             , by default None
-        bar_label : str, optional
-            color bar label when `z` is not None., by default ''
         annotations : array, optional
             to add annotation easily, by default None
         **kwargs : parameter of matplotlib.pyplot.scatter, optional
@@ -133,14 +132,15 @@ class TernaryDiagram:
 
         Returns
         -------
-        Axes object
+        matplotlib.collection.PathCollection
+            A collection of scatter points.
         """
 
-        plotter = _ScatterPlotter(vector=vector, ax=self.ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, annotations=annotations, **kwargs)
+        plotter = _ScatterPlotter(vector=vector, ax=self.ax, z=z, z_min=z_min, z_max=z_max, annotations=annotations, flag_cbar=flag_cbar, **kwargs)
         self._append_x_y(plotter)
-        return self.ax
+        return plotter._return_
 
-    def contour(self, vector, z, z_min=None, z_max=None, bar_label:str='', **kwargs) -> plt.Axes:
+    def contour(self, vector, z, z_min=None, z_max=None, flag_cbar:bool = True, **kwargs) -> matplotlib.tri.TriContourSet:
         """
         To create a contour map.
 
@@ -154,21 +154,20 @@ class TernaryDiagram:
             , by default None
         z_max : int, float, optional
             , by default None
-        bar_label : str, optional
-            color bar label when `z` is not None., by default ''
         **kwargs : parameter of matplotlib.pyplot.contour, optional
             https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html
 
         Returns
         -------
-        Axes object
+        matplotlib.tri.TriContourSet
+            A collection of contour lines.
         """
 
-        plotter = _ContourPlotter(vector=vector, ax=self.ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
+        plotter = _ContourPlotter(vector=vector, ax=self.ax, z=z, z_min=z_min, z_max=z_max, flag_cbar=flag_cbar, **kwargs)
         self._append_x_y(plotter)
-        return self.ax
+        return plotter._return_
 
-    def plot(self, vector, **kwargs) -> plt.Axes:   # 連結線を引く (scatterオブジェクトの使用が必須な状況)
+    def plot(self, vector, **kwargs) -> matplotlib.lines.Line2D:
         """
         To draw a tie line.
 
@@ -182,14 +181,15 @@ class TernaryDiagram:
 
         Returns
         -------
-        Axes object
+        matplotlib.lines.Line2D
+            A line.
         """
 
         plotter = _LinePlotter(vector=vector, ax=self.ax, **kwargs)
         self._append_x_y(plotter)
-        return self.ax
+        return plotter._return_
     
-    def annotate(self, text:str, vector, **kwargs) -> plt.Axes:
+    def annotate(self, text:str, vector, **kwargs) -> matplotlib.text.Annnotation:
         """annotate
 
         Parameters
@@ -201,12 +201,37 @@ class TernaryDiagram:
 
         Returns
         -------
-        plt.Axes
+        matplotlib.text.Annnotation
+            An annotation.
         """
         plotter = _AnnotatePlotter(text, vector, ax=self.ax, **kwargs)
         self._append_x_y(plotter)
-        return self.ax
-        
+        return plotter._return_
+    
+    def colorbar(self, mappable, shrink = 0.8, format = '%.1f', label:str = '', orientation = 'vertical', ticklocation = 'top', **kwargs)->matplotlib.colorbar.Colorbar:
+        """Draw a colorbar.
+
+        Parameters
+        ----------
+        mappable : matplotlib.cm.ScalarMappable
+            The object that contains the colorbar data.
+        shrink : float, optional
+            how much to shrink the colorbar, by default 0.8
+        format : str, optional
+            float format, by default '%.1f'
+        label : str, optional
+            bar label, by default ''
+        orientation : str, optional
+            bar orientation, by default 'vertical'
+        ticklocation : str, optional
+            tick location, by default 'top'
+
+        Returns
+        -------
+        matplotlib.colorbar.Colorbar
+            colorbar object
+        """        
+        return _draw_colorbar(mappable=mappable, ax=self.ax, shrink=shrink, format=format, label=label, orientation=orientation, ticklocation=ticklocation, **kwargs)
     
     def _append_x_y(self, plotter):
         if not isinstance(plotter, _BasePlotter):
@@ -223,31 +248,25 @@ class TernaryDiagram:
 
 
 class _BasePlotter:
-    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, bar_label:str='', **kwargs):
+    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, **kwargs):
         # クラスオブジェクト
-        self.vector = check_2d_vector(vector)  # numpy.ndarray化
-        self.ax = check_ax(ax)
-        self.kwargs = kwargs
-        self.z = np.array(z).ravel() if z is not None else None # convert to 1-d np.ndarray
+        self.vector:np.ndarray = check_2d_vector(vector)  # numpy.ndarray化
+        self.ax:matplotlib.axes.Axes = check_ax(ax)
+        self.kwargs:dict = kwargs
+        self.z:np.ndarray = np.array(z).ravel() if z is not None else None # convert to 1-d np.ndarray
         if self.z is not None:
             self.z_min = z_min
             self.z_max = z_max
-            self.bar_label = bar_label
 
-        self.name = 'base'  # change by each plotter
+        # change by each plotter
+        self.name:str = 'base'
+        self._return_ = None
 
         # get_figure
         self.fig = self.ax.figure
 
         # 3次元ベクトルをx, y座標に落とし込む．
         self.x, self.y = three2two(self.vector)
-        
-
-    def colorbar(self):
-        return self.fig.colorbar(self.triplot, shrink = 0.8, format='%.1f', label = self.bar_label, orientation = 'vertical', ticklocation = 'top', ax=self.ax)
-    
-    def tight_layout(self):
-        return self.fig.tight_layout()
     
     def get_x_y(self):
         return self.x, self.y
@@ -266,8 +285,8 @@ class _BasePlotter:
 
 
 class _ScatterPlotter(_BasePlotter):
-    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, bar_label='', annotations = None, **kwargs):
-        super().__init__(vector=vector, ax=ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
+    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, annotations = None, flag_cbar:bool = True, **kwargs):
+        super().__init__(vector=vector, ax=ax, z=z, z_min=z_min, z_max=z_max, **kwargs)
 
         # name
         self.name = 'scatter'
@@ -288,20 +307,22 @@ class _ScatterPlotter(_BasePlotter):
 
         # when z is None
         if self.z is None:
+            flag_cbar = False
             # To change color by each point
-            self.ax.scatter(self.x, self.y, **self.kwargs)
+            self._return_ = self.ax.scatter(self.x, self.y, **self.kwargs)
             # for i_data in range(len(self.x)):
             #     self.ax.scatter(self.x[i_data], self.y[i_data], **self.kwargs)
         else:
             if 'cmap' not in self.kwargs:
                 self.kwargs['cmap'] = DEFAULT_CMAP
-            self.triplot = self.ax.scatter(self.x, self.y, c = self.z, vmin = self.z_min, vmax = self.z_max, **self.kwargs)
-            self.colorbar()
-        self.tight_layout()
+            self._return_ = self.ax.scatter(self.x, self.y, c = self.z, vmin = self.z_min, vmax = self.z_max, **self.kwargs)
+            if flag_cbar:
+                _draw_colorbar(self._return_, ax=self.ax)
+        self.fig.tight_layout()
 
 class _ContourPlotter(_BasePlotter):
-    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, bar_label='', **kwargs):
-        super().__init__(vector, ax=ax, z=z, z_min=z_min, z_max=z_max, bar_label=bar_label, **kwargs)
+    def __init__(self, vector, ax=None, z=None, z_min=None, z_max=None, flag_cbar:bool=True, **kwargs):
+        super().__init__(vector, ax=ax, z=z, z_min=z_min, z_max=z_max, **kwargs)
 
         # name
         self.name = 'contour'
@@ -321,14 +342,14 @@ class _ContourPlotter(_BasePlotter):
         if unique.size == 1:
             offset = 0.001
             levels = np.linspace(unique[0] - offset * (n_levels // 2), unique[0] + offset * (n_levels // 2), n_levels)
-        self.triplot = self.ax.tricontourf(self.x, self.y, T.triangles, self.z, levels = levels, **self.kwargs)
-
-        self.colorbar()
-        self.tight_layout()
+        self._return_ = self.ax.tricontourf(self.x, self.y, T.triangles, self.z, levels = levels, **self.kwargs)
+        if flag_cbar:
+            self.colorbar = _draw_colorbar(mappable=self._return_, ax=self.ax)
+        self.fig.tight_layout()
 
 class _LinePlotter(_BasePlotter):
     def __init__(self, vector, ax=None, **kwargs):
-        super().__init__(vector, ax=ax, z=None, z_min=None, z_max=None, bar_label='', **kwargs)
+        super().__init__(vector, ax=ax, z=None, z_min=None, z_max=None, **kwargs)
 
         # name
         self.name = 'plot'
@@ -339,13 +360,16 @@ class _LinePlotter(_BasePlotter):
         )
 
         # plot
-        self.ax.plot(self.x, self.y, **self.kwargs)
-        self.tight_layout()
+        self._return_ = self.ax.plot(self.x, self.y, **self.kwargs)
+        self.fig.tight_layout()
 
 class _AnnotatePlotter(_BasePlotter):
     def __init__(self, text, vector, ax=None, **kwargs):
         vector = check_1d_vector(vector, scale=False)
-        super().__init__(vector, ax=ax, z=None, z_min=None, z_max=None, bar_label='', **kwargs)
+        super().__init__(vector, ax=ax, z=None, z_min=None, z_max=None, **kwargs)
+
+        # name
+        self.name = 'annotate'
 
         if 'xytext' not in kwargs:
             kwargs['xytext'] = (self.x[0] + 0.02, self.y[0] + 0.02)
@@ -358,9 +382,15 @@ class _AnnotatePlotter(_BasePlotter):
         except ValueError:
             pass
         # annotate
-        self.text_object_ = self.ax.annotate(text=text, xy=(self.x[0], self.y[0]), **kwargs)
+        self._return_ = self.ax.annotate(text=text, xy=(self.x[0], self.y[0]), **kwargs)
 
-        self.tight_layout()
+        self.fig.tight_layout()
+
+
+def _draw_colorbar(mappable, ax:matplotlib.axes.Axes = None, shrink = 0.8, format = '%.1f', label:str = '', orientation = 'vertical', ticklocation = 'top', **kwargs)->matplotlib.colorbar.Colorbar:
+    if ax is None:
+        ax = plt.gca()
+    return ax.figure.colorbar(mappable, ax=ax, shrink=shrink, format=format, label=label, orientation=orientation, ticklocation=ticklocation, **kwargs)
 
 
 if __name__ == '__main__':
