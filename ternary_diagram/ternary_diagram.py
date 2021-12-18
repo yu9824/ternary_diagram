@@ -107,7 +107,7 @@ class TernaryDiagram:
     
     
     
-    def scatter(self, vector, z=None, z_min=None, z_max=None, annotations=None, flag_cbar:bool = True, **kwargs) -> matplotlib.collection.PathCollection:
+    def scatter(self, vector, z=None, z_min=None, z_max=None, annotations=None, flag_cbar:bool = True, **kwargs) -> matplotlib.collections.PathCollection:
         """
         Plot scatter points.
 
@@ -131,7 +131,7 @@ class TernaryDiagram:
 
         Returns
         -------
-        matplotlib.collection.PathCollection
+        matplotlib.collections.PathCollection
             A collection of scatter points.
         """
 
@@ -188,7 +188,7 @@ class TernaryDiagram:
         self._append_x_y(plotter)
         return plotter._return_
     
-    def annotate(self, text:str, vector, **kwargs) -> matplotlib.text.Annnotation:
+    def annotate(self, text:str, vector, **kwargs) -> matplotlib.text.Annotation:
         """annotate
 
         Parameters
@@ -200,7 +200,7 @@ class TernaryDiagram:
 
         Returns
         -------
-        matplotlib.text.Annnotation
+        matplotlib.text.Annotation
             An annotation.
         """
         plotter = _AnnotatePlotter(text, vector, ax=self.ax, **kwargs)
