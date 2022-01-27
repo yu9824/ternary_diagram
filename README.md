@@ -1,7 +1,7 @@
 # Ternary Diagram
-![python_badge](https://img.shields.io/pypi/pyversions/ternary-diagram)
-![license_badge](https://img.shields.io/pypi/l/ternary-diagram)
-![Total_Downloads_badge](https://pepy.tech/badge/ternary-diagram)
+[![python_badge](https://img.shields.io/pypi/pyversions/ternary-diagram)](https://pypi.org/project/ternary-diagram/)
+[![license_badge](https://img.shields.io/pypi/l/ternary-diagram)](https://pypi.org/project/ternary-diagram/)
+[![Total_Downloads_badge](https://pepy.tech/badge/ternary-diagram)](https://pepy.tech/project/ternary-diagram)
 
 This package makes it easier for you to draw beautiful ternary diagram <b>without</b> [pymatgen](https://pymatgen.org).
 
