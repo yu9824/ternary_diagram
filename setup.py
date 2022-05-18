@@ -27,7 +27,7 @@ ICON = os.path.join('icon', '{}.icns'.format(PACKAGE_NAME))
 VERSION_PYTHON = '{0}.{1}'.format(sys.version_info.major, sys.version_info.minor)
 
 # __init__.pyから読み込む
-with open(os.path.join(PACKAGE_NAME, '__init__.py')) as f:
+with open(os.path.join(PACKAGE_NAME, '__init__.py'), encoding='utf-8') as f:
     init_text = f.read()
     VERSION = re.search(r'__version__\s*=\s*[\'\"](.+?)[\'\"]', init_text).group(1)
     LICENSE = re.search(r'__license__\s*=\s*[\'\"](.+?)[\'\"]', init_text).group(1)
@@ -36,6 +36,7 @@ with open(os.path.join(PACKAGE_NAME, '__init__.py')) as f:
     ID = re.search(r'__user_id__\s*=\s*[\'\"](.+?)[\'\"]', init_text).group(1)
     APP_NAME = re.search(r'__app_name__\s*=\s*[\'\"](.+?)[\'\"]', init_text).group(1)
     url = re.search(r'__url__\s*=\s*[\'\"](.+?)[\'\"]', init_text).group(1)
+
 assert VERSION
 assert LICENSE
 assert AUTHOR
@@ -114,11 +115,11 @@ else:
     """
     参考: https://python-packaging-user-guide-ja.readthedocs.io/ja/latest/distributing.html#manifest-in
     """
-    with open('requirements.txt') as requirements_file:
+    with open('requirements.txt', encoding='utf-8') as requirements_file:
         install_requirements = requirements_file.read().splitlines()
     
     try:
-        with open('README.md') as f:
+        with open('README.md', encoding='utf-8') as f:
             long_description = f.read()
     except IOError:
         long_description = ''
