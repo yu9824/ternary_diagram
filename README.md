@@ -3,6 +3,8 @@
 [![license_badge](https://img.shields.io/pypi/l/ternary-diagram)](https://pypi.org/project/ternary-diagram/)
 [![Total_Downloads_badge](https://pepy.tech/badge/ternary-diagram)](https://pepy.tech/project/ternary-diagram)
 
+[![conda_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/installer/conda.svg)](https://anaconda.org/conda-forge/ternary-diagram/)
+
 This package makes it easier for you to draw beautiful ternary diagram <b>without</b> [pymatgen](https://pymatgen.org).
 
 Meaningly, only need `numpy`, `pandas` and `matplotlib`.
@@ -31,11 +33,21 @@ get_ratio(products = ['LiLa2TiO6'], materials = ['Li2O', 'La2O3', 'TiO2'])
 ```
 
 ## How to install
+### PyPI
+
 ```bash
 pip install ternary-diagram
 ```
 
 PyPI project is [here](https://pypi.org/project/ternary-diagram/).
+
+### Anaconda
+
+```bash
+conda install -c conda-forge ternary-diagram
+```
+
+Anaconda (conda-forge) package site is [here](https://anaconda.org/conda-forge/ternary-diagram).
 
 ## Usage
 See [Examples](#examples) and the [documentation](https://yu9824.github.io/ternary_diagram/).
