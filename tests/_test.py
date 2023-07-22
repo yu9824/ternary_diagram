@@ -1,8 +1,10 @@
 if __name__ == "__main__":
+    from typing import List
+
     from ternary_diagram import TernaryDiagram
     import matplotlib.pyplot as plt
     import pandas as pd
-    from element_recognition import make_compositions
+    # from element_recognition import make_compositions
 
     n_cols = 3
     n_rows = 1
@@ -26,7 +28,7 @@ if __name__ == "__main__":
         "https://raw.githubusercontent.com/yu9824/ternary_diagram/main/example/contour/example_contour.csv"
     )
 
-    tds = []
+    tds: List[TernaryDiagram] = []
     for i in range(2):
         tds.append(
             TernaryDiagram(materials=df_mono_scatter.columns, ax=axes[i])
