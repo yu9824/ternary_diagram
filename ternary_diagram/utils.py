@@ -1,15 +1,17 @@
-from matplotlib.axes._subplots import Axes
+from typing import Tuple, Optional
+
+import matplotlib.axes
 import matplotlib.pyplot as plt
 import numpy as np
-from typing import Tuple
 
-def check_ax(ax) -> plt.Axes:
+
+def check_ax(ax: Optional[matplotlib.axes.Axes]) -> matplotlib.axes.Axes:
     """check ax
 
     Parameters
     ----------
     ax : None or Axes object
-        
+
 
     Returns
     -------
@@ -18,17 +20,22 @@ def check_ax(ax) -> plt.Axes:
     Raises
     ------
     TypeError
-        
+
     """
     if ax is None:
         ax = plt.gca()
-    elif isinstance(ax, Axes):
+    elif isinstance(ax, matplotlib.axes.Axes):
         ax = ax
     else:
-        raise TypeError('`ax` is None or Axes object.\nThis `ax` is ({}).'.format(ax.__class__))
+        raise TypeError(
+            "`ax` is None or Axes object.\nThis `ax` is ({}).".format(
+                ax.__class__
+            )
+        )
     return ax
 
-def check_2d_vector(vector, scale:bool=True) -> np.ndarray:
+
+def check_2d_vector(vector, scale: bool = True) -> np.ndarray:
     """check 2d vector
 
     Parameters
@@ -51,10 +58,13 @@ def check_2d_vector(vector, scale:bool=True) -> np.ndarray:
     if vector.shape[1] != 3:
         raise ValueError("`vector`'s shape must be (n, 3)")
     if scale:
-        vector = vector / np.sum(vector, axis = 1, keepdims = True) # 今回keepdims = Trueは.reshape(-1, 1)と同義
+        vector = vector / np.sum(
+            vector, axis=1, keepdims=True
+        )  # 今回keepdims = Trueは.reshape(-1, 1)と同義
     return vector
 
-def check_1d_vector(vector, scale:bool=True) -> np.ndarray:
+
+def check_1d_vector(vector, scale: bool = True) -> np.ndarray:
     """check 1d vector
 
     Parameters
@@ -85,6 +95,7 @@ def check_1d_vector(vector, scale:bool=True) -> np.ndarray:
     else:
         raise ValueError("`vector`'s length must be 3.")
 
+
 def three2two(vector) -> Tuple[np.ndarray, np.ndarray]:
     """
     Converted 3D proportions to 2D in order to generate a triangular diagram.
@@ -105,7 +116,8 @@ def three2two(vector) -> Tuple[np.ndarray, np.ndarray]:
     """
     return (2 * vector[:, 2] + vector[:, 0]) / 2, np.sqrt(3) / 2 * vector[:, 0]
 
-def get_label(compound_name:str) -> str:
+
+def get_label(compound_name: str) -> str:
     """
     Convert the chemical composition to LaTeX notation.
 
@@ -118,7 +130,7 @@ def get_label(compound_name:str) -> str:
     -------
     str
         Chemical composition converted to LaTeX notation.
-    
+
     Examples
     --------
     >>> get_label('Li2O')
@@ -133,17 +145,17 @@ def get_label(compound_name:str) -> str:
         when `compound_name` is not str.
     """
     if not isinstance(compound_name, str):
-        raise ValueError('The `compound_name` must be string.')
-    f = '$_{'
-    b = '}$'
+        raise ValueError("The `compound_name` must be string.")
+    f = "$_{"
+    b = "}$"
     N = len(compound_name)
-    lst_compound_name = list(compound_name) + ['']   # outputするために変えていく．
+    lst_compound_name = list(compound_name) + [""]  # outputするために変えていく．
 
     # １文字ずつ取り出して
     i = 0
     while i < N:
-        l = compound_name[i] # l: letter
-        if l.isdigit():
+        letter = compound_name[i]
+        if letter.isdigit():
             j = i + 1
             while j < N + 1:
                 try:
@@ -157,8 +169,10 @@ def get_label(compound_name:str) -> str:
             lst_compound_name[j] = b + lst_compound_name[j]
             i = j
         i += 1
-    return ''.join(lst_compound_name)
+    return "".join(lst_compound_name)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     from doctest import testmod
+
     testmod(verbose=True)
