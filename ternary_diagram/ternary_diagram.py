@@ -2,33 +2,30 @@
 Copyright © 2021 yu9824
 """
 
-from typing import Optional
+from abc import abstractmethod
+from typing import Optional, overload
 
 import numpy as np
-import matplotlib
+import matplotlib.axes
+import matplotlib.text
+import matplotlib.collections
+import matplotlib.lines
+import matplotlib.colorbar
 import matplotlib.pyplot as plt
 
 # import matplotlib.cm as cm      # ternary内にカラーマップを創設する
-import matplotlib.tri as tri  # 三角図を簡単に出すやつ
+# 三角図を簡単に出すやつ
+from matplotlib.tri.tricontour import TriContourSet
+from matplotlib.tri.triangulation import Triangulation
 
-try:
-    # package
-    from .utils import (
-        check_ax,
-        check_1d_vector,
-        check_2d_vector,
-        three2two,
-        get_label,
-    )
-except:
-    # for _test.py
-    from utils import (
-        check_ax,
-        check_1d_vector,
-        check_2d_vector,
-        three2two,
-        get_label,
-    )
+from ternary_diagram.utils import (
+    check_ax,
+    check_1d_vector,
+    check_2d_vector,
+    three2two,
+    get_label,
+)
+
 
 """
     kwargs
@@ -56,7 +53,9 @@ class TernaryDiagram:
         Parameters
         ----------
         materials : array (shape = (3,))
-            A one-dimensional list of compounds that constitute an endpoint when generating a ternary_diagram.
+            A one-dimensional list of compounds that constitute an endpoint
+             when generating a ternary_diagram.
+
         ax : matplotlib.axes.Axes, optional
             Axes object to draw a diagram. If None, automatically generate.
         """
@@ -80,7 +79,7 @@ class TernaryDiagram:
         )
         self.ax.tick_params(bottom=False, left=False, right=False, top=False)
 
-        # 枠線を表示しない．
+        # clear borders
         {
             self.ax.spines[position].set_visible(False)
             for position in ["bottom", "left", "right", "top"]
@@ -89,7 +88,7 @@ class TernaryDiagram:
         # h = √3/2
         h = np.sqrt(3.0) * 0.5
 
-        # 内側目盛
+        # inner tick marks
         inner_border_options = {
             "color": "gray",
             "lw": 0.5,
@@ -112,7 +111,7 @@ class TernaryDiagram:
                 **inner_border_options
             )
 
-        # 外周の枠線
+        # borders
         outer_border_options = {
             "color": "black",
             "lw": 2,
@@ -200,7 +199,9 @@ class TernaryDiagram:
         Parameters
         ----------
         vector : array | shape = (n, 3)
-            percentage of each compound mixed in 2D list / pandas.DataFrame / numpy.ndarray, where shape = [n, 3] (n is the number of samples to be plotted as integer)
+            percentage of each compound mixed in 2D list / pandas.DataFrame
+             / numpy.ndarray, where shape = [n, 3] (n is the number of samples
+             to be plotted as integer)
         z : list, numpy.ndarray, pandas.Series etc, shape = (n,), optional
             , by default None
         z_min : int, float , optional
@@ -242,14 +243,16 @@ class TernaryDiagram:
         z_max=None,
         flag_cbar: bool = True,
         **kwargs
-    ) -> matplotlib.tri.TriContourSet:
+    ) -> TriContourSet:
         """
         To create a contour map.
 
         Parameters
         ----------
         vector : array | shape = (n, 3)
-            percentage of each compound mixed in 2D list / pandas.DataFrame / numpy.ndarray, where shape = [n, 3] (n is the number of samples to be plotted as integer)
+            percentage of each compound mixed in 2D list / pandas.DataFrame
+             / numpy.ndarray, where shape = [n, 3] (n is the number of samples
+             to be plotted as integer)
         z : list, numpy.ndarray, pandas.Series etc, shape = (n,)
             , by default None
         z_min : int, float, optional
@@ -261,7 +264,7 @@ class TernaryDiagram:
 
         Returns
         -------
-        matplotlib.tri.TriContourSet
+        matplotlib.tri.tricontour.TriContourSet
             A collection of contour lines.
         """
 
@@ -284,8 +287,10 @@ class TernaryDiagram:
         Parameters
         ----------
         vector : array | shape = (n, 3)
-            A mixing ratio of the compounds that are endpoints of the connecting line. A one-dimensional list of length 3.
-        **kwargs: parameter of matplotlib.pyplot.plot, optional
+            A mixing ratio of the compounds that are endpoints of
+             the connecting line. A one-dimensional list of length 3.
+
+        kwargs: parameter of matplotlib.pyplot.plot, optional
             See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html
 
 
@@ -379,7 +384,13 @@ class TernaryDiagram:
 
 class _BasePlotter:
     def __init__(
-        self, vector, ax=None, z=None, z_min=None, z_max=None, **kwargs
+        self,
+        vector,
+        ax: Optional[matplotlib.axes.Axes] = None,
+        z=None,
+        z_min=None,
+        z_max=None,
+        **kwargs
     ):
         # クラスオブジェクト
         self.vector: np.ndarray = check_2d_vector(vector)  # numpy.ndarray化
@@ -417,6 +428,11 @@ class _BasePlotter:
             if k not in self.kwargs:
                 self.kwargs[k] = v
 
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        ...
+
 
 class _ScatterPlotter(_BasePlotter):
     def __init__(
@@ -433,9 +449,6 @@ class _ScatterPlotter(_BasePlotter):
         super().__init__(
             vector=vector, ax=ax, z=z, z_min=z_min, z_max=z_max, **kwargs
         )
-
-        # name
-        self.name = "scatter"
 
         # default options
         self._set_default_params(
@@ -479,6 +492,10 @@ class _ScatterPlotter(_BasePlotter):
                 self.colorbar = _draw_colorbar(self._return_, ax=self.ax)
         self.fig.tight_layout()
 
+    @property
+    def name(self):
+        return "scatter"
+
 
 class _ContourPlotter(_BasePlotter):
     def __init__(
@@ -495,16 +512,13 @@ class _ContourPlotter(_BasePlotter):
             vector, ax=ax, z=z, z_min=z_min, z_max=z_max, **kwargs
         )
 
-        # name
-        self.name = "contour"
-
         # default options
         self._set_default_params(
             cmap=DEFAULT_CMAP,
             zorder=DEFAULT_ZORDER_CONTOUR,
         )
 
-        T = tri.Triangulation(self.x, self.y)
+        T = Triangulation(self.x, self.y)
         # 等高線の線を引く場所，すなわち，色の勾配を表す配列．
         n_levels = 101  # 勾配をどれだけ細かくするかの変数．
         levels = np.linspace(
@@ -528,15 +542,16 @@ class _ContourPlotter(_BasePlotter):
             self.colorbar = _draw_colorbar(mappable=self._return_, ax=self.ax)
         self.fig.tight_layout()
 
+    @property
+    def name(self):
+        return "contour"
+
 
 class _LinePlotter(_BasePlotter):
     def __init__(self, vector, ax=None, **kwargs):
         super().__init__(
             vector, ax=ax, z=None, z_min=None, z_max=None, **kwargs
         )
-
-        # name
-        self.name = "plot"
 
         # default options
         self._set_default_params(
@@ -547,6 +562,10 @@ class _LinePlotter(_BasePlotter):
         self._return_ = self.ax.plot(self.x, self.y, **self.kwargs)
         self.fig.tight_layout()
 
+    @property
+    def name(self):
+        return "plot"
+
 
 class _AnnotatePlotter(_BasePlotter):
     def __init__(self, text, vector, ax=None, **kwargs):
@@ -554,9 +573,6 @@ class _AnnotatePlotter(_BasePlotter):
         super().__init__(
             vector, ax=ax, z=None, z_min=None, z_max=None, **kwargs
         )
-
-        # name
-        self.name = "annotate"
 
         if "xytext" not in kwargs:
             kwargs["xytext"] = (self.x[0] + 0.02, self.y[0] + 0.02)
@@ -575,6 +591,10 @@ class _AnnotatePlotter(_BasePlotter):
 
         self.fig.tight_layout()
 
+    @property
+    def name(self):
+        return "annotate"
+
 
 def _draw_colorbar(
     mappable,
@@ -586,8 +606,7 @@ def _draw_colorbar(
     ticklocation="top",
     **kwargs
 ) -> matplotlib.colorbar.Colorbar:
-    if ax is None:
-        ax = plt.gca()
+    ax = check_ax(ax)
     return ax.figure.colorbar(
         mappable,
         ax=ax,
