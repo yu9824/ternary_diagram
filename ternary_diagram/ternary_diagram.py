@@ -3,8 +3,10 @@ Copyright © 2021 yu9824
 """
 
 from abc import abstractmethod
-from typing import Optional, overload
+from typing import Optional, Union
+from collections import defaultdict
 
+from numpy.typing import ArrayLike
 import numpy as np
 import matplotlib.axes
 import matplotlib.text
@@ -180,16 +182,16 @@ class TernaryDiagram:
             )
 
         # 二次元に変換したデータを保存しておく
-        self.x = dict()
-        self.y = dict()
+        self.x_ = defaultdict(list)
+        self.y_ = defaultdict(list)
 
     def scatter(
         self,
-        vector,
-        z=None,
-        z_min=None,
-        z_max=None,
-        annotations=None,
+        vector: ArrayLike,
+        z: Optional[ArrayLike] = None,
+        z_min: Optional[Union[int, float]] = None,
+        z_max: Optional[Union[int, float]] = None,
+        annotations: Optional[ArrayLike] = None,
         flag_cbar: bool = True,
         **kwargs
     ) -> matplotlib.collections.PathCollection:
@@ -233,7 +235,7 @@ class TernaryDiagram:
             **kwargs
         )
         self._append_x_y(plotter)
-        return plotter._return_
+        return plotter.collection_
 
     def contour(
         self,
@@ -278,7 +280,7 @@ class TernaryDiagram:
             **kwargs
         )
         self._append_x_y(plotter)
-        return plotter._return_
+        return plotter.collection_
 
     def plot(self, vector, **kwargs) -> matplotlib.lines.Line2D:
         """
@@ -302,7 +304,7 @@ class TernaryDiagram:
 
         plotter = _LinePlotter(vector=vector, ax=self.ax, **kwargs)
         self._append_x_y(plotter)
-        return plotter._return_
+        return plotter.collection_
 
     def annotate(
         self, text: str, vector, **kwargs
@@ -323,7 +325,7 @@ class TernaryDiagram:
         """
         plotter = _AnnotatePlotter(text, vector, ax=self.ax, **kwargs)
         self._append_x_y(plotter)
-        return plotter._return_
+        return plotter.collection_
 
     def colorbar(
         self,
@@ -374,12 +376,8 @@ class TernaryDiagram:
 
         x, y = plotter.get_x_y()
         name = plotter.name
-        if name in self.x:
-            self.x[name].append(x)
-            self.y[name].append(y)
-        else:
-            self.x[name] = [x]
-            self.y[name] = [y]
+        self.x_[name].append(x)
+        self.y_[name].append(y)
 
 
 class _BasePlotter:
@@ -392,20 +390,17 @@ class _BasePlotter:
         z_max=None,
         **kwargs
     ):
-        # クラスオブジェクト
         self.vector: np.ndarray = check_2d_vector(vector)  # numpy.ndarray化
         self.ax: matplotlib.axes.Axes = check_ax(ax)
         self.kwargs: dict = kwargs
         self.z: np.ndarray = (
             np.array(z).ravel() if z is not None else None
         )  # convert to 1-d np.ndarray
+
+        # TODO: check
         if self.z is not None:
             self.z_min = z_min
             self.z_max = z_max
-
-        # change by each plotter
-        self.name: str = "base"
-        self._return_ = None
 
         # get_figure
         self.fig = self.ax.figure
@@ -432,6 +427,15 @@ class _BasePlotter:
     @abstractmethod
     def name(self) -> str:
         ...
+
+    @property
+    def collection_(self) -> matplotlib.collections.Collection:
+        return self.__collection
+
+    @collection_.setter
+    def collection_(self, _collection):
+        if isinstance(_collection, matplotlib.collections.Collection):
+            self.__collection = _collection
 
 
 class _ScatterPlotter(_BasePlotter):
@@ -474,13 +478,13 @@ class _ScatterPlotter(_BasePlotter):
         if self.z is None:
             flag_cbar = False
             # To change color by each point
-            self._return_ = self.ax.scatter(self.x, self.y, **self.kwargs)
+            self.collection_ = self.ax.scatter(self.x, self.y, **self.kwargs)
             # for i_data in range(len(self.x)):
             #     self.ax.scatter(self.x[i_data], self.y[i_data], **self.kwargs)
         else:
             if "cmap" not in self.kwargs:
                 self.kwargs["cmap"] = DEFAULT_CMAP
-            self._return_ = self.ax.scatter(
+            self.collection_ = self.ax.scatter(
                 self.x,
                 self.y,
                 c=self.z,
@@ -489,7 +493,7 @@ class _ScatterPlotter(_BasePlotter):
                 **self.kwargs
             )
             if flag_cbar:
-                self.colorbar = _draw_colorbar(self._return_, ax=self.ax)
+                self.colorbar = _draw_colorbar(self.collection_, ax=self.ax)
         self.fig.tight_layout()
 
     @property
@@ -535,11 +539,13 @@ class _ContourPlotter(_BasePlotter):
                 unique[0] + offset * (n_levels // 2),
                 n_levels,
             )
-        self._return_ = self.ax.tricontourf(
+        self.collection_ = self.ax.tricontourf(
             self.x, self.y, T.triangles, self.z, levels=levels, **self.kwargs
         )
         if flag_cbar:
-            self.colorbar = _draw_colorbar(mappable=self._return_, ax=self.ax)
+            self.colorbar = _draw_colorbar(
+                mappable=self.collection_, ax=self.ax
+            )
         self.fig.tight_layout()
 
     @property
@@ -559,7 +565,7 @@ class _LinePlotter(_BasePlotter):
         )
 
         # plot
-        self._return_ = self.ax.plot(self.x, self.y, **self.kwargs)
+        self.collection_ = self.ax.plot(self.x, self.y, **self.kwargs)
         self.fig.tight_layout()
 
     @property
@@ -585,7 +591,7 @@ class _AnnotatePlotter(_BasePlotter):
         except ValueError:
             pass
         # annotate
-        self._return_ = self.ax.annotate(
+        self.collection_ = self.ax.annotate(
             text=text, xy=(self.x[0], self.y[0]), **kwargs
         )
 
