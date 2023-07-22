@@ -25,7 +25,7 @@ def check_ax(ax: Optional[matplotlib.axes.Axes]) -> matplotlib.axes.Axes:
     if ax is None:
         ax = plt.gca()
     elif isinstance(ax, matplotlib.axes.Axes):
-        ax = ax
+        pass
     else:
         raise TypeError(
             "`ax` is None or Axes object.\nThis `ax` is ({}).".format(
