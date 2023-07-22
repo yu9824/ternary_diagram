@@ -1,8 +1,6 @@
-# 正規表現でtextファイルと同じやり方で読み込むのですべて手打ちする．
-
 from .ternary_diagram import TernaryDiagram
 
-__version__      = '2.1.3dev'
+__version__      = '3.0.0dev0'
 __license__      = 'MIT'
 __author__       = 'yu9824'
 __copyright__ = 'Copyright © 2021 yu9824'
