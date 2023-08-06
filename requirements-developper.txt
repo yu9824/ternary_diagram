@@ -4,3 +4,4 @@ pandas
 sphinx
 sphinx_rtd_theme
 jupyter
+pytest
