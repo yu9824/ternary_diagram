@@ -1,8 +1,9 @@
 from typing import Tuple, Optional
 
+import numpy as np
+from numpy.typing import ArrayLike
 import matplotlib.axes
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 def check_ax(ax: Optional[matplotlib.axes.Axes]) -> matplotlib.axes.Axes:
@@ -35,7 +36,7 @@ def check_ax(ax: Optional[matplotlib.axes.Axes]) -> matplotlib.axes.Axes:
     return ax
 
 
-def check_2d_vector(vector, scale: bool = True) -> np.ndarray:
+def check_2d_vector(vector: ArrayLike, scale: bool = True) -> np.ndarray:
     """check 2d vector
 
     Parameters
@@ -54,7 +55,7 @@ def check_2d_vector(vector, scale: bool = True) -> np.ndarray:
     ValueError
         when shape is not (n, 3)
     """
-    vector = np.array(vector)
+    vector: np.ndarray = np.array(vector)
     if vector.shape[1] != 3:
         raise ValueError("`vector`'s shape must be (n, 3)")
     if scale:
@@ -64,7 +65,7 @@ def check_2d_vector(vector, scale: bool = True) -> np.ndarray:
     return vector
 
 
-def check_1d_vector(vector, scale: bool = True) -> np.ndarray:
+def check_1d_vector(vector: ArrayLike, scale: bool = True) -> np.ndarray:
     """check 1d vector
 
     Parameters
@@ -96,7 +97,7 @@ def check_1d_vector(vector, scale: bool = True) -> np.ndarray:
         raise ValueError("`vector`'s length must be 3.")
 
 
-def three2two(vector) -> Tuple[np.ndarray, np.ndarray]:
+def three2two(vector: ArrayLike) -> Tuple[np.ndarray, np.ndarray]:
     """
     Converted 3D proportions to 2D in order to generate a triangular diagram.
 
