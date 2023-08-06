@@ -15,7 +15,7 @@ sys.setrecursionlimit(10**9)
 
 # ------------------------ ここを変更 --------------------------------
 PACKAGE_NAME = "ternary_diagram"  # フォルダの名前も統一
-DESCRIPTION = "This package makes it easier for you to draw beautiful ternary diagram without pymatgen."
+DESCRIPTION = "This package makes it easier for you to draw beautiful ternary diagram without pymatgen."  # noqa
 
 # py2app用の変数
 SRC = ["main.py"]
@@ -66,7 +66,7 @@ python3.8で以前やったときはこのエラーがでなかった．
     → 3.8だとsetupのほうがエラー起きるので3.6でやってみる．
     3.6は起動後に関数が呼び出せないと言われる
 setup.pyに関する参考サイト
-* https://packaging.python.org/guides/distributing-packages-using-setuptools/#packages
+* https://packaging.python.org/guides/distributing-packages-using-setuptools/#packages  # noqa
 py2app 0.23や0.22では動作確認
 """
 
@@ -128,10 +128,10 @@ if "py2app" in sys.argv:
 
     # aliasモードじゃないとき．
     # if not alias:
-    #     {copyfile(f, os.path.join(frameworks_path, os.path.basename(f))) for f in dylib_files}
+    #     {copyfile(f, os.path.join(frameworks_path, os.path.basename(f))) for f in dylib_files}    # noqa
 else:
     """
-    参考: https://python-packaging-user-guide-ja.readthedocs.io/ja/latest/distributing.html#manifest-in
+    参考: https://python-packaging-user-guide-ja.readthedocs.io/ja/latest/distributing.html#manifest-in # noqa
     """
     with open("requirements.txt", encoding="utf-8") as requirements_file:
         install_requirements = requirements_file.read().splitlines()
@@ -147,22 +147,26 @@ else:
         version=VERSION,
         description=DESCRIPTION,
         long_description=long_description,
-        long_description_content_type="text/markdown",  # long_descriptionの形式を'text/plain', 'text/x-rst', 'text/markdown'のいずれかから指定．
+        # long_descriptionの形式
+        # 'text/plain', 'text/x-rst', 'text/markdown'のいずれかから指定．
+        long_description_content_type="text/markdown",
         author=AUTHOR,
         author_email=EMAIL,
         maintainer=AUTHOR,
         maintainer_email=EMAIL,
         install_requires=install_requirements,
         url=url,
-        keywords="ternarydiagram phasediagram chemistry",  # PyPIでの検索用キーワードをスペース区切りで指定．
+        # PyPIでの検索用キーワードをスペース区切りで指定．
+        keywords="ternarydiagram phasediagram chemistry",
         license=LICENSE,
         packages=find_packages(exclude=["example"]),
         classifiers=[
             "License :: OSI Approved :: MIT License",
             "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: 3.6",
             "Programming Language :: Python :: 3.7",
             "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
         ],  # パッケージ(プロジェクト)の分類．https://pypi.org/classifiers/ に掲載されているものを指定可能．
     )
