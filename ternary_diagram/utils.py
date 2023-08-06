@@ -1,4 +1,8 @@
-from typing import Tuple, Optional
+# deprecated in python>=3.9
+from typing import Tuple
+
+from typing import Optional
+from math import sqrt
 
 import numpy as np
 from numpy.typing import ArrayLike
@@ -115,7 +119,10 @@ def three2two(vector: ArrayLike) -> Tuple[np.ndarray, np.ndarray]:
     -------
     numpy.ndarray shape = (n, 2)
     """
-    return (2 * vector[:, 2] + vector[:, 0]) / 2, np.sqrt(3) / 2 * vector[:, 0]
+    return (
+        (2.0 * vector[:, 2] + vector[:, 0]) / 2.0,
+        sqrt(3.0) / 2.0 * vector[:, 0],
+    )
 
 
 def get_label(compound_name: str) -> str:
@@ -147,18 +154,23 @@ def get_label(compound_name: str) -> str:
     """
     if not isinstance(compound_name, str):
         raise ValueError("The `compound_name` must be string.")
+
     f = "$_{"
     b = "}$"
-    N = len(compound_name)
-    lst_compound_name = list(compound_name) + [""]  # outputするために変えていく．
+    n_name = len(compound_name)
 
-    # １文字ずつ取り出して
+    # convert str to list
+    # (add empty string to the end of the list to add b to the last letter.)
+    lst_compound_name = list(compound_name) + [""]
+
+    # find the number in the compound name.
     i = 0
-    while i < N:
+    while i < n_name:
+        # if you met a number, find the end of the number.
         letter = compound_name[i]
         if letter.isdigit():
             j = i + 1
-            while j < N + 1:
+            while j < n_name + 1:
                 try:
                     float(compound_name[i:j])
                 except ValueError:
