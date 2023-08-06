@@ -3,7 +3,9 @@
 [![license_badge](https://img.shields.io/pypi/l/ternary-diagram)](https://pypi.org/project/ternary-diagram/)
 [![Total_Downloads_badge](https://pepy.tech/badge/ternary-diagram)](https://pepy.tech/project/ternary-diagram)
 
-[![conda_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/installer/conda.svg)](https://anaconda.org/conda-forge/ternary-diagram/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![conda_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/version.svg)](https://anaconda.org/conda-forge/ternary-diagram/)
+[![arch_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/platforms.svg)](https://anaconda.org/conda-forge/ternary-diagram)
 
 This package makes it easier for you to draw beautiful ternary diagram <b>without</b> [pymatgen](https://pymatgen.org).
 
@@ -73,7 +75,7 @@ import matplotlib.pyplot as plt
 from ternary_diagram import TernaryDiagram
 
 fig, ax = plt.subplots(facecolor='w')   # The background color is sometimes transparent in jupyter notebooks, so set facecolor 'white'.
-td = TernaryDiagram(['Li2O', 'La2O3', 'TiO2'], ax=ax)   # You can set `ax` to select which axes to draw. If not, 
+td = TernaryDiagram(['Li2O', 'La2O3', 'TiO2'], ax=ax)   # You can set `ax` to select which axes to draw. If not,
 td.scatter(vector = [[1, 1, 1], [1, 2, 3]], z = [0, 1])
 td.scatter(vector = [[2, 1, 3], [3, 2, 1]], marker = 's', c = '#022c5e', s = 30)    # You can set some options in matplotlib.pyplot.scatter like `marker`, `c` etc.
 td.plot([[1, 1, 1], [1, 2, 3]], color = 'black')  # You can set some options in matplotlib.pyplot.plot like `lw`, `c`, and so on.
