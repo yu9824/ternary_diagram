@@ -1,10 +1,14 @@
 """
 Copyright © 2021 yu9824
 """
+# deprecated from python>=3.9
+from typing import Tuple
 
 from abc import abstractmethod
 from typing import Optional, Union
 from collections import defaultdict
+from math import sqrt
+from numbers import Number
 
 from numpy.typing import ArrayLike
 import numpy as np
@@ -13,7 +17,6 @@ import matplotlib.text
 import matplotlib.collections
 import matplotlib.lines
 import matplotlib.colorbar
-import matplotlib.pyplot as plt
 
 # import matplotlib.cm as cm      # ternary内にカラーマップを創設する
 # 三角図を簡単に出すやつ
@@ -45,7 +48,11 @@ DEFAULT_ZORDER_SCATTER = 3
 
 
 class TernaryDiagram:
-    def __init__(self, materials, ax: Optional[matplotlib.axes.Axes] = None):
+    def __init__(
+        self,
+        materials: Tuple[str, str, str],
+        ax: Optional[matplotlib.axes.Axes] = None,
+    ) -> None:
         """
         Make instance.
 
@@ -67,10 +74,10 @@ class TernaryDiagram:
         self.fig = self.ax.figure
 
         # Generate material_label (LaTeX notation)
-        material_label = list(map(get_label, materials))
+        material_label = tuple(map(get_label, materials))
 
         # Allign the aspect
-        self.ax.set_aspect("equal", "datalim")
+        self.ax.set_aspect("equal", adjustable="datalim")
 
         # 目盛りや目盛りにつくラベルを表示しない
         self.ax.tick_params(
@@ -82,13 +89,11 @@ class TernaryDiagram:
         self.ax.tick_params(bottom=False, left=False, right=False, top=False)
 
         # clear borders
-        {
+        for position in ("bottom", "left", "right", "top"):
             self.ax.spines[position].set_visible(False)
-            for position in ["bottom", "left", "right", "top"]
-        }
 
         # h = √3/2
-        h = np.sqrt(3.0) * 0.5
+        h = sqrt(3.0) / 2.0
 
         # inner tick marks
         inner_border_options = {
@@ -124,41 +129,44 @@ class TernaryDiagram:
         self.ax.plot([0.0, 0.5], [0.0, h], **outer_border_options)
         self.ax.plot([1.0, 0.5], [0.0, h], **outer_border_options)
 
-        # 頂点のラベル
-        font_size_material_label = 16
+        # 頂点のラベル (Labels of vertices)
+        FONT_SIZE_MATERIAL_LABEL = 16
+        # top label
         self.ax.text(
             0.5,
             h + 0.02,
             material_label[0],
-            fontsize=font_size_material_label,
+            fontsize=FONT_SIZE_MATERIAL_LABEL,
             ha="center",
             va="bottom",
         )
+        # left bottom label
         self.ax.text(
             0,
             -0.05,
             material_label[1],
-            fontsize=font_size_material_label,
+            fontsize=FONT_SIZE_MATERIAL_LABEL,
             ha="right",
             va="top",
         )  # , rotation=300)
+        # right bottom label
         self.ax.text(
             1,
             -0.05,
             material_label[2],
-            fontsize=font_size_material_label,
+            fontsize=FONT_SIZE_MATERIAL_LABEL,
             ha="left",
             va="top",
         )  # , rotation=60)
 
-        # 軸ラベル
-        font_size_axis_label = 10
+        # 軸ラベル (Axis-label)
+        FONT_SIZE_AXIS_LABEL = 10
         for i in range(1, 10):
             self.ax.text(
                 0.5 + (10 - i) / 20.0,
                 h * (1.0 - (10 - i) / 10.0),
                 "%d0" % i,
-                fontsize=font_size_axis_label,
+                fontsize=FONT_SIZE_AXIS_LABEL,
                 va="bottom",
                 ha="left",
             )
@@ -166,7 +174,7 @@ class TernaryDiagram:
                 (10 - i) / 20.0 - 0.01,
                 h * (10 - i) / 10.0 + 0.04,
                 "%d0" % i,
-                fontsize=font_size_axis_label,
+                fontsize=FONT_SIZE_AXIS_LABEL,
                 rotation=300,
                 va="top",
                 ha="right",
@@ -175,13 +183,13 @@ class TernaryDiagram:
                 i / 10.0 + 0.02,
                 0,
                 "%d0" % i,
-                fontsize=font_size_axis_label,
+                fontsize=FONT_SIZE_AXIS_LABEL,
                 rotation=60,
                 va="top",
                 ha="right",
             )
 
-        # 二次元に変換したデータを保存しておく
+        # 二次元に変換したデータを保存しておく (Save the data converted to two dimensions)
         self.x_ = defaultdict(list)
         self.y_ = defaultdict(list)
 
@@ -215,7 +223,7 @@ class TernaryDiagram:
         **kwargs : parameter of matplotlib.pyplot.scatter, optional
             For example, `marker='x'`, `facecolor='blue'` etc.
 
-            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html.
+            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html.   # noqa
 
 
         Returns
@@ -293,7 +301,7 @@ class TernaryDiagram:
              the connecting line. A one-dimensional list of length 3.
 
         kwargs: parameter of matplotlib.pyplot.plot, optional
-            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html
+            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html   # noqa
 
 
         Returns
@@ -383,14 +391,14 @@ class TernaryDiagram:
 class _BasePlotter:
     def __init__(
         self,
-        vector,
+        vector: ArrayLike,
         ax: Optional[matplotlib.axes.Axes] = None,
-        z=None,
-        z_min=None,
-        z_max=None,
+        z: Optional[ArrayLike] = None,
+        z_min: Optional[Number] = None,
+        z_max: Optional[Number] = None,
         **kwargs
     ):
-        self.vector: np.ndarray = check_2d_vector(vector)  # numpy.ndarray化
+        self.vector: np.ndarray = check_2d_vector(vector)
         self.ax: matplotlib.axes.Axes = check_ax(ax)
         self.kwargs: dict = kwargs
         self.z: np.ndarray = (
@@ -429,13 +437,12 @@ class _BasePlotter:
         ...
 
     @property
-    def collection_(self) -> matplotlib.collections.Collection:
+    def collection_(self):
         return self.__collection
 
     @collection_.setter
     def collection_(self, _collection):
-        if isinstance(_collection, matplotlib.collections.Collection):
-            self.__collection = _collection
+        self.__collection = _collection
 
 
 class _ScatterPlotter(_BasePlotter):
@@ -480,7 +487,7 @@ class _ScatterPlotter(_BasePlotter):
             # To change color by each point
             self.collection_ = self.ax.scatter(self.x, self.y, **self.kwargs)
             # for i_data in range(len(self.x)):
-            #     self.ax.scatter(self.x[i_data], self.y[i_data], **self.kwargs)
+            #     self.ax.scatter(self.x[i_data], self.y[i_data], **self.kwargs)    # noqa
         else:
             if "cmap" not in self.kwargs:
                 self.kwargs["cmap"] = DEFAULT_CMAP
@@ -522,7 +529,7 @@ class _ContourPlotter(_BasePlotter):
             zorder=DEFAULT_ZORDER_CONTOUR,
         )
 
-        T = Triangulation(self.x, self.y)
+        triangulation = Triangulation(self.x, self.y)
         # 等高線の線を引く場所，すなわち，色の勾配を表す配列．
         n_levels = 101  # 勾配をどれだけ細かくするかの変数．
         levels = np.linspace(
@@ -540,7 +547,12 @@ class _ContourPlotter(_BasePlotter):
                 n_levels,
             )
         self.collection_ = self.ax.tricontourf(
-            self.x, self.y, T.triangles, self.z, levels=levels, **self.kwargs
+            self.x,
+            self.y,
+            triangulation.get_masked_triangles(),
+            self.z,
+            levels=levels,
+            **self.kwargs
         )
         if flag_cbar:
             self.colorbar = _draw_colorbar(
@@ -565,7 +577,9 @@ class _LinePlotter(_BasePlotter):
         )
 
         # plot
-        self.collection_ = self.ax.plot(self.x, self.y, **self.kwargs)
+        self.collection_: matplotlib.lines.Line2D = self.ax.plot(
+            self.x, self.y, **self.kwargs
+        )[0]
         self.fig.tight_layout()
 
     @property
