@@ -474,11 +474,11 @@ class _ScatterPlotter(_BasePlotter):
 
         # easy annotation 右上に簡易annotation
         if annotations is not None:
+            assert len(annotations) == len(
+                self.x
+            ), "len(annotations) != len(x)"
             for x, y, txt in zip(self.x, self.y, annotations):
-                try:
-                    txt = get_label(txt)
-                except ValueError:
-                    pass
+                txt = get_label(txt)
                 self.ax.annotate(
                     txt,
                     xy=(x, y),
