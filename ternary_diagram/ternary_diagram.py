@@ -2,10 +2,10 @@
 Copyright © 2021 yu9824
 """
 # deprecated from python>=3.9
-from typing import Tuple
+from typing import Tuple, List
 
 from abc import abstractmethod
-from typing import Optional, Union
+from typing import Optional
 from collections import defaultdict
 from math import sqrt
 from numbers import Number
@@ -31,13 +31,6 @@ from ternary_diagram.utils import (
     get_label,
 )
 
-
-"""
-    kwargs
-z_max: colorbarの上限値を固定するかどうか．default;None
-z_min: colorbarの上限値を固定するかどうか．default;None
-norm: 標準化する必要があるかどうか．default;True
-"""
 
 # default parameters
 DEFAULT_CMAP = "rainbow"
@@ -197,9 +190,9 @@ class TernaryDiagram:
         self,
         vector: ArrayLike,
         z: Optional[ArrayLike] = None,
-        z_min: Optional[Union[int, float]] = None,
-        z_max: Optional[Union[int, float]] = None,
-        annotations: Optional[ArrayLike] = None,
+        z_min: Optional[Number] = None,
+        z_max: Optional[Number] = None,
+        annotations: Optional[List[str]] = None,
         flag_cbar: bool = True,
         **kwargs
     ) -> matplotlib.collections.PathCollection:
@@ -210,16 +203,24 @@ class TernaryDiagram:
         ----------
         vector : array | shape = (n, 3)
             percentage of each compound mixed in 2D list / pandas.DataFrame
-             / numpy.ndarray, where shape = [n, 3] (n is the number of samples
-             to be plotted as integer)
+             / numpy.ndarray, where shape = [n, 3] (n is the number of samples)
+
         z : list, numpy.ndarray, pandas.Series etc, shape = (n,), optional
             , by default None
+
         z_min : int, float , optional
             , by default None
+
         z_max : int, float, optional
             , by default None
-        annotations : array, optional
-            to add annotation easily, by default None
+
+        annotations : Optional[List[str]], optional
+            instance annotations, by default None
+            if None, nothing is annotated.
+
+        flag_cbar : bool, optional
+            instance colorbar or not, by default True
+
         **kwargs : parameter of matplotlib.pyplot.scatter, optional
             For example, `marker='x'`, `facecolor='blue'` etc.
 
@@ -247,10 +248,10 @@ class TernaryDiagram:
 
     def contour(
         self,
-        vector,
-        z,
-        z_min=None,
-        z_max=None,
+        vector: ArrayLike,
+        z: Optional[ArrayLike] = None,
+        z_min: Optional[Number] = None,
+        z_max: Optional[Number] = None,
         flag_cbar: bool = True,
         **kwargs
     ) -> TriContourSet:
@@ -290,7 +291,7 @@ class TernaryDiagram:
         self._append_x_y(plotter)
         return plotter.collection_
 
-    def plot(self, vector, **kwargs) -> matplotlib.lines.Line2D:
+    def plot(self, vector: ArrayLike, **kwargs) -> matplotlib.lines.Line2D:
         """
         To draw a tie line.
 
@@ -315,15 +316,20 @@ class TernaryDiagram:
         return plotter.collection_
 
     def annotate(
-        self, text: str, vector, **kwargs
+        self, text: str, vector: ArrayLike, **kwargs
     ) -> matplotlib.text.Annotation:
         """annotate
 
         Parameters
         ----------
         text : str
+            Text to be displayed.
 
         vector : 1d array, whose length is 3.
+            The position of the text to be displayed.
+
+        kwargs : parameter of matplotlib.pyplot.annotate, optional
+            see https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.annotate.html   # noqa
 
 
         Returns
@@ -623,10 +629,13 @@ def _draw_colorbar(
     format="%.1f",
     label: str = "",
     orientation="vertical",
-    ticklocation="top",
+    location="right",
     **kwargs
 ) -> matplotlib.colorbar.Colorbar:
+    # check ax
     ax = check_ax(ax)
+
+    # draw colorbar
     return ax.figure.colorbar(
         mappable,
         ax=ax,
@@ -634,7 +643,7 @@ def _draw_colorbar(
         format=format,
         label=label,
         orientation=orientation,
-        ticklocation=ticklocation,
+        location=location,
         **kwargs
     )
 
