@@ -203,7 +203,7 @@ class TernaryDiagram:
         ----------
         vector : array | shape = (n, 3)
             percentage of each compound mixed in 2D list / pandas.DataFrame
-             / numpy.ndarray, where shape = [n, 3] (n is the number of samples)
+            / numpy.ndarray, where shape = [n, 3] (n is the number of samples)
 
         z : list, numpy.ndarray, pandas.Series etc, shape = (n,), optional
             , by default None
@@ -262,8 +262,8 @@ class TernaryDiagram:
         ----------
         vector : array | shape = (n, 3)
             percentage of each compound mixed in 2D list / pandas.DataFrame
-             / numpy.ndarray, where shape = [n, 3] (n is the number of samples
-             to be plotted as integer)
+            / numpy.ndarray, where shape = [n, 3] (n is the number of samples
+            to be plotted as integer)
         z : list, numpy.ndarray, pandas.Series etc, shape = (n,)
             , by default None
         z_min : int, float, optional
@@ -299,7 +299,7 @@ class TernaryDiagram:
         ----------
         vector : array | shape = (n, 3)
             A mixing ratio of the compounds that are endpoints of
-             the connecting line. A one-dimensional list of length 3.
+            the connecting line. A one-dimensional list of length 3.
 
         kwargs: parameter of matplotlib.pyplot.plot, optional
             See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html   # noqa
