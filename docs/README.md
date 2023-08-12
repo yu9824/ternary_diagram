@@ -17,5 +17,5 @@ sphinx-apidoc -f -o docs/source ./ternary_diagram
 ## .rstからhtmlの生成
 
 ```bash
-sphinx-build -b html ./docs/source ./docs/_build
+sphinx-build -b html ./docs/source ./docs/build
 ```
