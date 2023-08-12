@@ -1,19 +1,16 @@
 .. ternary-diagram documentation master file, created by
-   sphinx-quickstart on Sat Aug 28 19:04:27 2021.
+   sphinx-quickstart on Sat Aug 12 17:09:54 2023.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to ternary_diagram's documentation!
+Welcome to ternary-diagram's documentation!
 ===========================================
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
    :caption: Contents:
-   :numbered:
 
-   modules.rst
-
-
+   modules
 
 Indices and tables
 ==================

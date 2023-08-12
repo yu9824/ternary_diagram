@@ -1,0 +1,10 @@
+numpy
+matplotlib
+pandas
+sphinx
+sphinx_rtd_theme
+recommonmark
+sphinx-markdown-tables
+sphinx-multiversion
+jupyter
+pytest
