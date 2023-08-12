@@ -11,6 +11,7 @@ Welcome to ternary-diagram's documentation!
    :caption: Contents:
 
 
+modules
 
 Indices and tables
 ==================
