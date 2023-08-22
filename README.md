@@ -10,7 +10,7 @@
 [![conda_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/version.svg)](https://anaconda.org/conda-forge/ternary-diagram/)
 [![arch_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/platforms.svg)](https://anaconda.org/conda-forge/ternary-diagram)
 
-This package makes it easier for you to draw beautiful ternary diagram <b>without</b> [pymatgen](https://pymatgen.org).
+This package makes it easier for you to draw beautiful ternary diagram **without** [pymatgen](https://pymatgen.org).
 
 Meaningly, only need `numpy` and `matplotlib`.
 
