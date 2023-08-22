@@ -2,7 +2,7 @@
 
 [![python_badge](https://img.shields.io/pypi/pyversions/ternary-diagram)](https://pypi.org/project/ternary-diagram/)
 [![license_badge](https://img.shields.io/pypi/l/ternary-diagram)](https://pypi.org/project/ternary-diagram/)
-[![PyPI version](https://badge.fury.io/py/kennard-stone.svg)](https://pypi.org/project/kennard-stone/)
+[![PyPI version](https://badge.fury.io/py/ternary-diagram.svg)](https://pypi.org/project/ternary-diagram/)
 [![Downloads](https://static.pepy.tech/badge/ternary-diagram)](https://pepy.tech/project/ternary-diagram)
 
 [![Test on each version](https://github.com/yu9824/ternary_diagram/actions/workflows/pytest-on-each-version.yaml/badge.svg)](https://github.com/yu9824/ternary_diagram/actions/workflows/pytest-on-each-version.yaml)
