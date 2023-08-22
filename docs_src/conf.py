@@ -4,6 +4,8 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+from ternary_diagram import __version__
+
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -22,7 +24,7 @@ copyright = "2021, yu9824"
 author = "yu9824"
 
 # The full version, including alpha/beta/rc tags
-release = "v3.0.0"
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
