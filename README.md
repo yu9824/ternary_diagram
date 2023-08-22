@@ -2,15 +2,17 @@
 
 [![python_badge](https://img.shields.io/pypi/pyversions/ternary-diagram)](https://pypi.org/project/ternary-diagram/)
 [![license_badge](https://img.shields.io/pypi/l/ternary-diagram)](https://pypi.org/project/ternary-diagram/)
-[![Total_Downloads_badge](https://pepy.tech/badge/ternary-diagram)](https://pepy.tech/project/ternary-diagram)
+[![PyPI version](https://badge.fury.io/py/kennard-stone.svg)](https://pypi.org/project/kennard-stone/)
+[![Downloads](https://static.pepy.tech/badge/ternary-diagram)](https://pepy.tech/project/ternary-diagram)
 
+[![Test on each version](https://github.com/yu9824/ternary_diagram/actions/workflows/pytest-on-each-version.yaml/badge.svg)](https://github.com/yu9824/ternary_diagram/actions/workflows/pytest-on-each-version.yaml)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![conda_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/version.svg)](https://anaconda.org/conda-forge/ternary-diagram/)
 [![arch_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/platforms.svg)](https://anaconda.org/conda-forge/ternary-diagram)
 
 This package makes it easier for you to draw beautiful ternary diagram <b>without</b> [pymatgen](https://pymatgen.org).
 
-Meaningly, only need `numpy`, `pandas` and `matplotlib`.
+Meaningly, only need `numpy` and `matplotlib`.
 
 ## What you will be able to do with this package
 
@@ -23,6 +25,7 @@ Meaningly, only need `numpy`, `pandas` and `matplotlib`.
 ![/example/contour/example_contour.png](https://github.com/yu9824/ternary_diagram/blob/main/example/contour/example_contour.png?raw=true "example")
 
 ## How to install
+
 ### PyPI
 
 ```bash
