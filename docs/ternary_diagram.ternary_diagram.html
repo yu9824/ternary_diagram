@@ -86,13 +86,24 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ternary_diagram.ternary_diagram.TernaryDiagram._append_x_y">
-<span class="sig-name descname"><span class="pre">_append_x_y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plotter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ternary_diagram.ternary_diagram.TernaryDiagram._append_x_y" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">_append_x_y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plotter</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ternary_diagram.ternary_diagram.TernaryDiagram._append_x_y" title="Permalink to this definition"></a></dt>
+<dd><p>append x, y data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>plotter</strong> (<a class="reference internal" href="#ternary_diagram.ternary_diagram._BasePlotter" title="ternary_diagram.ternary_diagram._BasePlotter"><em>_BasePlotter</em></a>) – plotter</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – “plotter must inherit <cite>_BasePlotter</cite>”</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ternary_diagram.ternary_diagram.TernaryDiagram.annotate">
 <span class="sig-name descname"><span class="pre">annotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.typing._nested_sequence._NestedSequence</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.typing._nested_sequence._NestedSequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">matplotlib.text.Annotation</span></span></span><a class="headerlink" href="#ternary_diagram.ternary_diagram.TernaryDiagram.annotate" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Annotate text.</p>
+<p>This is a wrapper of <cite>matplotlib.pyplot.annotate</cite>.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> (<em>str</em>) – Text to be displayed.</p></li>
@@ -140,12 +151,12 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vector</strong> (<em>array</em><em> | </em><em>shape =</em><em> (</em><em>n</em><em>, </em><em>3</em><em>)</em>) – percentage of each compound mixed in 2D list / pandas.DataFrame
+<li><p><strong>vector</strong> (<em>ArrayLike</em><em> | </em><em>shape =</em><em> (</em><em>n</em><em>, </em><em>3</em><em>)</em>) – percentage of each compound mixed in 2D list / pandas.DataFrame
 / numpy.ndarray, where shape = [n, 3] (n is the number of samples
 to be plotted as integer)</p></li>
-<li><p><strong>z</strong> (<em>list</em><em>, </em><em>numpy.ndarray</em><em>, </em><em>pandas.Series etc</em><em>, </em><em>shape =</em><em> (</em><em>n</em><em>,</em><em>)</em>) – , by default None</p></li>
-<li><p><strong>z_min</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>optional</em>) – , by default None</p></li>
-<li><p><strong>z_max</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>optional</em>) – , by default None</p></li>
+<li><p><strong>z</strong> (<em>Optional</em><em>[</em><em>ArrayLike</em><em>]</em><em>, </em><em>shape =</em><em> (</em><em>n</em><em>,</em><em>)</em>) – , by default None</p></li>
+<li><p><strong>z_min</strong> (<em>Optional</em><em>[</em><em>Number</em><em>]</em><em>, </em><em>optional</em>) – , by default None</p></li>
+<li><p><strong>z_max</strong> (<em>Optional</em><em>[</em><em>Number</em><em>]</em><em>, </em><em>optional</em>) – , by default None</p></li>
 <li><p><strong>**kwargs</strong> (<em>parameter of matplotlib.pyplot.contour</em><em>, </em><em>optional</em>) – <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html">https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html</a></p></li>
 </ul>
 </dd>
@@ -160,8 +171,9 @@ to be plotted as integer)</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ternary_diagram.ternary_diagram.TernaryDiagram.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.typing._nested_sequence._NestedSequence</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.typing._nested_sequence._NestedSequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">matplotlib.lines.Line2D</span></span></span><a class="headerlink" href="#ternary_diagram.ternary_diagram.TernaryDiagram.plot" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.typing._nested_sequence._NestedSequence</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.typing._nested_sequence._NestedSequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">matplotlib.lines.Line2D</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ternary_diagram.ternary_diagram.TernaryDiagram.plot" title="Permalink to this definition"></a></dt>
 <dd><p>To draw a tie line.</p>
+<p>This is a wrapper of <cite>matplotlib.pyplot.plot</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -171,10 +183,10 @@ the connecting line. A one-dimensional list of length 3.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A line.</p>
+<dd class="field-even"><p>lines.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>matplotlib.lines.Line2D</p>
+<dd class="field-odd"><p>List[matplotlib.lines.Line2D]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -183,14 +195,15 @@ the connecting line. A one-dimensional list of length 3.</p></li>
 <dt class="sig sig-object py" id="ternary_diagram.ternary_diagram.TernaryDiagram.scatter">
 <span class="sig-name descname"><span class="pre">scatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.typing._nested_sequence._NestedSequence</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.typing._nested_sequence._NestedSequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.typing._nested_sequence._NestedSequence</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.typing._nested_sequence._NestedSequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Number</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Number</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_cbar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">matplotlib.collections.PathCollection</span></span></span><a class="headerlink" href="#ternary_diagram.ternary_diagram.TernaryDiagram.scatter" title="Permalink to this definition"></a></dt>
 <dd><p>Plot scatter points.</p>
+<p>This is a wrapper of <cite>matplotlib.pyplot.scatter</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>vector</strong> (<em>array</em><em> | </em><em>shape =</em><em> (</em><em>n</em><em>, </em><em>3</em><em>)</em>) – percentage of each compound mixed in 2D list / pandas.DataFrame
 / numpy.ndarray, where shape = [n, 3] (n is the number of samples)</p></li>
-<li><p><strong>z</strong> (<em>list</em><em>, </em><em>numpy.ndarray</em><em>, </em><em>pandas.Series etc</em><em>, </em><em>shape =</em><em> (</em><em>n</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – , by default None</p></li>
-<li><p><strong>z_min</strong> (<em>int</em><em>, </em><em>float</em><em> , </em><em>optional</em>) – , by default None</p></li>
-<li><p><strong>z_max</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>optional</em>) – , by default None</p></li>
+<li><p><strong>z</strong> (<em>ArrayLike</em><em>, </em><em>shape =</em><em> (</em><em>n</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – , by default None</p></li>
+<li><p><strong>z_min</strong> (<em>Optional</em><em>[</em><em>Number</em><em>] </em><em>, </em><em>optional</em>) – , by default None</p></li>
+<li><p><strong>z_max</strong> (<em>Optional</em><em>[</em><em>Number</em><em>]</em><em>, </em><em>optional</em>) – , by default None</p></li>
 <li><p><strong>annotations</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – instance annotations, by default None
 if None, nothing is annotated.</p></li>
 <li><p><strong>flag_cbar</strong> (<em>bool</em><em>, </em><em>optional</em>) – instance colorbar or not, by default True</p></li>
@@ -217,7 +230,8 @@ if None, nothing is annotated.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="ternary_diagram.ternary_diagram._AnnotatePlotter.name">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#ternary_diagram.ternary_diagram._AnnotatePlotter.name" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Plotter name</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -228,9 +242,11 @@ if None, nothing is annotated.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="ternary_diagram.ternary_diagram._BasePlotter._set_default_params">
 <span class="sig-name descname"><span class="pre">_set_default_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ternary_diagram.ternary_diagram._BasePlotter._set_default_params" title="Permalink to this definition"></a></dt>
-<dd><p>set_default_params</p>
+<dd><p>set default params</p>
 <p class="rubric">Examples</p>
-<p>self._set_default_params(zorder=2)</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">_set_default_params</span><span class="p">(</span><span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
@@ -240,13 +256,23 @@ if None, nothing is annotated.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ternary_diagram.ternary_diagram._BasePlotter.get_x_y">
-<span class="sig-name descname"><span class="pre">get_x_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ternary_diagram.ternary_diagram._BasePlotter.get_x_y" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">get_x_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ternary_diagram.ternary_diagram._BasePlotter.get_x_y" title="Permalink to this definition"></a></dt>
+<dd><p>get x, y data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>tuple of x, y data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ternary_diagram.ternary_diagram._BasePlotter.name">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ternary_diagram.ternary_diagram._BasePlotter.name" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Plotter name</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -257,7 +283,8 @@ if None, nothing is annotated.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="ternary_diagram.ternary_diagram._ContourPlotter.name">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#ternary_diagram.ternary_diagram._ContourPlotter.name" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Plotter name</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -268,7 +295,8 @@ if None, nothing is annotated.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="ternary_diagram.ternary_diagram._LinePlotter.name">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#ternary_diagram.ternary_diagram._LinePlotter.name" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Plotter name</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -279,14 +307,36 @@ if None, nothing is annotated.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="ternary_diagram.ternary_diagram._ScatterPlotter.name">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#ternary_diagram.ternary_diagram._ScatterPlotter.name" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Plotter name</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ternary_diagram.ternary_diagram._draw_colorbar">
 <span class="sig-prename descclassname"><span class="pre">ternary_diagram.ternary_diagram.</span></span><span class="sig-name descname"><span class="pre">_draw_colorbar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mappable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">matplotlib.axes._axes.Axes</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shrink</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%.1f'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vertical'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">matplotlib.colorbar.Colorbar</span></span></span><a class="headerlink" href="#ternary_diagram.ternary_diagram._draw_colorbar" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Draw a colorbar.</p>
+<p>This is a wrapper of <cite>matplotlib.pyplot.colorbar</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mappable</strong> – mapplotable object</p></li>
+<li><p><strong>ax</strong> (<em>Optional</em><em>[</em><em>matplotlib.axes.Axes</em><em>]</em><em>, </em><em>optional</em>) – axes, by default None</p></li>
+<li><p><strong>shrink</strong> (<em>float</em><em>, </em><em>optional</em>) – , by default 0.8</p></li>
+<li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – , by default “%.1f”</p></li>
+<li><p><strong>label</strong> (<em>str</em><em>, </em><em>optional</em>) – , by default “”</p></li>
+<li><p><strong>orientation</strong> (<em>str</em><em>, </em><em>optional</em>) – , by default “vertical”</p></li>
+<li><p><strong>location</strong> (<em>str</em><em>, </em><em>optional</em>) – , by default “right”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>colorbar object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>matplotlib.colorbar.Colorbar</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 

@@ -1,3 +1,2 @@
 - Create `annotate` test.
 - Create `plot` test
-- Create tests by Github Actions

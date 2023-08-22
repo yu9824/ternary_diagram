@@ -54,12 +54,34 @@ class TernaryDiagram:
 
         Parameters
         ----------
-        materials : array (shape = (3,))
+        materials : Tuple[str, str, str]
             A one-dimensional list of compounds that constitute an endpoint
              when generating a ternary_diagram.
 
-        ax : matplotlib.axes.Axes, optional
+        ax : Optional[matplotlib.axes.Axes], optional
             Axes object to draw a diagram. If None, automatically generate.
+
+
+        Examples
+        --------
+        >>> from ternary_diagram import TernaryDiagram
+
+        >>> # You can set `ax` to select which axes to draw.
+        >>> # If not, the current axes will be used.
+        >>> td = TernaryDiagram(["Li2O", "La2O3", "TiO2"])
+
+        >>> # scatter
+        >>> td.scatter(vector=[[1, 1, 1], [1, 2, 3]], z=[0, 1])
+        >>> # You can set some options in `plt.scatter` like `marker`, `c` etc.
+        >>> td.scatter([[2, 1, 3], [3, 2, 1]], marker="s", c="#022c5e", s=30)
+
+        >>> # line plot
+        >>> # You can set some options in `plt.plot` like `lw`, `c`, and so on.
+        >>> td.plot([[1, 1, 1], [1, 2, 3]], color="black")
+
+        >>> # save figure
+        >>> td.fig.savefig("figure.png", dpi=144)
+
         """
 
         # check `ax`
@@ -199,19 +221,21 @@ class TernaryDiagram:
         """
         Plot scatter points.
 
+        This is a wrapper of `matplotlib.pyplot.scatter`.
+
         Parameters
         ----------
         vector : array | shape = (n, 3)
             percentage of each compound mixed in 2D list / pandas.DataFrame
             / numpy.ndarray, where shape = [n, 3] (n is the number of samples)
 
-        z : list, numpy.ndarray, pandas.Series etc, shape = (n,), optional
+        z : ArrayLike, shape = (n,), optional
             , by default None
 
-        z_min : int, float , optional
+        z_min : Optional[Number] , optional
             , by default None
 
-        z_max : int, float, optional
+        z_max : Optional[Number], optional
             , by default None
 
         annotations : Optional[List[str]], optional
@@ -260,15 +284,16 @@ class TernaryDiagram:
 
         Parameters
         ----------
-        vector : array | shape = (n, 3)
+        vector : ArrayLike | shape = (n, 3)
             percentage of each compound mixed in 2D list / pandas.DataFrame
             / numpy.ndarray, where shape = [n, 3] (n is the number of samples
             to be plotted as integer)
-        z : list, numpy.ndarray, pandas.Series etc, shape = (n,)
+
+        z : Optional[ArrayLike], shape = (n,)
             , by default None
-        z_min : int, float, optional
+        z_min : Optional[Number], optional
             , by default None
-        z_max : int, float, optional
+        z_max : Optional[Number], optional
             , by default None
         **kwargs : parameter of matplotlib.pyplot.contour, optional
             https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html
@@ -291,9 +316,13 @@ class TernaryDiagram:
         self._append_x_y(plotter)
         return plotter.collection_
 
-    def plot(self, vector: ArrayLike, **kwargs) -> matplotlib.lines.Line2D:
+    def plot(
+        self, vector: ArrayLike, **kwargs
+    ) -> List[matplotlib.lines.Line2D]:
         """
         To draw a tie line.
+
+        This is a wrapper of `matplotlib.pyplot.plot`.
 
         Parameters
         ----------
@@ -307,8 +336,8 @@ class TernaryDiagram:
 
         Returns
         -------
-        matplotlib.lines.Line2D
-            A line.
+        List[matplotlib.lines.Line2D]
+            lines.
         """
 
         plotter = _LinePlotter(vector=vector, ax=self.ax, **kwargs)
@@ -318,7 +347,9 @@ class TernaryDiagram:
     def annotate(
         self, text: str, vector: ArrayLike, **kwargs
     ) -> matplotlib.text.Annotation:
-        """annotate
+        """Annotate text.
+
+        This is a wrapper of `matplotlib.pyplot.annotate`.
 
         Parameters
         ----------
@@ -357,14 +388,19 @@ class TernaryDiagram:
         ----------
         mappable : matplotlib.cm.ScalarMappable
             The object that contains the colorbar data.
+
         shrink : float, optional
             how much to shrink the colorbar, by default 0.8
+
         format : str, optional
             float format, by default '%.1f'
+
         label : str, optional
             bar label, by default ''
+
         orientation : str, optional
             bar orientation, by default 'vertical'
+
         ticklocation : str, optional
             tick location, by default 'top'
 
@@ -384,9 +420,21 @@ class TernaryDiagram:
             **kwargs
         )
 
-    def _append_x_y(self, plotter):
+    def _append_x_y(self, plotter) -> None:
+        """append x, y data
+
+        Parameters
+        ----------
+        plotter : _BasePlotter
+            plotter
+
+        Raises
+        ------
+        TypeError
+            "plotter must inherit `_BasePlotter`"
+        """
         if not isinstance(plotter, _BasePlotter):
-            raise TypeError()
+            raise TypeError("plotter must inherit `_BasePlotter`")
 
         x, y = plotter.get_x_y()
         name = plotter.name
@@ -404,6 +452,23 @@ class _BasePlotter:
         z_max: Optional[Number] = None,
         **kwargs
     ):
+        """_BasePlotter
+
+        This is a base class for the wrapper of `matplotlib.pyplot.` functions.
+
+        Parameters
+        ----------
+        vector : ArrayLike
+            vector
+        ax : Optional[matplotlib.axes.Axes], optional
+            , by default None
+        z : Optional[ArrayLike], optional
+            , by default None
+        z_min : Optional[Number], optional
+            , by default None
+        z_max : Optional[Number], optional
+            , by default None
+        """
         self.vector: np.ndarray = check_2d_vector(vector)
         self.ax: matplotlib.axes.Axes = check_ax(ax)
         self.kwargs: dict = kwargs
@@ -422,16 +487,23 @@ class _BasePlotter:
         # 3次元ベクトルをx, y座標に落とし込む．
         self.x, self.y = three2two(self.vector)
 
-    def get_x_y(self):
+    def get_x_y(self) -> Tuple[np.ndarray, np.ndarray]:
+        """get x, y data
+
+        Returns
+        -------
+        Tuple[np.ndarray, np.ndarray]
+            tuple of x, y data
+        """
         return self.x, self.y
 
     def _set_default_params(self, **kwargs):
         """
-        set_default_params
+        set default params
 
         Examples
         --------------
-        self._set_default_params(zorder=2)
+        >>> self._set_default_params(zorder=2)
         """
         for k, v in kwargs.items():
             if k not in self.kwargs:
@@ -440,7 +512,12 @@ class _BasePlotter:
     @property
     @abstractmethod
     def name(self) -> str:
+        """Plotter name"""
         ...
+
+    @name.setter
+    def name(self, _v):
+        raise AttributeError("name is read-only")
 
     @property
     def collection_(self):
@@ -583,9 +660,9 @@ class _LinePlotter(_BasePlotter):
         )
 
         # plot
-        self.collection_: matplotlib.lines.Line2D = self.ax.plot(
+        self.collection_: List[matplotlib.lines.Line2D] = self.ax.plot(
             self.x, self.y, **self.kwargs
-        )[0]
+        )
         self.fig.tight_layout()
 
     @property
@@ -624,7 +701,7 @@ class _AnnotatePlotter(_BasePlotter):
 
 def _draw_colorbar(
     mappable,
-    ax: matplotlib.axes.Axes = None,
+    ax: Optional[matplotlib.axes.Axes] = None,
     shrink=0.8,
     format="%.1f",
     label: str = "",
@@ -632,6 +709,32 @@ def _draw_colorbar(
     location="right",
     **kwargs
 ) -> matplotlib.colorbar.Colorbar:
+    """Draw a colorbar.
+
+    This is a wrapper of `matplotlib.pyplot.colorbar`.
+
+    Parameters
+    ----------
+    mappable :
+        mapplotable object
+    ax : Optional[matplotlib.axes.Axes], optional
+        axes, by default None
+    shrink : float, optional
+        , by default 0.8
+    format : str, optional
+        , by default "%.1f"
+    label : str, optional
+        , by default ""
+    orientation : str, optional
+        , by default "vertical"
+    location : str, optional
+        , by default "right"
+
+    Returns
+    -------
+    matplotlib.colorbar.Colorbar
+        colorbar object
+    """
     # check ax
     ax = check_ax(ax)
 
