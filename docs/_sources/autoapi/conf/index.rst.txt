@@ -1,0 +1,125 @@
+:py:mod:`conf`
+==============
+
+.. py:module:: conf
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   conf.skip_util_classes
+   conf.setup
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   conf.project
+   conf.copyright
+   conf.author
+   conf.release
+   conf.extensions
+   conf.source_suffix
+   conf.source_parsers
+   conf.templates_path
+   conf.exclude_patterns
+   conf.autoapi_dirs
+   conf.html_theme
+   conf.html_static_path
+
+
+.. py:data:: project
+   :value: 'ternary-diagram'
+
+   
+
+.. py:data:: copyright
+   :value: '2021, yu9824'
+
+   
+
+.. py:data:: author
+   :value: 'yu9824'
+
+   
+
+.. py:data:: release
+   :value: 'v3.0.0'
+
+   
+
+.. py:data:: extensions
+   :value: ['sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'sphinx.ext.githubpages', 'recommonmark',...
+
+   
+
+.. py:data:: source_suffix
+   :value: ['.rst', '.md']
+
+   
+
+.. py:data:: source_parsers
+
+   
+
+.. py:data:: templates_path
+   :value: ['_templates']
+
+   
+
+.. py:data:: exclude_patterns
+   :value: ['_build', 'Thumbs.db', '.DS_Store', 'README.md']
+
+   
+
+.. py:data:: autoapi_dirs
+   :value: ['.']
+
+   
+
+.. py:function:: skip_util_classes(app, what: str, name: str, obj, skip: bool, options) -> Optional[bool]
+
+   _summary_
+
+   :param app: The Sphinx application object.
+   :type app: _type_
+   :param what: The type of the object which the docstring belongs to. This can be one
+                of: "attribute", "class", "data", "exception", "function",
+                "method", "module", "package".
+   :type what: _type_
+   :param name: The fully qualified name of the object.
+   :type name: _type_
+   :param obj: The object itself.
+   :type obj: _type_
+   :param skip: Whether AutoAPI will skip this member if the handler does not override
+                the decision.
+   :type skip: bool
+   :param options: The options given to the directive.
+   :type options: _type_
+
+   :returns: _description_
+   :rtype: Optional[bool]
+
+
+.. py:function:: setup(app)
+
+
+.. py:data:: html_theme
+   :value: 'sphinx_rtd_theme'
+
+   
+
+.. py:data:: html_static_path
+   :value: ['_static']
+
+   
+

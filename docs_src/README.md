@@ -27,7 +27,7 @@ index.rstに`modules`を加える。
 ## docstringから.rstを生成
 
 ```bash
-sphinx-apidoc -f -o docs_src ./ternary_diagram
+sphinx-apidoc -f -o docs_src ./ternary_diagram --module-first --private --separate
 ```
 
 ## .rstからhtmlの生成

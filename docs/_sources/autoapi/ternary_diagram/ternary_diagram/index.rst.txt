@@ -1,0 +1,131 @@
+:py:mod:`ternary_diagram.ternary_diagram`
+=========================================
+
+.. py:module:: ternary_diagram.ternary_diagram
+
+.. autoapi-nested-parse::
+
+   Copyright © 2021 yu9824
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ternary_diagram.ternary_diagram._BasePlotter
+   ternary_diagram.ternary_diagram._ScatterPlotter
+   ternary_diagram.ternary_diagram._ContourPlotter
+   ternary_diagram.ternary_diagram._LinePlotter
+   ternary_diagram.ternary_diagram._AnnotatePlotter
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   ternary_diagram.ternary_diagram._draw_colorbar
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   ternary_diagram.ternary_diagram.DEFAULT_CMAP
+   ternary_diagram.ternary_diagram.DEFAULT_ZORDER_CONTOUR
+   ternary_diagram.ternary_diagram.DEFAULT_ZORDER_GRIDS
+   ternary_diagram.ternary_diagram.DEFAULT_ZORDER_PLOTS
+   ternary_diagram.ternary_diagram.DEFAULT_ZORDER_SCATTER
+
+
+.. py:data:: DEFAULT_CMAP
+   :value: 'rainbow'
+
+   
+
+.. py:data:: DEFAULT_ZORDER_CONTOUR
+   :value: 0
+
+   
+
+.. py:data:: DEFAULT_ZORDER_GRIDS
+   :value: 1
+
+   
+
+.. py:data:: DEFAULT_ZORDER_PLOTS
+   :value: 2
+
+   
+
+.. py:data:: DEFAULT_ZORDER_SCATTER
+   :value: 3
+
+   
+
+.. py:class:: _BasePlotter(vector: numpy.typing.ArrayLike, ax: Optional[matplotlib.axes.Axes] = None, z: Optional[numpy.typing.ArrayLike] = None, z_min: Optional[numbers.Number] = None, z_max: Optional[numbers.Number] = None, **kwargs)
+
+   .. py:property:: name
+      :type: str
+      :abstractmethod:
+
+
+   .. py:property:: collection_
+
+
+   .. py:method:: get_x_y()
+
+
+   .. py:method:: _set_default_params(**kwargs)
+
+      set_default_params
+
+      .. rubric:: Examples
+
+      self._set_default_params(zorder=2)
+
+
+
+.. py:class:: _ScatterPlotter(vector, ax=None, z=None, z_min=None, z_max=None, annotations=None, flag_cbar: bool = True, **kwargs)
+
+   Bases: :py:obj:`_BasePlotter`
+
+   .. py:property:: name
+
+
+
+.. py:class:: _ContourPlotter(vector, ax=None, z=None, z_min=None, z_max=None, flag_cbar: bool = True, **kwargs)
+
+   Bases: :py:obj:`_BasePlotter`
+
+   .. py:property:: name
+
+
+
+.. py:class:: _LinePlotter(vector, ax=None, **kwargs)
+
+   Bases: :py:obj:`_BasePlotter`
+
+   .. py:property:: name
+
+
+
+.. py:class:: _AnnotatePlotter(text, vector, ax=None, **kwargs)
+
+   Bases: :py:obj:`_BasePlotter`
+
+   .. py:property:: name
+
+
+
+.. py:function:: _draw_colorbar(mappable, ax: matplotlib.axes.Axes = None, shrink=0.8, format='%.1f', label: str = '', orientation='vertical', location='right', **kwargs) -> matplotlib.colorbar.Colorbar
+
+

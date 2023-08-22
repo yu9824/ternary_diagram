@@ -1,0 +1,133 @@
+:py:mod:`ternary_diagram`
+=========================
+
+.. py:module:: ternary_diagram
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   ternary_diagram/index.rst
+   utils/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   ternary_diagram.TernaryDiagram
+
+
+
+
+.. py:class:: TernaryDiagram(materials: Tuple[str, str, str], ax: Optional[matplotlib.axes.Axes] = None)
+
+   .. py:method:: scatter(vector: numpy.typing.ArrayLike, z: Optional[numpy.typing.ArrayLike] = None, z_min: Optional[numbers.Number] = None, z_max: Optional[numbers.Number] = None, annotations: Optional[List[str]] = None, flag_cbar: bool = True, **kwargs) -> matplotlib.collections.PathCollection
+
+      Plot scatter points.
+
+      :param vector: percentage of each compound mixed in 2D list / pandas.DataFrame
+                     / numpy.ndarray, where shape = [n, 3] (n is the number of samples)
+      :type vector: array | shape = (n, 3)
+      :param z: , by default None
+      :type z: list, numpy.ndarray, pandas.Series etc, shape = (n,), optional
+      :param z_min: , by default None
+      :type z_min: int, float , optional
+      :param z_max: , by default None
+      :type z_max: int, float, optional
+      :param annotations: instance annotations, by default None
+                          if None, nothing is annotated.
+      :type annotations: Optional[List[str]], optional
+      :param flag_cbar: instance colorbar or not, by default True
+      :type flag_cbar: bool, optional
+      :param \*\*kwargs: For example, `marker='x'`, `facecolor='blue'` etc.
+
+                         See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html.   # noqa
+      :type \*\*kwargs: parameter of matplotlib.pyplot.scatter, optional
+
+      :returns: A collection of scatter points.
+      :rtype: matplotlib.collections.PathCollection
+
+
+   .. py:method:: contour(vector: numpy.typing.ArrayLike, z: Optional[numpy.typing.ArrayLike] = None, z_min: Optional[numbers.Number] = None, z_max: Optional[numbers.Number] = None, flag_cbar: bool = True, **kwargs) -> matplotlib.tri.tricontour.TriContourSet
+
+      To create a contour map.
+
+      :param vector: percentage of each compound mixed in 2D list / pandas.DataFrame
+                     / numpy.ndarray, where shape = [n, 3] (n is the number of samples
+                     to be plotted as integer)
+      :type vector: array | shape = (n, 3)
+      :param z: , by default None
+      :type z: list, numpy.ndarray, pandas.Series etc, shape = (n,)
+      :param z_min: , by default None
+      :type z_min: int, float, optional
+      :param z_max: , by default None
+      :type z_max: int, float, optional
+      :param \*\*kwargs: https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html
+      :type \*\*kwargs: parameter of matplotlib.pyplot.contour, optional
+
+      :returns: A collection of contour lines.
+      :rtype: matplotlib.tri.tricontour.TriContourSet
+
+
+   .. py:method:: plot(vector: numpy.typing.ArrayLike, **kwargs) -> matplotlib.lines.Line2D
+
+      To draw a tie line.
+
+      :param vector: A mixing ratio of the compounds that are endpoints of
+                     the connecting line. A one-dimensional list of length 3.
+      :type vector: array | shape = (n, 3)
+      :param kwargs: See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html   # noqa
+      :type kwargs: parameter of matplotlib.pyplot.plot, optional
+
+      :returns: A line.
+      :rtype: matplotlib.lines.Line2D
+
+
+   .. py:method:: annotate(text: str, vector: numpy.typing.ArrayLike, **kwargs) -> matplotlib.text.Annotation
+
+      annotate
+
+      :param text: Text to be displayed.
+      :type text: str
+      :param vector: The position of the text to be displayed.
+      :type vector: 1d array, whose length is 3.
+      :param kwargs: see https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.annotate.html   # noqa
+      :type kwargs: parameter of matplotlib.pyplot.annotate, optional
+
+      :returns: An annotation.
+      :rtype: matplotlib.text.Annotation
+
+
+   .. py:method:: colorbar(mappable, shrink=0.8, format='%.1f', label: str = '', orientation='vertical', ticklocation='top', **kwargs) -> matplotlib.colorbar.Colorbar
+
+      Draw a colorbar.
+
+      :param mappable: The object that contains the colorbar data.
+      :type mappable: matplotlib.cm.ScalarMappable
+      :param shrink: how much to shrink the colorbar, by default 0.8
+      :type shrink: float, optional
+      :param format: float format, by default '%.1f'
+      :type format: str, optional
+      :param label: bar label, by default ''
+      :type label: str, optional
+      :param orientation: bar orientation, by default 'vertical'
+      :type orientation: str, optional
+      :param ticklocation: tick location, by default 'top'
+      :type ticklocation: str, optional
+
+      :returns: colorbar object
+      :rtype: matplotlib.colorbar.Colorbar
+
+
+   .. py:method:: _append_x_y(plotter)
+
+
+
