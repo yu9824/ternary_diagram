@@ -437,8 +437,8 @@ class TernaryDiagram:
             raise TypeError("plotter must inherit `_BasePlotter`")
 
         name = plotter.name
-        self.x_[name].append(plotter.x)
-        self.y_[name].append(plotter.y)
+        self.x_[name].append(plotter.x_)
+        self.y_[name].append(plotter.y_)
 
 
 class _BasePlotter:
@@ -484,17 +484,7 @@ class _BasePlotter:
         self.fig = self.ax.figure
 
         # 3次元ベクトルをx, y座標に落とし込む．
-        self.x, self.y = three2two(self.vector)
-
-    def get_x_y(self) -> Tuple[np.ndarray, np.ndarray]:
-        """get x, y data
-
-        Returns
-        -------
-        Tuple[np.ndarray, np.ndarray]
-            tuple of x, y data
-        """
-        return self.x, self.y
+        self.__x, self.__y = three2two(self.vector)
 
     def _set_default_params(self, **kwargs):
         """
@@ -507,6 +497,24 @@ class _BasePlotter:
         for k, v in kwargs.items():
             if k not in self.kwargs:
                 self.kwargs[k] = v
+
+    @property
+    def x_(self) -> np.ndarray:
+        # TODO: docstring
+        return self.__x
+
+    @x_.setter
+    def x_(self, _x):
+        raise AttributeError("x_ is read-only")
+
+    @property
+    def y_(self) -> np.ndarray:
+        # TODO: docstring
+        return self.__y
+
+    @y_.setter
+    def y_(self, _y):
+        raise AttributeError("y_ is read-only")
 
     @property
     @abstractmethod
@@ -551,9 +559,9 @@ class _ScatterPlotter(_BasePlotter):
         # easy annotation 右上に簡易annotation
         if annotations is not None:
             assert len(annotations) == len(
-                self.x
+                self.x_
             ), "len(annotations) != len(x)"
-            for x, y, txt in zip(self.x, self.y, annotations):
+            for x, y, txt in zip(self.x_, self.y_, annotations):
                 txt = get_label(txt)
                 self.ax.annotate(
                     txt,
@@ -567,15 +575,15 @@ class _ScatterPlotter(_BasePlotter):
         if self.z is None:
             flag_cbar = False
             # To change color by each point
-            self.collection_ = self.ax.scatter(self.x, self.y, **self.kwargs)
-            # for i_data in range(len(self.x)):
-            #     self.ax.scatter(self.x[i_data], self.y[i_data], **self.kwargs)    # noqa
+            self.collection_ = self.ax.scatter(self.x_, self.y_, **self.kwargs)
+            # for i_data in range(len(self.x_)):
+            #     self.ax.scatter(self.x_[i_data], self.y_[i_data], **self.kwargs)    # noqa
         else:
             if "cmap" not in self.kwargs:
                 self.kwargs["cmap"] = DEFAULT_CMAP
             self.collection_ = self.ax.scatter(
-                self.x,
-                self.y,
+                self.x_,
+                self.y_,
                 c=self.z,
                 vmin=self.z_min,
                 vmax=self.z_max,
@@ -611,7 +619,7 @@ class _ContourPlotter(_BasePlotter):
             zorder=DEFAULT_ZORDER_CONTOUR,
         )
 
-        triangulation = Triangulation(self.x, self.y)
+        triangulation = Triangulation(self.x_, self.y_)
         # 等高線の線を引く場所，すなわち，色の勾配を表す配列．
         N_LEVELS = 101  # 勾配をどれだけ細かくするかの変数．
         levels = np.linspace(
@@ -629,8 +637,8 @@ class _ContourPlotter(_BasePlotter):
                 N_LEVELS,
             )
         self.collection_ = self.ax.tricontourf(
-            self.x,
-            self.y,
+            self.x_,
+            self.y_,
             triangulation.get_masked_triangles(),
             self.z,
             levels=levels,
@@ -660,7 +668,7 @@ class _LinePlotter(_BasePlotter):
 
         # plot
         self.collection_: List[matplotlib.lines.Line2D] = self.ax.plot(
-            self.x, self.y, **self.kwargs
+            self.x_, self.y_, **self.kwargs
         )
         self.fig.tight_layout()
 
@@ -677,7 +685,7 @@ class _AnnotatePlotter(_BasePlotter):
         )
 
         if "xytext" not in kwargs:
-            kwargs["xytext"] = (self.x[0] + 0.02, self.y[0] + 0.02)
+            kwargs["xytext"] = (self.x_[0] + 0.02, self.y_[0] + 0.02)
         if "fontsize" not in kwargs:
             kwargs["fontsize"] = 8
 
@@ -688,7 +696,7 @@ class _AnnotatePlotter(_BasePlotter):
             pass
         # annotate
         self.collection_ = self.ax.annotate(
-            text=text, xy=(self.x[0], self.y[0]), **kwargs
+            text=text, xy=(self.x_[0], self.y_[0]), **kwargs
         )
 
         self.fig.tight_layout()

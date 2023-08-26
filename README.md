@@ -97,8 +97,14 @@ fig.savefig("figure.png", dpi=144)
 
 It means that you can draw multiple figures in one figure object.
 
-
 See also the [example](https://github.com/yu9824/ternary_diagram/tree/main/example) folder.
+
+## Histories
+
+### v3.1.0
+
+- Delete `.utils._BasePlotter.get_x_y` (we should access directly).
+
 
 
 ## LICENSE
