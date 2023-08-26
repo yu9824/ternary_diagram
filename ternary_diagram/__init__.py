@@ -1,6 +1,6 @@
 from .ternary_diagram import TernaryDiagram
 
-__version__ = "3.0.1"
+__version__ = "3.1.0dev0"
 __license__ = "MIT"
 __author__ = "yu9824"
 __copyright__ = "Copyright © 2021 yu9824"
