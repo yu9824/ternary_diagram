@@ -436,10 +436,9 @@ class TernaryDiagram:
         if not isinstance(plotter, _BasePlotter):
             raise TypeError("plotter must inherit `_BasePlotter`")
 
-        x, y = plotter.get_x_y()
         name = plotter.name
-        self.x_[name].append(x)
-        self.y_[name].append(y)
+        self.x_[name].append(plotter.x)
+        self.y_[name].append(plotter.y)
 
 
 class _BasePlotter:
@@ -614,20 +613,20 @@ class _ContourPlotter(_BasePlotter):
 
         triangulation = Triangulation(self.x, self.y)
         # 等高線の線を引く場所，すなわち，色の勾配を表す配列．
-        n_levels = 101  # 勾配をどれだけ細かくするかの変数．
+        N_LEVELS = 101  # 勾配をどれだけ細かくするかの変数．
         levels = np.linspace(
             self.z_min if self.z_min is not None else np.min(self.z),
             self.z_max if self.z_max is not None else np.max(self.z),
-            n_levels,
+            N_LEVELS,
         )
         # solve issue#7
         unique = np.unique(levels)
         if unique.size == 1:
-            offset = 0.001
+            OFFSET = 0.001
             levels = np.linspace(
-                unique[0] - offset * (n_levels // 2),
-                unique[0] + offset * (n_levels // 2),
-                n_levels,
+                unique[0] - OFFSET * (N_LEVELS // 2),
+                unique[0] + OFFSET * (N_LEVELS // 2),
+                N_LEVELS,
             )
         self.collection_ = self.ax.tricontourf(
             self.x,
