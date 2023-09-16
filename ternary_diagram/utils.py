@@ -16,7 +16,7 @@ def check_ax(ax: Optional[matplotlib.axes.Axes]) -> matplotlib.axes.Axes:
     Parameters
     ----------
     ax : None or Axes object
-
+        if None, get current axes
 
     Returns
     -------
@@ -25,7 +25,7 @@ def check_ax(ax: Optional[matplotlib.axes.Axes]) -> matplotlib.axes.Axes:
     Raises
     ------
     TypeError
-
+        when ax is not None or Axes object
     """
     if ax is None:
         ax = plt.gca()
@@ -45,10 +45,10 @@ def check_2d_vector(vector: ArrayLike, scale: bool = True) -> np.ndarray:
 
     Parameters
     ----------
-    vector : array | shape = (n, 3)
+    vector : ArrayLike | shape = (n, 3)
         ratio
     scale : bool, optional
-        do minmaxscale or not, by default True
+        minmaxscale or not, by default True
 
     Returns
     -------
@@ -74,10 +74,10 @@ def check_1d_vector(vector: ArrayLike, scale: bool = True) -> np.ndarray:
 
     Parameters
     ----------
-    vector : [type]
-        [description]
+    vector : ArrayLike | shape = (3,)
+        ratio
     scale : bool, optional
-        [description], by default True
+        minmaxscale or not, by default True
 
     Examples
     --------
@@ -89,10 +89,7 @@ def check_1d_vector(vector: ArrayLike, scale: bool = True) -> np.ndarray:
 
     Returns
     -------
-    np.ndarray
-        2d array
-
-        shape is (1, 3)
+    np.ndarray | shape = (1, 3)
     """
     vector = np.array(vector).ravel()
     if len(vector) == 3:
@@ -107,7 +104,7 @@ def three2two(vector: ArrayLike) -> Tuple[np.ndarray, np.ndarray]:
 
     Parameters
     ----------
-    vector : array | shape = (n, 3)
+    vector : ArrayLike | shape = (n, 3)
         ratio
 
     Examples
@@ -117,7 +114,7 @@ def three2two(vector: ArrayLike) -> Tuple[np.ndarray, np.ndarray]:
 
     Returns
     -------
-    numpy.ndarray shape = (n, 2)
+    numpy.ndarray | shape = (n, 2)
     """
     return (
         (2.0 * vector[:, 2] + vector[:, 0]) / 2.0,
