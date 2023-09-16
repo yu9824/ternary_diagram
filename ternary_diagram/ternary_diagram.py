@@ -66,6 +66,10 @@ class TernaryDiagram:
         ax : Optional[matplotlib.axes.Axes], optional
             Axes object to draw a diagram. If None, automatically generate.
 
+        auto_latex_notation : bool, optional
+            If True, the LaTeX notation of the material is automatically
+            generated. If False, the material is displayed as it is.
+
 
         Examples
         --------
