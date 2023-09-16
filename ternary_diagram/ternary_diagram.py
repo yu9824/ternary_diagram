@@ -5,7 +5,7 @@ Copyright © 2021 yu9824
 from typing import Tuple, List
 
 from abc import abstractmethod
-from typing import Optional
+from typing import Optional, Any, Union
 from collections import defaultdict
 from math import sqrt
 from numbers import Number
@@ -13,6 +13,8 @@ from numbers import Number
 from numpy.typing import ArrayLike
 import numpy as np
 import matplotlib.axes
+import matplotlib.figure
+import matplotlib.cm
 import matplotlib.text
 import matplotlib.collections
 import matplotlib.lines
@@ -45,6 +47,7 @@ class TernaryDiagram:
         self,
         materials: Tuple[str, str, str],
         ax: Optional[matplotlib.axes.Axes] = None,
+        auto_latex_notation: bool = True,
     ) -> None:
         """
         Make instance.
@@ -56,7 +59,9 @@ class TernaryDiagram:
         ----------
         materials : Tuple[str, str, str]
             A one-dimensional list of compounds that constitute an endpoint
-             when generating a ternary_diagram.
+            when generating a ternary_diagram.
+
+            Specify counterclockwise from the top vertex of the triangle.
 
         ax : Optional[matplotlib.axes.Axes], optional
             Axes object to draw a diagram. If None, automatically generate.
@@ -82,14 +87,18 @@ class TernaryDiagram:
         >>> # save figure
         >>> td.fig.savefig("figure.png", dpi=144)
 
+
         """
 
         # check `ax`
-        self.ax = check_ax(ax)
-        self.fig = self.ax.figure
+        self.__ax = check_ax(ax)
+        self.__fig = self.ax.figure
 
-        # Generate material_label (LaTeX notation)
-        material_label = tuple(map(get_label, materials))
+        # Generate material_labels (LaTeX notation)
+        if auto_latex_notation:
+            material_labels = tuple(map(get_label, materials))
+        else:
+            material_labels = materials
 
         # Allign the aspect
         self.ax.set_aspect("equal", adjustable="datalim")
@@ -107,11 +116,11 @@ class TernaryDiagram:
         for position in ("bottom", "left", "right", "top"):
             self.ax.spines[position].set_visible(False)
 
-        # h = √3/2
-        h = sqrt(3.0) / 2.0
+        # ROOT3_OVER_2 = √3/2
+        ROOT3_OVER_2 = sqrt(3.0) / 2.0
 
         # inner tick marks
-        inner_border_options = {
+        INNER_BORDER_OPTIONS = {
             "color": "gray",
             "lw": 0.5,
             "zorder": DEFAULT_ZORDER_GRIDS,
@@ -119,38 +128,38 @@ class TernaryDiagram:
         for i in range(1, 10):
             self.ax.plot(
                 [i / 20.0, 1.0 - i / 20.0],
-                [h * i / 10.0, h * i / 10.0],
-                **inner_border_options
+                [ROOT3_OVER_2 * i / 10.0, ROOT3_OVER_2 * i / 10.0],
+                **INNER_BORDER_OPTIONS,
             )
             self.ax.plot(
                 [i / 20.0, i / 10.0],
-                [h * i / 10.0, 0.0],
-                **inner_border_options
+                [ROOT3_OVER_2 * i / 10.0, 0.0],
+                **INNER_BORDER_OPTIONS,
             )
             self.ax.plot(
                 [0.5 + i / 20.0, i / 10.0],
-                [h * (1.0 - i / 10.0), 0.0],
-                **inner_border_options
+                [ROOT3_OVER_2 * (1.0 - i / 10.0), 0.0],
+                **INNER_BORDER_OPTIONS,
             )
 
         # borders
-        outer_border_options = {
+        OUTER_BORDER_OPTIONS = {
             "color": "black",
             "lw": 2,
             "linestyle": "-",
             "zorder": DEFAULT_ZORDER_GRIDS,
         }
-        self.ax.plot([0.0, 1.0], [0.0, 0.0], **outer_border_options)
-        self.ax.plot([0.0, 0.5], [0.0, h], **outer_border_options)
-        self.ax.plot([1.0, 0.5], [0.0, h], **outer_border_options)
+        self.ax.plot([0.0, 1.0], [0.0, 0.0], **OUTER_BORDER_OPTIONS)
+        self.ax.plot([0.0, 0.5], [0.0, ROOT3_OVER_2], **OUTER_BORDER_OPTIONS)
+        self.ax.plot([1.0, 0.5], [0.0, ROOT3_OVER_2], **OUTER_BORDER_OPTIONS)
 
         # 頂点のラベル (Labels of vertices)
         FONT_SIZE_MATERIAL_LABEL = 16
         # top label
         self.ax.text(
             0.5,
-            h + 0.02,
-            material_label[0],
+            ROOT3_OVER_2 + 0.02,
+            material_labels[0],
             fontsize=FONT_SIZE_MATERIAL_LABEL,
             ha="center",
             va="bottom",
@@ -159,7 +168,7 @@ class TernaryDiagram:
         self.ax.text(
             0,
             -0.05,
-            material_label[1],
+            material_labels[1],
             fontsize=FONT_SIZE_MATERIAL_LABEL,
             ha="right",
             va="top",
@@ -168,7 +177,7 @@ class TernaryDiagram:
         self.ax.text(
             1,
             -0.05,
-            material_label[2],
+            material_labels[2],
             fontsize=FONT_SIZE_MATERIAL_LABEL,
             ha="left",
             va="top",
@@ -179,7 +188,7 @@ class TernaryDiagram:
         for i in range(1, 10):
             self.ax.text(
                 0.5 + (10 - i) / 20.0,
-                h * (1.0 - (10 - i) / 10.0),
+                ROOT3_OVER_2 * (1.0 - (10 - i) / 10.0),
                 "%d0" % i,
                 fontsize=FONT_SIZE_AXIS_LABEL,
                 va="bottom",
@@ -187,7 +196,7 @@ class TernaryDiagram:
             )
             self.ax.text(
                 (10 - i) / 20.0 - 0.01,
-                h * (10 - i) / 10.0 + 0.04,
+                ROOT3_OVER_2 * (10 - i) / 10.0 + 0.04,
                 "%d0" % i,
                 fontsize=FONT_SIZE_AXIS_LABEL,
                 rotation=300,
@@ -208,6 +217,20 @@ class TernaryDiagram:
         self.x_ = defaultdict(list)
         self.y_ = defaultdict(list)
 
+    @property
+    def ax(self) -> matplotlib.axes.Axes:
+        """Axes object"""
+        return self.__ax
+
+    @ax.setter
+    def ax(self, _ax):
+        raise AttributeError("ax is read-only")
+
+    @property
+    def fig(self) -> matplotlib.figure.Figure:
+        """Figure object"""
+        return self.__fig
+
     def scatter(
         self,
         vector: ArrayLike,
@@ -225,9 +248,13 @@ class TernaryDiagram:
 
         Parameters
         ----------
-        vector : array | shape = (n, 3)
-            percentage of each compound mixed in 2D list / pandas.DataFrame
-            / numpy.ndarray, where shape = [n, 3] (n is the number of samples)
+        vector : ArrayLike | shape = (n, 3)
+            vector : ArrayLike | shape = (n, 3)
+            2D vector whose shape is (n, 3). It represents the ratio of
+            each component (the sum does not have to be 1).
+
+            The vectors are specified in semi-clockwise order starting
+            from the vertex of the triangle.
 
         z : ArrayLike, shape = (n,), optional
             , by default None
@@ -245,17 +272,17 @@ class TernaryDiagram:
         flag_cbar : bool, optional
             instance colorbar or not, by default True
 
-        **kwargs : parameter of matplotlib.pyplot.scatter, optional
+        kwargs : parameter of `matplotlib.pyplot.scatter`, optional
             For example, `marker='x'`, `facecolor='blue'` etc.
 
-            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html.   # noqa
+            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html.
 
 
         Returns
         -------
         matplotlib.collections.PathCollection
             A collection of scatter points.
-        """
+        """  # noqa: E501
 
         plotter = _ScatterPlotter(
             vector=vector,
@@ -265,7 +292,7 @@ class TernaryDiagram:
             z_max=z_max,
             annotations=annotations,
             flag_cbar=flag_cbar,
-            **kwargs
+            **kwargs,
         )
         self._append_x_y(plotter)
         return plotter.collection_
@@ -276,33 +303,47 @@ class TernaryDiagram:
         z: Optional[ArrayLike] = None,
         z_min: Optional[Number] = None,
         z_max: Optional[Number] = None,
+        fill: bool = True,
         flag_cbar: bool = True,
         **kwargs
     ) -> TriContourSet:
         """
         To create a contour map.
 
+        This is a wrapper of `plt.tricontour` or `plt.tricontourf`.
+
+        See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tricontour.html
+        or https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tricontourf.html
+
+        - When fill is `True`, this is a wrapper of `plt.tricontourf`.
+        - When fill is `False`, this is a wrapper of `plt.tricontour`.
+
         Parameters
         ----------
         vector : ArrayLike | shape = (n, 3)
-            percentage of each compound mixed in 2D list / pandas.DataFrame
-            / numpy.ndarray, where shape = [n, 3] (n is the number of samples
-            to be plotted as integer)
+            2D vector whose shape is (n, 3). It represents the ratio of
+            each component (the sum does not have to be 1).
+
+            The vectors are specified in semi-clockwise order starting
+            from the vertex of the triangle.
 
         z : Optional[ArrayLike], shape = (n,)
             , by default None
+
         z_min : Optional[Number], optional
             , by default None
+
         z_max : Optional[Number], optional
             , by default None
-        **kwargs : parameter of matplotlib.pyplot.contour, optional
-            https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html
+
+        kwargs : parameter of `matplotlib.pyplot.contour`, optional
+            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html.
 
         Returns
         -------
         matplotlib.tri.tricontour.TriContourSet
             A collection of contour lines.
-        """
+        """  # noqa: E501
 
         plotter = _ContourPlotter(
             vector=vector,
@@ -310,8 +351,9 @@ class TernaryDiagram:
             z=z,
             z_min=z_min,
             z_max=z_max,
+            fill=fill,
             flag_cbar=flag_cbar,
-            **kwargs
+            **kwargs,
         )
         self._append_x_y(plotter)
         return plotter.collection_
@@ -326,19 +368,23 @@ class TernaryDiagram:
 
         Parameters
         ----------
-        vector : array | shape = (n, 3)
-            A mixing ratio of the compounds that are endpoints of
-            the connecting line. A one-dimensional list of length 3.
+        vector : ArrayLike | shape = (n, 3)
+            vector : ArrayLike | shape = (n, 3)
+            2D vector whose shape is (n, 3). It represents the ratio of
+            each component (the sum does not have to be 1).
 
-        kwargs: parameter of matplotlib.pyplot.plot, optional
-            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html   # noqa
+            The vectors are specified in semi-clockwise order starting
+            from the vertex of the triangle.
+
+        kwargs : parameter of `matplotlib.pyplot.plot`, optional
+            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html
 
 
         Returns
         -------
         List[matplotlib.lines.Line2D]
             lines.
-        """
+        """  # noqa: E501
 
         plotter = _LinePlotter(vector=vector, ax=self.ax, **kwargs)
         self._append_x_y(plotter)
@@ -356,18 +402,23 @@ class TernaryDiagram:
         text : str
             Text to be displayed.
 
-        vector : 1d array, whose length is 3.
-            The position of the text to be displayed.
+        vector : 1D ArrayLike, whose length is 3.
+            vector : ArrayLike | shape = (3,)
+            It represents the ratio of
+            each component (the sum does not have to be 1).
+
+            The vectors are specified in semi-clockwise order starting
+            from the vertex of the triangle.
 
         kwargs : parameter of matplotlib.pyplot.annotate, optional
-            see https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.annotate.html   # noqa
+            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.annotate.html
 
 
         Returns
         -------
         matplotlib.text.Annotation
             An annotation.
-        """
+        """  # noqa: E501
         plotter = _AnnotatePlotter(text, vector, ax=self.ax, **kwargs)
         self._append_x_y(plotter)
         return plotter.collection_
@@ -375,14 +426,18 @@ class TernaryDiagram:
     def colorbar(
         self,
         mappable,
-        shrink=0.8,
+        shrink: float = 0.8,
         format="%.1f",
         label: str = "",
-        orientation="vertical",
-        ticklocation="top",
+        orientation: str = "vertical",
+        location: str = "right",
         **kwargs
     ) -> matplotlib.colorbar.Colorbar:
         """Draw a colorbar.
+
+        This is a wrapper of `matplotlib.pyplot.colorbar`.
+
+        See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.colorbar.html
 
         Parameters
         ----------
@@ -401,23 +456,28 @@ class TernaryDiagram:
         orientation : str, optional
             bar orientation, by default 'vertical'
 
-        ticklocation : str, optional
-            tick location, by default 'top'
+        location : str, optional
+            location, by default 'right'
+
+        kwargs : parameter of `matplotlib.pyplot.colorbar`, optional
+            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.colorbar.html
 
         Returns
         -------
         matplotlib.colorbar.Colorbar
             colorbar object
-        """
-        return _draw_colorbar(
-            mappable=mappable,
-            ax=self.ax,
+        """  # noqa: E501
+
+        # draw colorbar
+        return _BasePlotter.colorbar(
+            mappable,
             shrink=shrink,
             format=format,
             label=label,
             orientation=orientation,
-            ticklocation=ticklocation,
-            **kwargs
+            location=location,
+            ax=self.ax,
+            **kwargs,
         )
 
     def _append_x_y(self, plotter) -> None:
@@ -436,9 +496,8 @@ class TernaryDiagram:
         if not isinstance(plotter, _BasePlotter):
             raise TypeError("plotter must inherit `_BasePlotter`")
 
-        name = plotter.name
-        self.x_[name].append(plotter.x_)
-        self.y_[name].append(plotter.y_)
+        self.x_[plotter.name].append(plotter.x_)
+        self.y_[plotter.name].append(plotter.y_)
 
 
 class _BasePlotter:
@@ -451,20 +510,23 @@ class _BasePlotter:
         z_max: Optional[Number] = None,
         **kwargs
     ):
-        """_BasePlotter
-
+        """
         This is a base class for the wrapper of `matplotlib.pyplot.` functions.
 
         Parameters
         ----------
         vector : ArrayLike
             vector
+
         ax : Optional[matplotlib.axes.Axes], optional
             , by default None
+
         z : Optional[ArrayLike], optional
             , by default None
+
         z_min : Optional[Number], optional
             , by default None
+
         z_max : Optional[Number], optional
             , by default None
         """
@@ -534,6 +596,70 @@ class _BasePlotter:
     def collection_(self, _collection):
         self.__collection = _collection
 
+    @staticmethod
+    def colorbar(
+        mappable: Optional[Union[matplotlib.cm.ScalarMappable, Any]] = None,
+        shrink: float = 0.8,
+        format="%.1f",
+        label: str = "",
+        orientation: str = "vertical",
+        location: str = "right",
+        ax: Optional[matplotlib.axes.Axes] = None,
+        **kwargs
+    ) -> matplotlib.colorbar.Colorbar:
+        """Draw a colorbar.
+
+        This is a wrapper of `matplotlib.pyplot.colorbar`.
+
+        See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.colorbar.html
+
+        Parameters
+        ----------
+        mappable : Optional[Union[matplotlib.cm.ScalarMappable, Any]]
+            The object that contains the colorbar data.
+
+        shrink : float, optional
+            how much to shrink the colorbar, by default 0.8
+
+        format : str, optional
+            float format, by default '%.1f'
+
+        label : str, optional
+            bar label, by default ''
+
+        orientation : str, optional
+            bar orientation, by default 'vertical'
+
+        location : str, optional
+            location, by default 'right'
+
+        ax : Optional[matplotlib.axes.Axes], optional
+            axes object, by default None
+
+        kwargs : parameter of `matplotlib.pyplot.colorbar`, optional
+            See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.colorbar.html
+
+        Returns
+        -------
+        matplotlib.colorbar.Colorbar
+            colorbar object
+        """  # noqa: E501
+
+        # check `ax`
+        ax = check_ax(ax)
+
+        # draw colorbar
+        return ax.figure.colorbar(
+            mappable,
+            ax=ax,
+            shrink=shrink,
+            format=format,
+            label=label,
+            orientation=orientation,
+            location=location,
+            **kwargs,
+        )
+
 
 class _ScatterPlotter(_BasePlotter):
     def __init__(
@@ -577,7 +703,7 @@ class _ScatterPlotter(_BasePlotter):
             # To change color by each point
             self.collection_ = self.ax.scatter(self.x_, self.y_, **self.kwargs)
             # for i_data in range(len(self.x_)):
-            #     self.ax.scatter(self.x_[i_data], self.y_[i_data], **self.kwargs)    # noqa
+            #     self.ax.scatter(self.x_[i_data], self.y_[i_data], **self.kwargs)  # noqa: E501
         else:
             if "cmap" not in self.kwargs:
                 self.kwargs["cmap"] = DEFAULT_CMAP
@@ -587,10 +713,10 @@ class _ScatterPlotter(_BasePlotter):
                 c=self.z,
                 vmin=self.z_min,
                 vmax=self.z_max,
-                **self.kwargs
+                **self.kwargs,
             )
             if flag_cbar:
-                self.colorbar = _draw_colorbar(self.collection_, ax=self.ax)
+                self.colorbar(self.collection_, ax=self.ax)
         self.fig.tight_layout()
 
     @property
@@ -606,6 +732,7 @@ class _ContourPlotter(_BasePlotter):
         z=None,
         z_min=None,
         z_max=None,
+        fill: bool = True,
         flag_cbar: bool = True,
         **kwargs
     ):
@@ -622,32 +749,36 @@ class _ContourPlotter(_BasePlotter):
         triangulation = Triangulation(self.x_, self.y_)
         # 等高線の線を引く場所，すなわち，色の勾配を表す配列．
         N_LEVELS = 101  # 勾配をどれだけ細かくするかの変数．
-        levels = np.linspace(
-            self.z_min if self.z_min is not None else np.min(self.z),
-            self.z_max if self.z_max is not None else np.max(self.z),
-            N_LEVELS,
+        levels: np.ndarray = np.linspace(
+            start=self.z_min if self.z_min is not None else np.min(self.z),
+            stop=self.z_max if self.z_max is not None else np.max(self.z),
+            num=N_LEVELS,
         )
         # solve issue#7
-        unique = np.unique(levels)
-        if unique.size == 1:
+        if levels.std() == 0:
             OFFSET = 0.001
             levels = np.linspace(
-                unique[0] - OFFSET * (N_LEVELS // 2),
-                unique[0] + OFFSET * (N_LEVELS // 2),
+                levels[0] - OFFSET * (N_LEVELS // 2),
+                levels[-1] + OFFSET * (N_LEVELS // 2),
                 N_LEVELS,
             )
-        self.collection_ = self.ax.tricontourf(
-            self.x_,
-            self.y_,
-            triangulation.get_masked_triangles(),
-            self.z,
-            levels=levels,
-            **self.kwargs
-        )
-        if flag_cbar:
-            self.colorbar = _draw_colorbar(
-                mappable=self.collection_, ax=self.ax
+        if fill:
+            self.collection_ = self.ax.tricontourf(
+                triangulation,
+                self.z,
+                levels=levels,
+                **self.kwargs,
             )
+        else:
+            self.collection_ = self.ax.tricontour(
+                triangulation,
+                self.z,
+                levels=levels,
+                **self.kwargs,
+            )
+
+        if flag_cbar:
+            self.colorbar(mappable=self.collection_, ax=self.ax)
         self.fig.tight_layout()
 
     @property
@@ -704,58 +835,6 @@ class _AnnotatePlotter(_BasePlotter):
     @property
     def name(self):
         return "annotate"
-
-
-def _draw_colorbar(
-    mappable,
-    ax: Optional[matplotlib.axes.Axes] = None,
-    shrink=0.8,
-    format="%.1f",
-    label: str = "",
-    orientation="vertical",
-    location="right",
-    **kwargs
-) -> matplotlib.colorbar.Colorbar:
-    """Draw a colorbar.
-
-    This is a wrapper of `matplotlib.pyplot.colorbar`.
-
-    Parameters
-    ----------
-    mappable :
-        mapplotable object
-    ax : Optional[matplotlib.axes.Axes], optional
-        axes, by default None
-    shrink : float, optional
-        , by default 0.8
-    format : str, optional
-        , by default "%.1f"
-    label : str, optional
-        , by default ""
-    orientation : str, optional
-        , by default "vertical"
-    location : str, optional
-        , by default "right"
-
-    Returns
-    -------
-    matplotlib.colorbar.Colorbar
-        colorbar object
-    """
-    # check ax
-    ax = check_ax(ax)
-
-    # draw colorbar
-    return ax.figure.colorbar(
-        mappable,
-        ax=ax,
-        shrink=shrink,
-        format=format,
-        label=label,
-        orientation=orientation,
-        location=location,
-        **kwargs
-    )
 
 
 if __name__ == "__main__":
