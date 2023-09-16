@@ -170,7 +170,7 @@ if __name__ == "__main__":
             maintainer=AUTHOR,
             maintainer_email=EMAIL,
             install_requires=install_requirements,
-            # url=url,
+            url=url,
             project_urls={
                 "Documentation": "https://yu9824.github.io/ternary_diagram/",
                 "Source": url,
