@@ -26,6 +26,10 @@ author = "yu9824"
 # The full version, including alpha/beta/rc tags
 release = __version__
 
+# Use __init__ docstring as class docstring
+# https://www.sphinx-doc.org/ja/master/usage/extensions/autodoc.html
+autoclass_content = "init"
+
 
 # -- General configuration ---------------------------------------------------
 

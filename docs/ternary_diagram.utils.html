@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ternary_diagram.utils module &mdash; ternary-diagram 3.0.1 documentation</title>
+  <title>ternary_diagram.utils module &mdash; ternary-diagram 3.1.0dev0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -85,8 +85,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vector</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>scale</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description], by default True</p></li>
+<li><p><strong>vector</strong> (<em>ArrayLike</em><em> | </em><em>shape =</em><em> (</em><em>3</em><em>,</em><em>)</em>) – ratio</p></li>
+<li><p><strong>scale</strong> (<em>bool</em><em>, </em><em>optional</em>) – minmaxscale or not, by default True</p></li>
 </ul>
 </dd>
 </dl>
@@ -100,13 +100,8 @@
 </pre></div>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p>2d array</p>
-<p>shape is (1, 3)</p>
-</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray | shape = (1, 3)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -118,8 +113,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vector</strong> (<em>array</em><em> | </em><em>shape =</em><em> (</em><em>n</em><em>, </em><em>3</em><em>)</em>) – ratio</p></li>
-<li><p><strong>scale</strong> (<em>bool</em><em>, </em><em>optional</em>) – do minmaxscale or not, by default True</p></li>
+<li><p><strong>vector</strong> (<em>ArrayLike</em><em> | </em><em>shape =</em><em> (</em><em>n</em><em>, </em><em>3</em><em>)</em>) – ratio</p></li>
+<li><p><strong>scale</strong> (<em>bool</em><em>, </em><em>optional</em>) – minmaxscale or not, by default True</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
@@ -137,13 +132,13 @@
 <dd><p>check ax</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ax</strong> (<em>None</em><em> or </em><em>Axes object</em>) – </p>
+<dd class="field-odd"><p><strong>ax</strong> (<em>None</em><em> or </em><em>Axes object</em>) – if None, get current axes</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Axes object</p>
 </dd>
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><strong>TypeError</strong> – </p>
+<dd class="field-odd"><p><strong>TypeError</strong> – when ax is not None or Axes object</p>
 </dd>
 </dl>
 </dd></dl>
@@ -185,7 +180,7 @@
 <dd><p>Converted 3D proportions to 2D in order to generate a triangular diagram.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vector</strong> (<em>array</em><em> | </em><em>shape =</em><em> (</em><em>n</em><em>, </em><em>3</em><em>)</em>) – ratio</p>
+<dd class="field-odd"><p><strong>vector</strong> (<em>ArrayLike</em><em> | </em><em>shape =</em><em> (</em><em>n</em><em>, </em><em>3</em><em>)</em>) – ratio</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -195,7 +190,7 @@
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.ndarray shape = (n, 2)</p>
+<dd class="field-odd"><p>numpy.ndarray | shape = (n, 2)</p>
 </dd>
 </dl>
 </dd></dl>
