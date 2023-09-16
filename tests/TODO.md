@@ -1,2 +1,4 @@
 - Create `annotate` test.
 - Create `plot` test
+- when `self.z size == 1`
+- Use `cax`

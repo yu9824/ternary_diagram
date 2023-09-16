@@ -32,7 +32,9 @@ if __name__ == "__main__":
     )
 
     # __init__.pyから読み込む
-    with open(os.path.join(PACKAGE_NAME, "__init__.py"), encoding="utf-8") as f:
+    with open(
+        os.path.join(PACKAGE_NAME, "__init__.py"), encoding="utf-8"
+    ) as f:
         init_text = f.read()
         VERSION = re.search(
             r"__version__\s*=\s*[\'\"](.+?)[\'\"]", init_text
@@ -40,13 +42,15 @@ if __name__ == "__main__":
         LICENSE = re.search(
             r"__license__\s*=\s*[\'\"](.+?)[\'\"]", init_text
         ).group(1)
-        AUTHOR = re.search(r"__author__\s*=\s*[\'\"](.+?)[\'\"]", init_text).group(
-            1
-        )
+        AUTHOR = re.search(
+            r"__author__\s*=\s*[\'\"](.+?)[\'\"]", init_text
+        ).group(1)
         EMAIL = re.search(
             r"__author_email__\s*=\s*[\'\"](.+?)[\'\"]", init_text
         ).group(1)
-        ID = re.search(r"__user_id__\s*=\s*[\'\"](.+?)[\'\"]", init_text).group(1)
+        ID = re.search(
+            r"__user_id__\s*=\s*[\'\"](.+?)[\'\"]", init_text
+        ).group(1)
         APP_NAME = re.search(
             r"__app_name__\s*=\s*[\'\"](.+?)[\'\"]", init_text
         ).group(1)
@@ -85,7 +89,9 @@ if __name__ == "__main__":
             lib_path, "libpython{}m.dylib".format(VERSION_PYTHON)
         )
         path_converted = os.path.join(lib_path, fname_libpython)
-        if os.path.exists(path_original) and not os.path.exists(path_converted):
+        if os.path.exists(path_original) and not os.path.exists(
+            path_converted
+        ):
             copyfile(path_original, path_converted)
 
         # 諸変数の準備
@@ -94,7 +100,9 @@ if __name__ == "__main__":
             for f in os.listdir(lib_path)
             if ".dylib" in f
         ]
-        contents_path = os.path.join("dist", "{}.app".format(APP_NAME), "Contents")
+        contents_path = os.path.join(
+            "dist", "{}.app".format(APP_NAME), "Contents"
+        )
         frameworks_path = os.path.join(contents_path, "Frameworks")
 
         OPTIONS = {
@@ -103,7 +111,9 @@ if __name__ == "__main__":
             "iconfile": ICON,
             "plist": {
                 "PyRuntimeLocations": [
-                    "@executable_path/../Frameworks/{}".format(fname_libpython),
+                    "@executable_path/../Frameworks/{}".format(
+                        fname_libpython
+                    ),
                     os.path.join(lib_path, fname_libpython),
                 ],
                 "CFBundleName": APP_NAME,
@@ -112,7 +122,9 @@ if __name__ == "__main__":
                 "CFBundleIdentifier": "com.{0}.osx.{1}".format(ID, APP_NAME),
                 "CFBundleVersion": VERSION,
                 "CFBundleShortVersionString": VERSION,
-                "NSHumanReadableCopyright": "Copyright © 2021-, {}".format(AUTHOR),
+                "NSHumanReadableCopyright": "Copyright © 2021-, {}".format(
+                    AUTHOR
+                ),
             },
             # 'frameworks': dylib_files,
         }
@@ -158,7 +170,13 @@ if __name__ == "__main__":
             maintainer=AUTHOR,
             maintainer_email=EMAIL,
             install_requires=install_requirements,
-            url=url,
+            # url=url,
+            project_urls={
+                "Documentation": "https://yu9824.github.io/ternary_diagram/",
+                "Source": url,
+                "Tracker": "{}/issues".format(url),
+                "PyPI": "https://pypi.org/project/ternary-diagram/",
+            },  # プロジェクトのホームページやソースコードを置いているリポジトリのURLを指定．
             # PyPIでの検索用キーワードをスペース区切りで指定．
             keywords="ternarydiagram phasediagram chemistry",
             license=LICENSE,
@@ -171,5 +189,7 @@ if __name__ == "__main__":
                 "Programming Language :: Python :: 3.9",
                 "Programming Language :: Python :: 3.10",
                 "Programming Language :: Python :: 3.11",
+                "Topic :: Scientific/Engineering :: Chemistry",
+                "Topic :: Scientific/Engineering :: Visualization",
             ],  # パッケージ(プロジェクト)の分類．https://pypi.org/classifiers/ に掲載されているものを指定可能．
         )
