@@ -1,0 +1,71 @@
+# https://packaging.python.org/ja/latest/guides/writing-pyproject-toml/
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ternary-diagram"
+dynamic = ["version"]
+dependencies = ["numpy >=1.20", "matplotlib"]
+requires-python = ">= 3.8"
+authors = [{ name = "yu9824" }]
+maintainers = [{ name = "yu9824" }]
+description = ""
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { file = "LICENSE" }
+keywords = []
+# https://pypi.org/classifiers/
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Visualization",
+] # https://pypi.org/classifiers/
+
+[project.optional-dependencies]
+test = ["pytest", "pandas"]
+dev = ["build", "jupyter", "pandas"]
+optional = ["colorlog", "tqdm"]
+docs = [
+    "sphinx",
+    "sphinx_rtd_theme",
+    "sphinx-markdown-tables",
+    "recommonmark",
+    "sphinx-multiversion",
+]
+gui = ["TkEasyGUI"]
+
+[project.urls]
+Homepage = "https://github.com/yu9824/ternary-diagram"
+Documentation = "https://yu9824.github.io/ternary_diagram/"
+PyPI = "https://pypi.org/project/ternary-diagram/"
+Source = "https://github.com/yu9824/ternary-diagram"
+Tracker = "https://github.com/yu9824/ternary-diagram/issues"
+
+[project.scripts]
+ternary-diagram = "python_template.__main__:entrypoint"
+
+# [project.gui-scripts]
+# ternary-diagram-gui = "python_template:main_gui"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.dynamic]
+version = { attr = "python_template.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src/"]
+
+[tool.ruff]
+line-length = 79
+indent-width = 4
+
+[tool.ruff.lint]
+unfixable = ["F401"]
