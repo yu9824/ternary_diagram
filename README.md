@@ -5,7 +5,7 @@
 [![PyPI version](https://badge.fury.io/py/ternary-diagram.svg)](https://pypi.org/project/ternary-diagram/)
 [![Downloads](https://static.pepy.tech/badge/ternary-diagram)](https://pepy.tech/project/ternary-diagram)
 
-[![Test on each version](https://github.com/yu9824/ternary_diagram/actions/workflows/pytest-on-each-version.yaml/badge.svg)](https://github.com/yu9824/ternary_diagram/actions/workflows/pytest-on-each-version.yaml)
+[![CI](https://github.com/yu9824/ternary_diagram/actions/workflows/CI.yaml/badge.svg)](https://github.com/yu9824/ternary_diagram/actions/workflows/CI.yaml)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![conda_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/version.svg)](https://anaconda.org/conda-forge/ternary-diagram/)
 [![arch_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/platforms.svg)](https://anaconda.org/conda-forge/ternary-diagram)
