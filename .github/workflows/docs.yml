@@ -1,0 +1,38 @@
+name: docs
+run-name: ${{ github.workflow }} (${{ github.ref_name }})
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+    - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    # runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0  # fetch all commits
+          fetch-tags: true
+      - uses: actions/setup-python@v5
+      - name: Install dependencies
+        run: |
+          pip install .[docs]
+      - name: sphinx-apidoc
+        run: |
+          sphinx-apidoc -f -o ./docs_src ./src/ternary_diagram --module-first
+      - name: Sphinx build
+        run: |
+          sphinx-build -b html ./docs_src ./docs
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          force_orphan: true

@@ -1,0 +1,37 @@
+# Regrences
+# - https://enu23456.hatenablog.com/entry/2022/11/24/195744
+name: CI
+run-name: ${{ github.workflow }} (${{ github.ref_name }})
+
+on:
+  workflow_dispatch:
+  push:
+    # branches:
+    #   - 'main'
+    #   - 'dev'
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    # runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+      max-parallel: 6
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    # - name: Add conda to system path
+    #   run: |
+    #     # $CONDA is an environment variable pointing to the root of the miniconda directory
+    #     echo $CONDA/bin >> $GITHUB_PATH
+    - name: Install dependencies
+      run: |
+        pip install .[test,optional]
+    - name: Test with pytest
+      run: |
+        pytest -xs .
