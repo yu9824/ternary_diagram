@@ -1,4 +1,0 @@
-include LICENSE
-include *.md
-exclude README.md
-include requirements.txt
