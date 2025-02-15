@@ -11,6 +11,7 @@ from math import sqrt
 from numbers import Number
 from typing import Any, Optional, Union
 
+import matplotlib
 import matplotlib.axes
 import matplotlib.cm
 import matplotlib.collections
@@ -21,8 +22,11 @@ import matplotlib.text
 import numpy as np
 
 # import matplotlib.cm as cm      # ternary内にカラーマップを創設する
-# 三角図を簡単に出すやつ
-from matplotlib.tri import Triangulation, TriContourSet
+if tuple(map(int, matplotlib.__version__.split(".")[:2])) >= (3, 7):
+    from matplotlib.tri import Triangulation, TriContourSet
+else:
+    from matplotlib.tri.triangulation import Triangulation
+    from matplotlib.tri.tricontour import TriContourSet
 from numpy.typing import ArrayLike
 
 from ternary_diagram.utils import (
