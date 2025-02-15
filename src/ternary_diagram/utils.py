@@ -59,14 +59,14 @@ def check_2d_vector(vector: ArrayLike, scale: bool = True) -> np.ndarray:
     ValueError
         when shape is not (n, 3)
     """
-    vector: np.ndarray = np.array(vector)
-    if vector.shape[1] != 3:
+    arr_vector = np.asarray(vector)
+    if arr_vector.shape[1] != 3:
         raise ValueError("`vector`'s shape must be (n, 3)")
     if scale:
-        vector = vector / np.sum(
-            vector, axis=1, keepdims=True
+        arr_vector = arr_vector / np.sum(
+            arr_vector, axis=1, keepdims=True
         )  # 今回keepdims = Trueは.reshape(-1, 1)と同義
-    return vector
+    return arr_vector
 
 
 def check_1d_vector(vector: ArrayLike, scale: bool = True) -> np.ndarray:
@@ -116,9 +116,10 @@ def three2two(vector: ArrayLike) -> Tuple[np.ndarray, np.ndarray]:
     -------
     numpy.ndarray | shape = (n, 2)
     """
+    arr_vector = np.asarray(vector)
     return (
-        (2.0 * vector[:, 2] + vector[:, 0]) / 2.0,
-        sqrt(3.0) / 2.0 * vector[:, 0],
+        (2.0 * arr_vector[:, 2] + arr_vector[:, 0]) / 2.0,
+        sqrt(3.0) / 2.0 * arr_vector[:, 0],
     )
 
 

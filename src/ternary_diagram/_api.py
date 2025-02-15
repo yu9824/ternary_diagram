@@ -222,6 +222,7 @@ class TernaryDiagram:
                 ha="right",
             )
 
+        # FIXME: mypy
         # 二次元に変換したデータを保存しておく (Save the data converted to two dimensions)
         self.x_ = defaultdict(list)
         self.y_ = defaultdict(list)
@@ -542,8 +543,8 @@ class _BasePlotter:
         self.vector: np.ndarray = check_2d_vector(vector)
         self.ax: matplotlib.axes.Axes = check_ax(ax)
         self.kwargs: dict = kwargs
-        self.z: np.ndarray = (
-            np.array(z).ravel() if z is not None else None
+        self.z = (
+            np.asarray(z).ravel() if z is not None else None
         )  # convert to 1-d np.ndarray
 
         # TODO: check
@@ -755,8 +756,8 @@ class _ContourPlotter(_BasePlotter):
         # 等高線の線を引く場所，すなわち，色の勾配を表す配列．
         N_LEVELS = 101  # 勾配をどれだけ細かくするかの変数．
         levels: np.ndarray = np.linspace(
-            start=self.z_min if self.z_min is not None else np.min(self.z),
-            stop=self.z_max if self.z_max is not None else np.max(self.z),
+            start=self.z_min if self.z_min is not None else np.min(self.z),  # type: ignore[arg-type]
+            stop=self.z_max if self.z_max is not None else np.max(self.z),  # type: ignore[arg-type]
             num=N_LEVELS,
         )
         # solve issue#7
