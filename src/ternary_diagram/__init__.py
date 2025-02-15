@@ -9,6 +9,4 @@ __user_id__ = "yu9824"
 __app_name__ = "ternary_diagram"
 __url__ = "http://github.com/yu9824/ternary_diagram/"
 
-__all__ = [
-    "TernaryDiagram",
-]
+__all__ = ("TernaryDiagram",)
