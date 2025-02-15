@@ -1,38 +1,37 @@
 """
 Copyright © 2021 yu9824
 """
+
 # deprecated from python>=3.9
-from typing import Tuple, List
+from typing import Tuple, List  # isort: skip
 
 from abc import abstractmethod
-from typing import Optional, Any, Union
 from collections import defaultdict
 from math import sqrt
 from numbers import Number
+from typing import Any, Optional, Union
 
-from numpy.typing import ArrayLike
-import numpy as np
 import matplotlib.axes
-import matplotlib.figure
 import matplotlib.cm
-import matplotlib.text
 import matplotlib.collections
-import matplotlib.lines
 import matplotlib.colorbar
+import matplotlib.figure
+import matplotlib.lines
+import matplotlib.text
+import numpy as np
 
 # import matplotlib.cm as cm      # ternary内にカラーマップを創設する
 # 三角図を簡単に出すやつ
-from matplotlib.tri.tricontour import TriContourSet
-from matplotlib.tri.triangulation import Triangulation
+from matplotlib.tri import Triangulation, TriContourSet
+from numpy.typing import ArrayLike
 
 from ternary_diagram.utils import (
-    check_ax,
     check_1d_vector,
     check_2d_vector,
-    three2two,
+    check_ax,
     get_label,
+    three2two,
 )
-
 
 # default parameters
 DEFAULT_CMAP = "rainbow"
@@ -245,7 +244,7 @@ class TernaryDiagram:
         z_max: Optional[Number] = None,
         annotations: Optional[List[str]] = None,
         flag_cbar: bool = True,
-        **kwargs
+        **kwargs,
     ) -> matplotlib.collections.PathCollection:
         """
         Plot scatter points.
@@ -311,7 +310,7 @@ class TernaryDiagram:
         z_max: Optional[Number] = None,
         fill: bool = True,
         flag_cbar: bool = True,
-        **kwargs
+        **kwargs,
     ) -> TriContourSet:
         """
         To create a contour map.
@@ -437,7 +436,7 @@ class TernaryDiagram:
         label: str = "",
         orientation: str = "vertical",
         location: str = "right",
-        **kwargs
+        **kwargs,
     ) -> matplotlib.colorbar.Colorbar:
         """Draw a colorbar.
 
@@ -514,7 +513,7 @@ class _BasePlotter:
         z: Optional[ArrayLike] = None,
         z_min: Optional[Number] = None,
         z_max: Optional[Number] = None,
-        **kwargs
+        **kwargs,
     ):
         """
         This is a base class for the wrapper of `matplotlib.pyplot.` functions.
@@ -590,10 +589,6 @@ class _BasePlotter:
         """Plotter name"""
         ...
 
-    @name.setter
-    def name(self, _v):
-        raise AttributeError("name is read-only")
-
     @property
     def collection_(self):
         return self.__collection
@@ -611,7 +606,7 @@ class _BasePlotter:
         orientation: str = "vertical",
         location: str = "right",
         ax: Optional[matplotlib.axes.Axes] = None,
-        **kwargs
+        **kwargs,
     ) -> matplotlib.colorbar.Colorbar:
         """Draw a colorbar.
 
@@ -677,7 +672,7 @@ class _ScatterPlotter(_BasePlotter):
         z_max=None,
         annotations=None,
         flag_cbar: bool = True,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             vector=vector, ax=ax, z=z, z_min=z_min, z_max=z_max, **kwargs
@@ -690,9 +685,9 @@ class _ScatterPlotter(_BasePlotter):
 
         # easy annotation 右上に簡易annotation
         if annotations is not None:
-            assert len(annotations) == len(
-                self.x_
-            ), "len(annotations) != len(x)"
+            assert len(annotations) == len(self.x_), (
+                "len(annotations) != len(x)"
+            )
             for x, y, txt in zip(self.x_, self.y_, annotations):
                 txt = get_label(txt)
                 self.ax.annotate(
@@ -740,7 +735,7 @@ class _ContourPlotter(_BasePlotter):
         z_max=None,
         fill: bool = True,
         flag_cbar: bool = True,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             vector, ax=ax, z=z, z_min=z_min, z_max=z_max, **kwargs
