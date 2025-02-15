@@ -5,14 +5,15 @@
 [![PyPI version](https://badge.fury.io/py/ternary-diagram.svg)](https://pypi.org/project/ternary-diagram/)
 [![Downloads](https://static.pepy.tech/badge/ternary-diagram)](https://pepy.tech/project/ternary-diagram)
 
-[![CI](https://github.com/yu9824/ternary_diagram/actions/workflows/CI.yaml/badge.svg)](https://github.com/yu9824/ternary_diagram/actions/workflows/CI.yaml)
+[![CI](https://github.com/yu9824/ternary_diagram/actions/workflows/CI.yml/badge.svg)](https://github.com/yu9824/ternary_diagram/actions/workflows/CI.yml)
+[![docs](https://github.com/yu9824/ternary_diagram/actions/workflows/docs.yml/badge.svg)](https://github.com/yu9824/ternary_diagram/actions/workflows/docs.yml)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![conda_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/version.svg)](https://anaconda.org/conda-forge/ternary-diagram/)
 [![arch_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/platforms.svg)](https://anaconda.org/conda-forge/ternary-diagram)
 
 This package makes it easier for you to draw beautiful ternary diagram **without** [pymatgen](https://pymatgen.org).
 
-Meaningly, only need `numpy` and `matplotlib`.
+Meaningly, only need `numpy>=1.20` and `matplotlib`.
 
 ## What you will be able to do with this package
 

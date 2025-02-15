@@ -1,9 +1,10 @@
 if __name__ == "__main__":
     from typing import List
 
-    from ternary_diagram import TernaryDiagram
     import matplotlib.pyplot as plt
     import pandas as pd
+
+    from ternary_diagram import TernaryDiagram
     # from element_recognition import make_compositions
 
     n_cols = 3

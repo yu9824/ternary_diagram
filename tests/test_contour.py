@@ -1,6 +1,7 @@
-from ternary_diagram import TernaryDiagram
-import pytest
 import pandas as pd
+import pytest
+
+from ternary_diagram import TernaryDiagram
 
 
 @pytest.fixture

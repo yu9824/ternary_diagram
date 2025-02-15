@@ -1,13 +1,13 @@
 # deprecated in python>=3.9
-from typing import Tuple
+from typing import Tuple  # isort: skip
 
-from typing import Optional
 from math import sqrt
+from typing import Optional
 
-import numpy as np
-from numpy.typing import ArrayLike
 import matplotlib.axes
 import matplotlib.pyplot as plt
+import numpy as np
+from numpy.typing import ArrayLike
 
 
 def check_ax(ax: Optional[matplotlib.axes.Axes]) -> matplotlib.axes.Axes:
