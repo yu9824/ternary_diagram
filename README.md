@@ -7,7 +7,7 @@
 
 [![CI](https://github.com/yu9824/ternary_diagram/actions/workflows/CI.yml/badge.svg)](https://github.com/yu9824/ternary_diagram/actions/workflows/CI.yml)
 [![docs](https://github.com/yu9824/ternary_diagram/actions/workflows/docs.yml/badge.svg)](https://github.com/yu9824/ternary_diagram/actions/workflows/docs.yml)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![conda_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/version.svg)](https://anaconda.org/conda-forge/ternary-diagram/)
 [![arch_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/platforms.svg)](https://anaconda.org/conda-forge/ternary-diagram)
 
