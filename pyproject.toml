@@ -43,7 +43,7 @@ gui = ["TkEasyGUI"]
 
 [project.urls]
 Homepage = "https://github.com/yu9824/ternary-diagram"
-Documentation = "https://yu9824.github.io/ternary_diagram/"
+Documentation = "https://yu9824.github.io/ternary-diagram/"
 PyPI = "https://pypi.org/project/ternary-diagram/"
 Source = "https://github.com/yu9824/ternary-diagram"
 Tracker = "https://github.com/yu9824/ternary-diagram/issues"
