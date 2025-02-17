@@ -8,8 +8,8 @@
 [![CI](https://github.com/yu9824/ternary-diagram/actions/workflows/CI.yml/badge.svg)](https://github.com/yu9824/ternary-diagram/actions/workflows/CI.yml)
 [![docs](https://github.com/yu9824/ternary-diagram/actions/workflows/docs.yml/badge.svg)](https://github.com/yu9824/ternary-diagram/actions/workflows/docs.yml)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![conda_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/version.svg)](https://anaconda.org/conda-forge/ternary-diagram/)
-[![arch_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/platforms.svg)](https://anaconda.org/conda-forge/ternary-diagram)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/ternary-diagram.svg)](https://anaconda.org/conda-forge/ternary-diagram)
+[![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/ternary-diagram.svg)](https://anaconda.org/conda-forge/ternary-diagram)
 
 This package makes it easier for you to draw beautiful ternary diagram **without** [pymatgen](https://pymatgen.org).
 
