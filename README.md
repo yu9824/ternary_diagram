@@ -5,8 +5,8 @@
 [![PyPI version](https://badge.fury.io/py/ternary-diagram.svg)](https://pypi.org/project/ternary-diagram/)
 [![Downloads](https://static.pepy.tech/badge/ternary-diagram)](https://pepy.tech/project/ternary-diagram)
 
-[![CI](https://github.com/yu9824/ternary_diagram/actions/workflows/CI.yml/badge.svg)](https://github.com/yu9824/ternary_diagram/actions/workflows/CI.yml)
-[![docs](https://github.com/yu9824/ternary_diagram/actions/workflows/docs.yml/badge.svg)](https://github.com/yu9824/ternary_diagram/actions/workflows/docs.yml)
+[![CI](https://github.com/yu9824/ternary-diagram/actions/workflows/CI.yml/badge.svg)](https://github.com/yu9824/ternary-diagram/actions/workflows/CI.yml)
+[![docs](https://github.com/yu9824/ternary-diagram/actions/workflows/docs.yml/badge.svg)](https://github.com/yu9824/ternary-diagram/actions/workflows/docs.yml)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![conda_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/version.svg)](https://anaconda.org/conda-forge/ternary-diagram/)
 [![arch_badge](https://anaconda.org/conda-forge/ternary-diagram/badges/platforms.svg)](https://anaconda.org/conda-forge/ternary-diagram)
@@ -23,7 +23,7 @@ Meaningly, only need `numpy>=1.20` and `matplotlib`.
 - Automatically format chemical composition using subscripts
 - Most of the matplotlib options are available
 
-![/example/contour/example_contour.png](https://github.com/yu9824/ternary_diagram/blob/main/example/contour/example_contour.png?raw=true "example")
+![/example/contour/example_contour.png](https://github.com/yu9824/ternary-diagram/blob/main/example/contour/example_contour.png?raw=true "example")
 
 ## How to install
 
@@ -45,7 +45,7 @@ Anaconda (conda-forge) package site is [here](https://anaconda.org/conda-forge/t
 
 ## Usage
 
-See [Examples](#examples) and the [documentation](https://yu9824.github.io/ternary_diagram/).
+See [Examples](#examples) and the [documentation](https://yu9824.github.io/ternary-diagram/).
 
 ### Examples
 
@@ -72,7 +72,7 @@ td.fig.savefig("figure.png", dpi=144)
 
 ```
 
-![/example/example_on_readme/figure.png](https://github.com/yu9824/ternary_diagram/blob/main/example/example_on_readme/figure.png?raw=true)
+![/example/example_on_readme/figure.png](https://github.com/yu9824/ternary-diagram/blob/main/example/example_on_readme/figure.png?raw=true)
 
 It can be written like this.
 ```python
@@ -98,7 +98,7 @@ fig.savefig("figure.png", dpi=144)
 
 It means that you can draw multiple figures in one figure object.
 
-See also the [example](https://github.com/yu9824/ternary_diagram/tree/main/example) folder.
+See also the [example](https://github.com/yu9824/ternary-diagram/tree/main/example) folder.
 
 ## Histories
 
@@ -113,7 +113,7 @@ See also the [example](https://github.com/yu9824/ternary_diagram/tree/main/examp
 
 ## LICENSE
 
-See [LICENSE](https://github.com/yu9824/ternary_diagram/tree/main/LICENSE).
+See [LICENSE](https://github.com/yu9824/ternary-diagram/tree/main/LICENSE).
 
 MIT Licence
 
