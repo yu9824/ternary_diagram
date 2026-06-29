@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ternary-diagram"
 dynamic = ["version"]
-dependencies = ["numpy >=1.20", "matplotlib"]
+dependencies = ["numpy >=2.2.6", "matplotlib"]
 requires-python = ">= 3.8"
 authors = [{ name = "yu9824" }]
 maintainers = [{ name = "yu9824" }]
