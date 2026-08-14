@@ -1,3 +1,5 @@
+
+
 # Ternary Diagram
 
 [![python_badge](https://img.shields.io/pypi/pyversions/ternary-diagram)](https://pypi.org/project/ternary-diagram/)
@@ -13,7 +15,7 @@
 
 This package makes it easier for you to draw beautiful ternary diagram **without** [pymatgen](https://pymatgen.org).
 
-Meaningly, only need `numpy>=1.20` and `matplotlib`.
+Specifically, it only requires `numpy>=1.20` and `matplotlib`.
 
 ## What you will be able to do with this package
 
